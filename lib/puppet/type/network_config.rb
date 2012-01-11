@@ -7,6 +7,10 @@ Puppet::Type.newtype(:network_config) do
     desc "The name of the physical or logical network device"
   end
 
+  # Many network configurations can take arbitrary parameters, so instead of
+  # trying to list every single possible attribute, we accept a hash of
+  # attributes and let providers do specific mapping of type attributes to
+  # on-disk state.
   newproperty(:attributes) do
     desc "Provider specific attributes to be passed to the provider"
 
