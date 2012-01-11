@@ -58,11 +58,17 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
     end
   end
 
-  private
+  # Pass over all provider instances, and see if there is a resource with the
+  # same namevar as a provider instance. If such a resource exists, set the
+  # provider field of that resource to the existing provider.
+  def self.prefetch(interfaces = {})
+    instances.each do |provider|
+      if interface = interfaces[provider.name]
+        interface.provider = provider
+      end
+    end
 
-  def self.iface_property(iface, name, value)
-    @interfaces[iface] ||= {}
-    @interfaces[iface][name] = value
+    @resources = interfaces
   end
 
   # Debian has a very irregular format for the interfaces file. The
@@ -158,6 +164,11 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
         end
       end
     end
+  end
+
+  def self.iface_property(iface, name, value)
+    @interfaces[iface] ||= {}
+    @interfaces[iface][name] = value
   end
 
   def self.header
