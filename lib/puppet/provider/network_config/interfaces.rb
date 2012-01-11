@@ -24,6 +24,11 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
     @property_hash[:ensure] = :absent
   end
 
+  # Delegate flush functionality to the class
+  def flush
+    self.class.flush
+  end
+
   attr_accessor :attributes
 
   ##############################################################################
