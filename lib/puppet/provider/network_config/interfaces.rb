@@ -94,6 +94,24 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
       when /^\s*#|^\s*$/
         # Ignore comments and blank lines
         next
+      when /^auto/
+
+        interfaces = line.split(' ')
+        property = interfaces.delete_at(0).intern
+        interfaces.each {|int| iface_property int, property, true}
+
+        # Reset the current parse state
+        current_interface = nil
+
+      when /^allow-/
+
+        interfaces = line.split(' ')
+        property = interfaces.delete_at(0).intern
+        interfaces.each {|int| iface_property int, property, true}
+
+        # Reset the current parse state
+        current_interface = nil
+
       when /^iface/
 
         # Format of the iface line:
@@ -120,24 +138,6 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
         # XXX dox
         raise Puppet::DevError, "Debian interfaces mapping parsing not implemented."
         status = :mapping
-
-      when /^auto/
-
-        interfaces = line.split(' ')
-        property = interfaces.delete_at(0).intern
-        interfaces.each {|int| iface_property int, property, true}
-
-        # Reset the current parse state
-        current_interface = nil
-
-      when /^allow-/
-
-        interfaces = line.split(' ')
-        property = interfaces.delete_at(0).intern
-        interfaces.each {|int| iface_property int, property, true}
-
-        # Reset the current parse state
-        current_interface = nil
 
       else
         # We're currently examining a line that is within a mapping or iface
