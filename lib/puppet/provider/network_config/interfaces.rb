@@ -25,10 +25,10 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
   end
 
   attr_accessor :attributes
-  
+
   ##############################################################################
   # Class methods
-  # 
+  #
   # The following methods serve to generate all resources of this type, and then
   # flush all changes to disk. Generally, instance methods will either only
   # update their internal state or delegate their functionality to the class.
@@ -153,5 +153,16 @@ Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider)
         end
       end
     end
+  end
+
+  def self.header
+    str = <<-HEADER
+# HEADER: /etc/network/interfaces is being managed by puppet. Changes to
+# HEADER: interfaces that are not being managed by puppet will persist;
+# HEADER: however changes to interfaces that are being managed by puppet will
+# HEADER: be overwritten. In addition, file order is NOT guaranteed.
+# HEADER: Last generated at: #{Time.now}
+HEADER
+    str
   end
 end
