@@ -14,6 +14,14 @@ Puppet::Type.newtype(:network_config) do
       provider.attributes
     end
 
+    def is_to_s(hash = @is)
+      hash.keys.sort.map {|key| "#{key} => #{hash[key]}"}.join(", ")
+    end
+
+    def should_to_s(hash = @should)
+      hash.keys.sort.map {|key| "#{key} => #{hash[key]}"}.join(", ")
+    end
+
     defaultto {}
 
     validate do |value|
