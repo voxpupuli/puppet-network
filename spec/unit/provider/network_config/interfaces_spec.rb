@@ -86,8 +86,28 @@ describe provider_class do
   end
 
   describe ".instances" do
-    it "should create a provider for each discovered interface"
-    it "should copy the interface attributes into the provider attributes"
+    before :each do
+      @filetype = stub 'filetype'
+      @flatfile_class.stubs(:new).returns @filetype
+      Puppet::Util::FileType.expects(:filetype).with(:flat).returns @flatfile_class
+      @provider_class.initvars
+    end
+
+    it "should create a provider for each discovered interface" do
+      @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
+      providers = @provider_class.instances
+      providers.map {|prov| prov.name}.sort.should == [:eth0, :lo]
+    end
+
+    it "should copy the interface attributes into the provider attributes" do
+      @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
+      providers = @provider_class.instances
+      eth0_provider = providers.select {|prov| prov.name == :eth0}.first
+      lo_provider   = providers.select {|prov| prov.name == :lo}.first
+
+      eth0_provider.attributes.should == {:proto => "inet", :method => "dhcp", :"allow-hotplug" => true}
+      lo_provider.attributes.should == {:proto => "inet", :method => "loopback", :auto => true}
+    end
   end
 
   describe ".prefetch" do
