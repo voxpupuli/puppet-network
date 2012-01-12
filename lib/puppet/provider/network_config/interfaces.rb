@@ -40,6 +40,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   ##############################################################################
 
   class << self
+    # XXX should these instance variables really be exposed?
     attr_reader :file_path, :filetype
   end
 
