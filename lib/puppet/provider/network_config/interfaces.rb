@@ -5,7 +5,7 @@
 # update the state that the resources should be in upon flushing.
 require 'puppet/util/filetype'
 
-Puppet::Type.type(:network_config).provide(:debian, :parent => Puppet::Provider) do
+Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provider) do
 
   desc "Debian /etc/network/interfaces provider"
 
