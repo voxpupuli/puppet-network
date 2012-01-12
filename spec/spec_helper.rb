@@ -1,8 +1,8 @@
 require 'puppet'
 require 'mocha'
 
-dir = File.expand_path(File.join(File.dirname(__FILE__), ".."))
-$LOAD_PATH.unshift(dir, dir + File.join('..', 'lib'))
+PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+$LOAD_PATH.unshift(File.join(PROJECT_ROOT, "lib"))
 
 RSpec.configure do |config|
   config.mock_with :mocha
