@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-provider_class = Puppet::Type(:network_config).provider(:interfaces)
+provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
 
 describe provider_class do
   before do
@@ -23,7 +23,19 @@ describe provider_class do
     it "should fail when reading a malformed interfaces file"
   end
 
+  describe ".instances" do
+    it "should create a provider for each discovered interface"
+    it "should copy the interface attributes into the provider attributes"
+  end
+
+  describe ".prefetch" do
+    it "should match resources to providers whose names match"
+  end
+
   describe "when flushing" do
+    it "should add interfaces that do not exist"
+    it "should remove interfaces that do exist whose ensure is absent"
+    it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"
     it "should not flush if the interfaces file is malformed"
   end
