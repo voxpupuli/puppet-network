@@ -175,6 +175,8 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   end
 
   def self.iface_property(iface, name, value)
+    iface = iface.intern
+    name  = name.intern unless name.is_a? Symbol
     @interfaces[iface] ||= {}
     @interfaces[iface][name] = value
   end
