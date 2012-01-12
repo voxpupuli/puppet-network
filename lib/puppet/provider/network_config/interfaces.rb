@@ -39,6 +39,14 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   # update their internal state or delegate their functionality to the class.
   ##############################################################################
 
+  class << self
+    attr_reader :file_path, :filetype
+  end
+
+  def self.interfaces
+    @interfaces.dup
+  end
+
   def self.initvars
     @file_path = "/etc/network/interfaces"
     @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
