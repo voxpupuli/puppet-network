@@ -44,22 +44,17 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     attr_reader :file_path, :filetype
   end
 
-  def self.interfaces
-    @interfaces.dup
-  end
-
   def self.initvars
     @file_path = "/etc/network/interfaces"
     @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
-    @interfaces = {}
   end
 
   self.initvars
 
   def self.instances
-    read_interfaces
+    interfaces = read_interfaces
 
-    @interfaces.reduce([]) do |arr, (interface, attributes)|
+    interfaces.reduce([]) do |arr, (interface, attributes)|
       instance = new(:name => interface, :ensure => :present, :provider => :debian)
       instance.attributes = attributes
       arr << instance
@@ -80,6 +75,9 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     @resources = interfaces
   end
 
+  def self.flush
+  end
+
   # Debian has a very irregular format for the interfaces file. The
   # read_interfaces method is somewhat derived from the ifup executable
   # supplied in the debian ifupdown package. The source can be found at
@@ -93,6 +91,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     # parsed.
     status = :none
     current_interface = nil
+    iface_hash = {}
 
     lines = @filetype.read.split("\n")
     # TODO line munging
@@ -112,8 +111,12 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       when /^auto/
 
         interfaces = line.split(' ')
-        property = interfaces.delete_at(0).intern
-        interfaces.each {|int| iface_property int, property, true}
+        interfaces.delete_at(0)
+        interfaces.each do |iface|
+          iface = iface.intern
+          iface_hash[iface] ||= {}
+          iface_hash[iface][:auto] = true
+        end
 
         # Reset the current parse state
         current_interface = nil
@@ -122,7 +125,12 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
 
         interfaces = line.split(' ')
         property = interfaces.delete_at(0).intern
-        interfaces.each {|int| iface_property int, property, true}
+
+        interfaces.each do |iface|
+          iface = iface.intern
+          iface_hash[iface] ||= {}
+          iface_hash[iface][property] = true
+        end
 
         # Reset the current parse state
         current_interface = nil
@@ -135,16 +143,25 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         # zero or more options for <iface>
 
         if line =~ /^iface (\S+)\s+(\S+)\s+(\S+)/
-          iface  = $1
+          iface  = $1.intern
           proto  = $2
           method = $3
 
           status = :iface
           current_interface = iface
 
-          iface_property($1, :proto,  $2)
-          iface_property($1, :method, $3)
+          # If an iface block for this interface has been seen, the file is
+          # malformed.
+          if iface_hash[iface] and iface_hash[iface][:iface]
+            raise Puppet::Error, malformed_err_str
+          end
+
+          iface_hash[iface] ||= {}
+          iface_hash[iface][:iface] = {:proto => proto, :method => method}
+
         else
+          # If we match on a string with a leading iface, but it isn't in the
+          # expected format, malformed blar blar
           raise Puppet::Error, malformed_err_str
         end
 
@@ -162,7 +179,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         case status
         when :iface
           if line =~ /(\S+)\s+(.*)/
-            iface_property current_interface, $1, $2
+            iface_hash[current_interface][:iface].merge!($1.intern => $2)
           else
             raise Puppet::Error, malformed_err_str
           end
@@ -173,13 +190,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         end
       end
     end
-  end
-
-  def self.iface_property(iface, name, value)
-    iface = iface.intern
-    name  = name.intern unless name.is_a? Symbol
-    @interfaces[iface] ||= {}
-    @interfaces[iface][name] = value
+    iface_hash
   end
 
   def self.header

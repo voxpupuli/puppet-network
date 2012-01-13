@@ -10,18 +10,15 @@ end
 provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
 
 describe provider_class do
-  before do
+  before :each do
     @provider_class = provider_class
+    @filetype = stub 'filetype'
+    @flatfile_class.stubs(:new).returns @filetype
+    Puppet::Util::FileType.expects(:filetype).with(:flat).returns @flatfile_class
+    @provider_class.initvars
   end
 
   describe ".read_interfaces" do
-    before :each do
-      @filetype = stub 'filetype'
-      @flatfile_class.stubs(:new).returns @filetype
-      Puppet::Util::FileType.expects(:filetype).with(:flat).returns @flatfile_class
-      @provider_class.initvars
-    end
-
     it "should read the contents of the default interfaces file" do
       @filetype.expects(:read).returns("")
       @provider_class.read_interfaces
@@ -29,39 +26,34 @@ describe provider_class do
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.read_interfaces
-      @provider_class.interfaces.keys.sort.should == [:lo]
-      @provider_class.interfaces[:lo][:auto].should be_true
+      @provider_class.read_interfaces[:lo][:auto].should be_true
     end
 
     it "should parse out allow-hotplug interfaces" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces
-      @provider_class.interfaces[:eth0][:"allow-hotplug"].should be_true
+      @provider_class.read_interfaces[:eth0][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.read_interfaces
-      @provider_class.interfaces[:eth1][:"allow-auto"].should be_true
+      @provider_class.read_interfaces[:eth1][:"allow-auto"].should be_true
     end
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces
-      @provider_class.interfaces[:eth0][:proto].should == "inet"
-      @provider_class.interfaces[:eth0][:method].should == "dhcp"
+      @provider_class.read_interfaces[:eth0][:iface].should == {:proto => "inet", :method => "dhcp"}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
-      @provider_class.read_interfaces
-      @provider_class.interfaces[:eth0][:proto].should == "inet"
-      @provider_class.interfaces[:eth0][:method].should == "static"
-      @provider_class.interfaces[:eth0][:address].should == "192.168.0.2"
-      @provider_class.interfaces[:eth0][:broadcast].should == "192.168.0.255"
-      @provider_class.interfaces[:eth0][:netmask].should == "255.255.255.0"
-      @provider_class.interfaces[:eth0][:gateway].should == "192.168.0.1"
+      @provider_class.read_interfaces[:eth0][:iface].should == {
+        :proto => "inet",
+        :method => "static",
+        :address => "192.168.0.2",
+        :broadcast => "192.168.0.255",
+        :netmask => "255.255.255.0",
+        :gateway => "192.168.0.1",
+      }
     end
 
     it "should parse out mapping lines"
@@ -86,13 +78,6 @@ describe provider_class do
   end
 
   describe ".instances" do
-    before :each do
-      @filetype = stub 'filetype'
-      @flatfile_class.stubs(:new).returns @filetype
-      Puppet::Util::FileType.expects(:filetype).with(:flat).returns @flatfile_class
-      @provider_class.initvars
-    end
-
     it "should create a provider for each discovered interface" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
@@ -105,17 +90,44 @@ describe provider_class do
       eth0_provider = providers.select {|prov| prov.name == :eth0}.first
       lo_provider   = providers.select {|prov| prov.name == :lo}.first
 
-      eth0_provider.attributes.should == {:proto => "inet", :method => "dhcp", :"allow-hotplug" => true}
-      lo_provider.attributes.should == {:proto => "inet", :method => "loopback", :auto => true}
+      eth0_provider.attributes.should == {:iface => { :proto => "inet", :method => "dhcp"}, :"allow-hotplug" => true}
+      lo_provider.attributes.should == {:iface => {:proto => "inet", :method => "loopback"}, :auto => true}
     end
   end
 
   describe ".prefetch" do
-    it "should match resources to providers whose names match"
+    it "should match resources to providers whose names match" do
+      @filetype.stubs(:read).returns(fixture_data('single_interface_dhcp'))
+      lo_resource   = mock 'lo_resource'
+      eth0_resource = mock 'eth0_resource'
+
+      lo_provider = stub 'lo_provider', :name => :lo
+      eth0_provider = stub 'eth0_provider', :name => :eth0
+
+      @provider_class.stubs(:instances).returns [lo_provider, eth0_provider]
+
+      lo_resource.expects(:provider=).with(lo_provider)
+      eth0_resource.expects(:provider=).with(eth0_provider)
+
+      @provider_class.prefetch(:eth0 => eth0_resource, :lo => lo_resource)
+    end
   end
 
-  describe "when flushing" do
-    it "should add interfaces that do not exist"
+  describe ".flush" do
+    before :each do
+      @eth0 = stub 'eth0'
+      @eth0.stubs(:[]).with(:name).returns 'eth0'
+      @eth0.stubs(:provider=)
+    end
+
+    it "should add interfaces that do not exist" do
+      @filetype.stubs(:read).returns("")
+      @eth0.stubs(:should).with(:ensure).returns :present
+
+      @filetype.expects(:write).with()
+      @provider_class.prefetch(@eth0 => :eth0)
+    end
+
     it "should remove interfaces that do exist whose ensure is absent"
     it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"
