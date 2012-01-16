@@ -62,21 +62,25 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   def self.instances
     interfaces = read_interfaces
 
-    interfaces.reduce([]) do |arr, (interface, attributes)|
-      instance = new(:name => interface, :ensure => :present, :provider => :debian)
+    providers = interfaces.reduce([]) do |arr, (interface, attributes)|
+      instance = new(:name => interface.to_s, :ensure => :present, :provider => :interfaces)
       instance.attributes = attributes
       arr << instance
       arr
     end
+
+    providers
   end
 
   # Pass over all provider instances, and see if there is a resource with the
   # same namevar as a provider instance. If such a resource exists, set the
   # provider field of that resource to the existing provider.
-  def self.prefetch(interfaces = {})
-    instances.each do |provider|
-      if interface = interfaces[provider.name]
-        interface.provider = provider
+  def self.prefetch(resources = {})
+    providers = instances
+
+    providers.each do |provider|
+      if resource = resources[provider.name]
+        resource.provider = provider
       end
     end
 
