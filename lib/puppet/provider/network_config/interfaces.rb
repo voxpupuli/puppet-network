@@ -88,6 +88,36 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   end
 
   def self.flush
+    # check all properties and see if they're in sync?
+    providers = @provider_instances
+    if true
+      contents = []
+      contents << header
+
+      # Determine auto and hotplug interfaces and add them, if any
+      [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
+        interfaces = providers.select { |provider| provider.attributes[attr] }
+        contents << "#{attr} #{interfaces.map {|i| i.name}.join(" ")}" unless interfaces.empty?
+      end
+
+      # Build up iface blocks
+      iface_interfaces = providers.select { |provider| provider.attributes[:iface] }
+      iface_interfaces.each do |provider|
+        attributes = provider.attributes.dup
+        block = []
+        if attributes[:iface]
+          block << "iface #{provider.name} #{attributes[:iface].delete(:proto)} #{attributes[:iface].delete(:method)}"
+          attributes[:iface].each_pair do |key, val|
+            block << "#{key} #{val}"
+          end
+        end
+
+        contents << block.join("\n")
+      end
+
+      @filetype.backup
+      @filetype.write contents.join("\n\n")
+    end
   end
 
   # Debian has a very irregular format for the interfaces file. The
@@ -125,7 +155,6 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         interfaces = line.split(' ')
         interfaces.delete_at(0)
         interfaces.each do |iface|
-          iface = iface.intern
           iface_hash[iface] ||= {}
           iface_hash[iface][:auto] = true
         end
@@ -139,7 +168,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         property = interfaces.delete_at(0).intern
 
         interfaces.each do |iface|
-          iface = iface.intern
+          iface = iface
           iface_hash[iface] ||= {}
           iface_hash[iface][property] = true
         end
@@ -155,7 +184,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         # zero or more options for <iface>
 
         if line =~ /^iface (\S+)\s+(\S+)\s+(\S+)/
-          iface  = $1.intern
+          iface  = $1
           proto  = $2
           method = $3
 
@@ -191,7 +220,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         case status
         when :iface
           if line =~ /(\S+)\s+(.*)/
-            iface_hash[current_interface][:iface].merge!($1.intern => $2)
+            iface_hash[current_interface][:iface].merge!($1 => $2)
           else
             raise Puppet::Error, malformed_err_str
           end
