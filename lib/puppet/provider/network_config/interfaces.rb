@@ -150,19 +150,10 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       when /^\s*#|^\s*$/
         # Ignore comments and blank lines
         next
-      when /^auto/
 
-        interfaces = line.split(' ')
-        interfaces.delete_at(0)
-        interfaces.each do |iface|
-          iface_hash[iface] ||= {}
-          iface_hash[iface][:auto] = true
-        end
+      when /^allow-|^auto/
 
-        # Reset the current parse state
-        current_interface = nil
-
-      when /^allow-/
+        # parse out allow-* and auto stanzas.
 
         interfaces = line.split(' ')
         property = interfaces.delete_at(0).intern
