@@ -84,7 +84,16 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       end
     end
 
-    @resources = interfaces
+    resources.values.select {|resource| resource.provider.nil? }.each do |resource|
+      resource.provider = new(:name => resource.name, :provider => :interfaces, :ensure => :absent)
+    end
+  end
+
+  def self.new(*args)
+    obj = super
+    @provider_instances ||= []
+    @provider_instances << obj
+    obj
   end
 
   def self.flush
