@@ -14,6 +14,8 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
 
   def create
     @property_hash[:ensure] = :present
+    # If we're creating a new resource, assume reasonable defaults.
+    @property_hash[:attributes] = {:iface => {:proto => "inet", :method => "dhcp"}, :auto => true}
   end
 
   def exists?
@@ -29,7 +31,13 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     self.class.flush
   end
 
-  attr_accessor :attributes
+  def attributes
+    @property_hash[:attributes].dup
+  end
+
+  def attributes=(attrs)
+    @property_hash[:attributes] = attrs
+  end
 
   ##############################################################################
   # Class methods
