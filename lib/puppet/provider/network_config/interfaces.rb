@@ -200,7 +200,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
           end
 
           iface_hash[iface] ||= {}
-          iface_hash[iface][:iface] = {:proto => proto, :method => method}
+          iface_hash[iface][:iface] = {"proto" => proto, "method" => method}
 
         else
           # If we match on a string with a leading iface, but it isn't in the

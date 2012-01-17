@@ -26,33 +26,33 @@ describe provider_class do
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.read_interfaces[:lo][:auto].should be_true
+      @provider_class.read_interfaces["lo"][:auto].should be_true
     end
 
     it "should parse out allow-hotplug interfaces" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces[:eth0][:"allow-hotplug"].should be_true
+      @provider_class.read_interfaces["eth0"][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.read_interfaces[:eth1][:"allow-auto"].should be_true
+      @provider_class.read_interfaces["eth1"][:"allow-auto"].should be_true
     end
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces[:eth0][:iface].should == {:proto => "inet", :method => "dhcp"}
+      @provider_class.read_interfaces["eth0"][:iface].should == {"proto" => "inet", "method" => "dhcp"}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
-      @provider_class.read_interfaces[:eth0][:iface].should == {
-        :proto => "inet",
-        :method => "static",
-        :address => "192.168.0.2",
-        :broadcast => "192.168.0.255",
-        :netmask => "255.255.255.0",
-        :gateway => "192.168.0.1",
+      @provider_class.read_interfaces["eth0"][:iface].should == {
+        "proto"     => "inet",
+        "method"    => "static",
+        "address"   => "192.168.0.2",
+        "broadcast" => "192.168.0.255",
+        "netmask"   => "255.255.255.0",
+        "gateway"   => "192.168.0.1",
       }
     end
 
@@ -81,35 +81,41 @@ describe provider_class do
     it "should create a provider for each discovered interface" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      providers.map {|prov| prov.name}.sort.should == [:eth0, :lo]
+      providers.map {|prov| prov.name}.sort.should == ["eth0", "lo"]
     end
 
     it "should copy the interface attributes into the provider attributes" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      eth0_provider = providers.select {|prov| prov.name == :eth0}.first
-      lo_provider   = providers.select {|prov| prov.name == :lo}.first
+      eth0_provider = providers.select {|prov| prov.name == "eth0"}.first
+      lo_provider   = providers.select {|prov| prov.name == "lo"}.first
 
-      eth0_provider.attributes.should == {:iface => { :proto => "inet", :method => "dhcp"}, :"allow-hotplug" => true}
-      lo_provider.attributes.should == {:iface => {:proto => "inet", :method => "loopback"}, :auto => true}
+      eth0_provider.attributes.should == {:iface => {"proto" => "inet", "method" => "dhcp"}, :"allow-hotplug" => true}
+      lo_provider.attributes.should == {:iface => {"proto" => "inet", "method" => "loopback"}, :auto => true}
     end
   end
 
   describe ".prefetch" do
     it "should match resources to providers whose names match" do
-      @filetype.stubs(:read).returns(fixture_data('single_interface_dhcp'))
-      lo_resource   = mock 'lo_resource'
-      eth0_resource = mock 'eth0_resource'
 
-      lo_provider = stub 'lo_provider', :name => :lo
-      eth0_provider = stub 'eth0_provider', :name => :eth0
+      @filetype.stubs(:read).returns(fixture_data('single_interface_dhcp'))
+
+      lo_resource   = mock 'lo_resource'
+      lo_resource.stubs(:name).returns("lo")
+      eth0_resource = mock 'eth0_resource'
+      eth0_resource.stubs(:name).returns("eth0")
+
+      lo_provider = stub 'lo_provider', :name => "lo"
+      eth0_provider = stub 'eth0_provider', :name => "eth0"
 
       @provider_class.stubs(:instances).returns [lo_provider, eth0_provider]
 
       lo_resource.expects(:provider=).with(lo_provider)
       eth0_resource.expects(:provider=).with(eth0_provider)
+      lo_resource.expects(:provider).returns(lo_provider)
+      eth0_resource.stubs(:provider).returns(eth0_provider)
 
-      @provider_class.prefetch(:eth0 => eth0_resource, :lo => lo_resource)
+      @provider_class.prefetch("eth0" => eth0_resource, "lo" => lo_resource)
     end
   end
 
@@ -118,14 +124,16 @@ describe provider_class do
       @eth0 = stub 'eth0'
       @eth0.stubs(:[]).with(:name).returns 'eth0'
       @eth0.stubs(:provider=)
+      @eth0.stubs(:provider)
     end
 
     it "should add interfaces that do not exist" do
-      @filetype.stubs(:read).returns("")
+      @filetype.stubs(:read).returns(fixture_data('loopback'))
       @eth0.stubs(:should).with(:ensure).returns :present
 
-      @filetype.expects(:write).with()
-      @provider_class.prefetch(@eth0 => :eth0)
+      @filetype.expects(:write).with(fixture_data('flush_lo_eth0_dhcp'))
+      @provider_class.prefetch("eth0" => @eth0)
+      @provider_class.flush
     end
 
     it "should remove interfaces that do exist whose ensure is absent"
