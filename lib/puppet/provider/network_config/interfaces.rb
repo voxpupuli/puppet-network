@@ -68,7 +68,6 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       arr << instance
       arr
     end
-
     providers
   end
 
@@ -115,12 +114,15 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         attributes = provider.attributes.dup
         block = []
         if attributes[:iface]
+
+          # Build up iface line, by deleting the attributes from that interface
+          # that are header specific. For everything else, it's an additional
+          # option to the iface block, so add it following the iface line.
           block << "iface #{provider.name} #{attributes[:iface].delete(:proto)} #{attributes[:iface].delete(:method)}"
           attributes[:iface].each_pair do |key, val|
             block << "#{key} #{val}"
           end
         end
-
         contents << block.join("\n")
       end
 
@@ -129,11 +131,11 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     end
   end
 
-  # Debian has a very irregular format for the interfaces file. The
-  # read_interfaces method is somewhat derived from the ifup executable
-  # supplied in the debian ifupdown package. The source can be found at
-  # http://packages.debian.org/squeeze/ifupdown
   def self.read_interfaces
+    # Debian has a very irregular format for the interfaces file. The
+    # read_interfaces method is somewhat derived from the ifup executable
+    # supplied in the debian ifupdown package. The source can be found at
+    # http://packages.debian.org/squeeze/ifupdown
 
     malformed_err_str = "Malformed debian interfaces file; cannot instantiate network_config resources"
 
