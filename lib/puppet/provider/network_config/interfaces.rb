@@ -77,14 +77,21 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   # same namevar as a provider instance. If such a resource exists, set the
   # provider field of that resource to the existing provider.
   def self.prefetch(resources = {})
-    providers = instances
 
-    providers.each do |provider|
-      if resource = resources[provider.name]
+    # generate hash of {provider_name => provider}
+    providers = instances.inject({}) do |hash, instance|
+      hash[instance.name] = instance
+      hash
+    end
+
+    # For each prefetched resource, try to match it to a provider
+    resources.each do |resource_name, resource|
+      if provider = providers[resource_name]
         resource.provider = provider
       end
     end
 
+    # Generate default providers for resources that don't exist on disk
     resources.values.select {|resource| resource.provider.nil? }.each do |resource|
       resource.provider = new(:name => resource.name, :provider => :interfaces, :ensure => :absent)
     end
