@@ -32,7 +32,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   end
 
   def attributes
-    @property_hash[:attributes].dup
+    @property_hash[:attributes] ||= {}
   end
 
   def attributes=(attrs)
