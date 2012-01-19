@@ -97,47 +97,13 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     end
   end
 
+  # Intercept all instantiations of providers, present or absent, so that we
+  # can reference everything when we rebuild the interfaces file.
   def self.new(*args)
     obj = super
     @provider_instances ||= []
     @provider_instances << obj
     obj
-  end
-
-  def self.flush
-    # check all properties and see if they're in sync?
-    providers = @provider_instances
-    if true
-      contents = []
-      contents << header
-
-      # Determine auto and hotplug interfaces and add them, if any
-      [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
-        interfaces = providers.select { |provider| provider.attributes[attr] }
-        contents << "#{attr} #{interfaces.map {|i| i.name}.join(" ")}" unless interfaces.empty?
-      end
-
-      # Build up iface blocks
-      iface_interfaces = providers.select { |provider| provider.attributes[:iface] }
-      iface_interfaces.each do |provider|
-        attributes = provider.attributes.dup
-        block = []
-        if attributes[:iface]
-
-          # Build up iface line, by deleting the attributes from that interface
-          # that are header specific. For everything else, it's an additional
-          # option to the iface block, so add it following the iface line.
-          block << "iface #{provider.name} #{attributes[:iface].delete(:proto)} #{attributes[:iface].delete(:method)}"
-          attributes[:iface].each_pair do |key, val|
-            block << "#{key} #{val}"
-          end
-        end
-        contents << block.join("\n")
-      end
-
-      @filetype.backup
-      @filetype.write contents.join("\n\n")
-    end
   end
 
   def self.read_interfaces
@@ -243,6 +209,51 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       end
     end
     iface_hash
+  end
+
+  def self.flush
+    providers = @provider_instances
+
+    if true # Only flush the providers if something was out of sync
+
+      # Delete any providers that should be absent
+      providers.reject! {|provider| provider.ensure == :absent}
+
+      @filetype.backup
+      write_interfaces(providers)
+    end
+  end
+
+  # TODO split out flush method and method to write file.
+  def self.write_interfaces(providers)
+    contents = []
+    contents << header
+
+    # Determine auto and hotplug interfaces and add them, if any
+    [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
+      interfaces = providers.select { |provider| provider.attributes[attr] }
+      contents << "#{attr} #{interfaces.map {|i| i.name}.join(" ")}" unless interfaces.empty?
+    end
+
+    # Build up iface blocks
+    iface_interfaces = providers.select { |provider| provider.attributes[:iface] }
+    iface_interfaces.each do |provider|
+      attributes = provider.attributes.dup
+      block = []
+      if attributes[:iface]
+
+        # Build up iface line, by deleting the attributes from that interface
+        # that are header specific. For everything else, it's an additional
+        # option to the iface block, so add it following the iface line.
+        block << "iface #{provider.name} #{attributes[:iface].delete("proto")} #{attributes[:iface].delete("method")}"
+        attributes[:iface].each_pair do |key, val|
+          block << "#{key} #{val}"
+        end
+      end
+      contents << block.join("\n")
+    end
+
+    @filetype.write contents.join("\n\n")
   end
 
   def self.header

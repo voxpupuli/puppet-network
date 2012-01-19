@@ -121,7 +121,7 @@ describe provider_class do
 
   describe ".flush" do
     before :each do
-      @eth0 = stub 'eth0'
+      @eth0 = stub 'eth0', :name => "eth0"
       @eth0.stubs(:[]).with(:name).returns 'eth0'
       @eth0.stubs(:provider=)
       @eth0.stubs(:provider)
