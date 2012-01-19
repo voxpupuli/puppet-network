@@ -57,7 +57,9 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
   end
 
-  self.initvars
+  initvars
+
+  mk_resource_methods # Instantiate accessors for resource properties
 
   def self.instances
     interfaces = read_interfaces
