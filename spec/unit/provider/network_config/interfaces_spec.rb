@@ -110,6 +110,19 @@ describe provider_class do
         :auto => true
       }
     end
+
+    describe "mapping attributes to properties" do
+
+      {
+        "address" => :ipaddress,
+        "netmask" => :netmask,
+        "method"  => :method,
+        "proto"   => :family,
+        "auto"    => :onboot,
+      }.each do |attribute, property|
+        it "should map the #{attribute} attribute to the #{property} property"
+      end
+    end
   end
 
   describe ".prefetch" do

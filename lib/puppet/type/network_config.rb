@@ -7,6 +7,38 @@ Puppet::Type.newtype(:network_config) do
     desc "The name of the physical or logical network device"
   end
 
+  newproperty(:ipaddress) do
+    desc "The IP address of the network interfaces"
+  end
+
+  newproperty(:netmask) do
+    desc "The subnet mask to apply to the interface"
+  end
+
+  newproperty(:method) do
+    desc "The method for determining an IP address for the interface"
+    newvalues(:static, :manual, :dhcp)
+    defaultto :dhcp
+  end
+
+  newproperty(:family) do
+    desc "The address family to use for the interface"
+    newvalues(:inet, :inet6)
+    defaultto :inet
+  end
+
+  newproperty(:onboot, :boolean => true) do
+    desc "Whether to bring the interface up on boot"
+    newvalues(:true, :false)
+    defaultto true
+  end
+
+  newparam(:reconfigure, :boolean => true) do
+    desc "Reconfigure the interface after the configuration has been updated"
+    newvalues(:true, :false)
+    defaultto false
+  end
+
   # Many network configurations can take arbitrary parameters, so instead of
   # trying to list every single possible attribute, we accept a hash of
   # attributes and let providers do specific mapping of type attributes to
