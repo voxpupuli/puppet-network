@@ -117,14 +117,50 @@ describe provider_class do
 
       @provider_class.prefetch("eth0" => eth0_resource, "lo" => lo_resource)
     end
+
+    it "should create a new absent provider for resources not on disk"
   end
 
   describe ".format_interfaces" do
-    it "should produce at most one auto section"
-    it "should produce at most one allow-hotplug section"
-    it "should produce at most one allow-auto section"
-    it "should produce an iface block for each interface"
+    before :each do
+      @eth0_provider = stub 'eth0_provider', :name => "eth0", :ensure => :present, :attributes => {
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          "proto"  => "inet",
+          "method" => "dhcp",
+        },
+      }
+
+      @lo_provider = stub 'lo_provider', :name => "lo", :ensure => :present, :attributes => {
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          "proto"  => "inet",
+          "method" => "loopback",
+        },
+      }
+    end
+
+    %w{auto allow-auto allow-hotplug}.each do |attr|
+      it "should allow at most one #{attr} section" do
+        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+
+        content.select {|line| line.match(/^#{attr} /)}.length.should == 1
+        content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
+      end
+    end
+
+    it "should produce an iface block for each interface" do
+      content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+
+        content.select {|line| line.match(/iface eth0 /)}.length.should == 1
+        content.find {|line| line.match(/iface eth0 /)}.should == "iface eth0 inet dhcp"
+    end
     it "should add all options following the iface block"
+    it "should fail if the ifaces attribute does not have family and method attributes"
   end
 
   describe ".flush" do

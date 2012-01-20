@@ -234,7 +234,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     # Determine auto and hotplug interfaces and add them, if any
     [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
       interfaces = providers.select { |provider| provider.attributes[attr] }
-      contents << "#{attr} #{interfaces.map {|i| i.name}.join(" ")}" unless interfaces.empty?
+      contents << "#{attr} #{interfaces.map {|i| i.name}.sort.join(" ")}" unless interfaces.empty?
     end
 
     # Build up iface blocks
