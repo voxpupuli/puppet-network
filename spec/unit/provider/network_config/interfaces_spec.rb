@@ -119,23 +119,16 @@ describe provider_class do
     end
   end
 
+  describe ".format_interfaces" do
+    it "should produce at most one auto section"
+    it "should produce at most one allow-hotplug section"
+    it "should produce at most one allow-auto section"
+    it "should produce an iface block for each interface"
+    it "should add all options following the iface block"
+  end
+
   describe ".flush" do
-    before :each do
-      @eth0 = stub 'eth0', :name => "eth0"
-      @eth0.stubs(:[]).with(:name).returns 'eth0'
-      @eth0.stubs(:provider=)
-      @eth0.stubs(:provider)
-    end
-
-    it "should add interfaces that do not exist" do
-      @filetype.stubs(:read).returns(fixture_data('loopback'))
-      @eth0.stubs(:should).with(:ensure).returns :present
-
-      @filetype.expects(:write).with(fixture_data('flush_lo_eth0_dhcp'))
-      @provider_class.prefetch("eth0" => @eth0)
-      @provider_class.flush
-    end
-
+    it "should add interfaces that do not exist"
     it "should remove interfaces that do exist whose ensure is absent"
     it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"

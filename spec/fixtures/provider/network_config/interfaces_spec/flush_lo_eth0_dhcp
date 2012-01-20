@@ -1,6 +1,14 @@
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
+# HEADER: /etc/network/interfaces is being managed by puppet. Changes to
+# HEADER: interfaces that are not being managed by puppet will persist;
+# HEADER: however changes to interfaces that are being managed by puppet will
+# HEADER: be overwritten. In addition, file order is NOT guaranteed.
+# HEADER: Last generated at: Thu Jan 19 16:23:31 -0800 2012
 
-# The loopback network interface
+
 auto lo
+
+allow-hotplug eth0
+
+iface eth0 inet dhcp
+
 iface lo inet loopback

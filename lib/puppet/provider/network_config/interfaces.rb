@@ -219,13 +219,15 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       # Delete any providers that should be absent
       providers.reject! {|provider| provider.ensure == :absent}
 
+      lines = format_interfaces(providers)
       @filetype.backup
-      write_interfaces(providers)
+      content = lines.join("\n\n")
+      @filetype.write(content)
     end
   end
 
-  # TODO split out flush method and method to write file.
-  def self.write_interfaces(providers)
+  # Generate an array of arrays
+  def self.format_interfaces(providers)
     contents = []
     contents << header
 
@@ -253,7 +255,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       contents << block.join("\n")
     end
 
-    @filetype.write contents.join("\n\n")
+    contents
   end
 
   def self.header
