@@ -225,7 +225,34 @@ describe provider_class do
   end
 
   describe ".flush" do
-    it "should add interfaces that do not exist"
+    before :each do
+      @eth0_attributes = {
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          :family   => "inet",
+          :method  => "static",
+          :options => [
+            "address 169.254.0.1",
+            "netmask 255.255.0.0"
+          ]
+        },
+      }
+
+      @filetype.stubs(:backup)
+      @filetype.stubs(:write)
+    end
+
+    it "should add interfaces that do not exist" do
+      eth0 = @provider_class.new
+      eth0.attributes = @eth0_attributes
+      eth0.expects(:ensure).returns :present
+
+      @provider_class.expects(:format_interfaces).with([eth0]).returns ["yep"]
+      @provider_class.flush
+    end
+
     it "should remove interfaces that do exist whose ensure is absent"
     it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"
