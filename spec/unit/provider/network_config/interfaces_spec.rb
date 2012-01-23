@@ -44,15 +44,15 @@ describe provider_class do
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces["eth0"][:iface].should == {"proto" => "inet", "method" => "dhcp", "options" => []}
+      @provider_class.read_interfaces["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
       @provider_class.read_interfaces["eth0"][:iface].should == {
-        "proto"     => "inet",
-        "method"    => "static",
-        "options"   => [
+        :family     => "inet",
+        :method    => "static",
+        :options   => [
           "address 192.168.0.2",
           "broadcast 192.168.0.255",
           "netmask 255.255.255.0",
@@ -97,17 +97,17 @@ describe provider_class do
 
       eth0_provider.attributes.should == {
         :iface => {
-          "proto" => "inet",
-          "method" => "dhcp",
-          "options" => []
+          :family => "inet",
+          :method => "dhcp",
+          :options => []
         },
         :"allow-hotplug" => true
       }
       lo_provider.attributes.should == {
         :iface => {
-          "proto" => "inet",
-          "method" => "loopback",
-          "options" => []
+          :family => "inet",
+          :method => "loopback",
+          :options => []
         },
         :auto => true
       }
@@ -147,9 +147,9 @@ describe provider_class do
         :"allow-auto"    => true,
         :"allow-hotplug" => true,
         :iface => {
-          "proto"   => "inet",
-          "method"  => "static",
-          "options" => [
+          :family   => "inet",
+          :method  => "static",
+          :options => [
             "address 169.254.0.1",
             "netmask 255.255.0.0"
           ]
@@ -161,8 +161,8 @@ describe provider_class do
         :"allow-auto"    => true,
         :"allow-hotplug" => true,
         :iface => {
-          "proto"   => "inet",
-          "method"  => "loopback",
+          :family   => "inet",
+          :method  => "loopback",
         },
       }
     end

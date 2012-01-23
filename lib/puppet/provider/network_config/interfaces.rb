@@ -15,7 +15,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   def create
     @property_hash[:ensure] = :present
     # If we're creating a new resource, assume reasonable defaults.
-    @property_hash[:attributes] = {:iface => {:proto => "inet", :method => "dhcp"}, :auto => true}
+    @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
   end
 
   def exists?
@@ -157,12 +157,12 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
 
         # Format of the iface line:
         #
-        # iface <iface> <proto> <method>
+        # iface <iface> <family> <method>
         # zero or more options for <iface>
 
         if line =~ /^iface (\S+)\s+(\S+)\s+(\S+)/
           iface  = $1
-          proto  = $2
+          family = $2
           method = $3
 
           status = :iface
@@ -175,7 +175,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
           end
 
           iface_hash[iface] ||= {}
-          iface_hash[iface][:iface] = {"proto" => proto, "method" => method, "options" => []}
+          iface_hash[iface][:iface] = {:family => family, :method => method, :options => []}
 
         else
           # If we match on a string with a leading iface, but it isn't in the
@@ -197,7 +197,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         case status
         when :iface
           if line =~ /(\S+)\s+(.*)/
-            iface_hash[current_interface][:iface]["options"] << line.chomp
+            iface_hash[current_interface][:iface][:options] << line.chomp
           else
             raise Puppet::Error, malformed_err_str
           end
@@ -247,8 +247,9 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         # Build up iface line, by deleting the attributes from that interface
         # that are header specific. For everything else, it's an additional
         # option to the iface block, so add it following the iface line.
-        block << "iface #{provider.name} #{attributes[:iface].delete("proto")} #{attributes[:iface].delete("method")}"
-        block.concat(attributes[:iface]["options"]) if attributes[:iface]["options"]
+        # XXX out of date
+        block << "iface #{provider.name} #{attributes[:iface].delete(:family)} #{attributes[:iface].delete(:method)}"
+        block.concat(attributes[:iface][:options]) if attributes[:iface][:options]
       end
       contents << block.join("\n")
     end
