@@ -39,9 +39,6 @@ describe provider_class do
       @provider_class.read_interfaces["eth1"][:"allow-auto"].should be_true
     end
 
-    it "should parse out iface lines with no options"
-    it "should parse out iface lines with trailing options"
-
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       @provider_class.read_interfaces["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
