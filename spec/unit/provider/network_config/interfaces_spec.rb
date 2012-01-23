@@ -191,7 +191,37 @@ describe provider_class do
       content.find {|line| line.match(/iface eth0/)}.should == block
     end
 
-    it "should fail if the ifaces attribute does not have family and method attributes"
+    it "should fail if the ifaces attribute does not have the family attribute" do
+      @lo_provider.unstub(:attributes)
+      @lo_provider.stubs(:attributes).returns({
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          :method  => "loopback",
+        },
+      })
+
+      lambda do
+        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+      end.should raise_exception
+    end
+
+    it "should fail if the ifaces attribute does not have the method attribute" do
+      @lo_provider.unstub(:attributes)
+      @lo_provider.stubs(:attributes).returns({
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          :family => "inet",
+        },
+      })
+
+      lambda do
+        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+      end.should raise_exception
+    end
   end
 
   describe ".flush" do

@@ -244,11 +244,11 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       block = []
       if attributes[:iface]
 
-        # Build up iface line, by deleting the attributes from that interface
-        # that are header specific. For everything else, it's an additional
-        # option to the iface block, so add it following the iface line.
-        # XXX out of date
-        block << "iface #{provider.name} #{attributes[:iface].delete(:family)} #{attributes[:iface].delete(:method)}"
+        if [attributes[:iface][:method], attributes[:iface][:family]].any? {|val| val.nil?}
+          raise Puppet::Error, "#{provider.name} does not have a method or family"
+        end
+
+        block << "iface #{provider.name} #{attributes[:iface][:family]} #{attributes[:iface][:method]}"
         block.concat(attributes[:iface][:options]) if attributes[:iface][:options]
       end
       contents << block.join("\n")
