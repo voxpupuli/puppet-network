@@ -39,9 +39,12 @@ describe provider_class do
       @provider_class.read_interfaces["eth1"][:"allow-auto"].should be_true
     end
 
+    it "should parse out iface lines with no options"
+    it "should parse out iface lines with trailing options"
+
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces["eth0"][:iface].should == {"proto" => "inet", "method" => "dhcp"}
+      @provider_class.read_interfaces["eth0"][:iface].should == {"proto" => "inet", "method" => "dhcp", "options" => []}
     end
 
     it "should parse out lines following iface lines" do
@@ -49,10 +52,12 @@ describe provider_class do
       @provider_class.read_interfaces["eth0"][:iface].should == {
         "proto"     => "inet",
         "method"    => "static",
-        "address"   => "192.168.0.2",
-        "broadcast" => "192.168.0.255",
-        "netmask"   => "255.255.255.0",
-        "gateway"   => "192.168.0.1",
+        "options"   => [
+          "address 192.168.0.2",
+          "broadcast 192.168.0.255",
+          "netmask 255.255.255.0",
+          "gateway 192.168.0.1",
+        ]
       }
     end
 
@@ -90,8 +95,22 @@ describe provider_class do
       eth0_provider = providers.select {|prov| prov.name == "eth0"}.first
       lo_provider   = providers.select {|prov| prov.name == "lo"}.first
 
-      eth0_provider.attributes.should == {:iface => {"proto" => "inet", "method" => "dhcp"}, :"allow-hotplug" => true}
-      lo_provider.attributes.should == {:iface => {"proto" => "inet", "method" => "loopback"}, :auto => true}
+      eth0_provider.attributes.should == {
+        :iface => {
+          "proto" => "inet",
+          "method" => "dhcp",
+          "options" => []
+        },
+        :"allow-hotplug" => true
+      }
+      lo_provider.attributes.should == {
+        :iface => {
+          "proto" => "inet",
+          "method" => "loopback",
+          "options" => []
+        },
+        :auto => true
+      }
     end
   end
 
@@ -128,8 +147,12 @@ describe provider_class do
         :"allow-auto"    => true,
         :"allow-hotplug" => true,
         :iface => {
-          "proto"  => "inet",
-          "method" => "dhcp",
+          "proto"   => "inet",
+          "method"  => "static",
+          "options" => [
+            "address 169.254.0.1",
+            "netmask 255.255.0.0"
+          ]
         },
       }
 
@@ -138,8 +161,8 @@ describe provider_class do
         :"allow-auto"    => true,
         :"allow-hotplug" => true,
         :iface => {
-          "proto"  => "inet",
-          "method" => "loopback",
+          "proto"   => "inet",
+          "method"  => "loopback",
         },
       }
     end
@@ -156,10 +179,21 @@ describe provider_class do
     it "should produce an iface block for each interface" do
       content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
 
-        content.select {|line| line.match(/iface eth0 /)}.length.should == 1
-        content.find {|line| line.match(/iface eth0 /)}.should == "iface eth0 inet dhcp"
+      content.select {|line| line.match(/iface eth0 inet static/)}.length.should == 1
     end
-    it "should add all options following the iface block"
+
+    it "should add all options following the iface block" do
+      content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+
+      block = [
+        "iface eth0 inet static",
+        "address 169.254.0.1",
+        "netmask 255.255.0.0",
+      ].join("\n")
+
+      content.find {|line| line.match(/iface eth0/)}.should == block
+    end
+
     it "should fail if the ifaces attribute does not have family and method attributes"
   end
 

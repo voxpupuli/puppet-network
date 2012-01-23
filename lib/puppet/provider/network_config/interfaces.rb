@@ -175,7 +175,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
           end
 
           iface_hash[iface] ||= {}
-          iface_hash[iface][:iface] = {"proto" => proto, "method" => method}
+          iface_hash[iface][:iface] = {"proto" => proto, "method" => method, "options" => []}
 
         else
           # If we match on a string with a leading iface, but it isn't in the
@@ -197,7 +197,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         case status
         when :iface
           if line =~ /(\S+)\s+(.*)/
-            iface_hash[current_interface][:iface].merge!($1 => $2)
+            iface_hash[current_interface][:iface]["options"] << line.chomp
           else
             raise Puppet::Error, malformed_err_str
           end
@@ -248,9 +248,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
         # that are header specific. For everything else, it's an additional
         # option to the iface block, so add it following the iface line.
         block << "iface #{provider.name} #{attributes[:iface].delete("proto")} #{attributes[:iface].delete("method")}"
-        attributes[:iface].each_pair do |key, val|
-          block << "#{key} #{val}"
-        end
+        block.concat(attributes[:iface]["options"]) if attributes[:iface]["options"]
       end
       contents << block.join("\n")
     end
