@@ -55,6 +55,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   def self.initvars
     @file_path = "/etc/network/interfaces"
     @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
+    @provider_instances = []
   end
 
   initvars
@@ -101,7 +102,6 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   # can reference everything when we rebuild the interfaces file.
   def self.new(*args)
     obj = super
-    @provider_instances ||= []
     @provider_instances << obj
     obj
   end
