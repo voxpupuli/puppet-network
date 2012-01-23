@@ -52,6 +52,8 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     attr_reader :file_path, :filetype
   end
 
+  # self.initvars is a hook upon instantiation of the provider. It's basically
+  # the class level constructor
   def self.initvars
     @file_path = "/etc/network/interfaces"
     @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
