@@ -7,7 +7,7 @@ require 'puppet/util/filetype'
 
 Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provider) do
 
-  desc "Debian /etc/network/interfaces provider"
+  desc "Debian interfaces style provider"
 
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
@@ -217,14 +217,12 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   end
 
   def self.flush
-    providers = @provider_instances
+    providers_on_disk = @provider_instances
+
+    providers_should = providers_on_disk.select {|provider| provider.ensure == :present }
 
     if true # Only flush the providers if something was out of sync
-
-      # Delete any providers that should be absent
-      providers.reject! {|provider| provider.ensure == :absent}
-
-      lines = format_interfaces(providers)
+      lines = format_interfaces(providers_on_disk)
       @filetype.backup
       content = lines.join("\n\n")
       @filetype.write(content)
