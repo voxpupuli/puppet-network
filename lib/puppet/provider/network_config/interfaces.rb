@@ -65,9 +65,9 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   mk_resource_methods # Instantiate accessors for resource properties
 
   def self.instances
-    interfaces = read_interfaces
+    interfaces = parse_file
 
-    # Iterate over the hash provided by read_interfaces, and for each one
+    # Iterate over the hash provided by parse_file, and for each one
     # generate a new provider and copy in the properties. Put all of these
     # in an array and return that.
     providers = interfaces.reduce([]) do |arr, (interface, attributes)|
@@ -111,9 +111,9 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     obj
   end
 
-  def self.read_interfaces
+  def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
-    # read_interfaces method is somewhat derived from the ifup executable
+    # parse_file method is somewhat derived from the ifup executable
     # supplied in the debian ifupdown package. The source can be found at
     # http://packages.debian.org/squeeze/ifupdown
 
@@ -222,7 +222,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     providers_should = providers_on_disk.select {|provider| provider.ensure == :present }
 
     if true # Only flush the providers if something was out of sync
-      lines = format_interfaces(providers_on_disk)
+      lines = format_interfaces(providers_should)
       @filetype.backup
       content = lines.join("\n\n")
       @filetype.write(content)

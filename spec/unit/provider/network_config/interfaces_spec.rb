@@ -18,35 +18,35 @@ describe provider_class do
     @provider_class.initvars
   end
 
-  describe ".read_interfaces" do
+  describe ".parse_file" do
     it "should read the contents of the default interfaces file" do
       @filetype.expects(:read).returns("")
-      @provider_class.read_interfaces
+      @provider_class.parse_file
     end
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.read_interfaces["lo"][:auto].should be_true
+      @provider_class.parse_file["lo"][:auto].should be_true
     end
 
     it "should parse out allow-hotplug interfaces" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces["eth0"][:"allow-hotplug"].should be_true
+      @provider_class.parse_file["eth0"][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.read_interfaces["eth1"][:"allow-auto"].should be_true
+      @provider_class.parse_file["eth1"][:"allow-auto"].should be_true
     end
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.read_interfaces["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
+      @provider_class.parse_file["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
-      @provider_class.read_interfaces["eth0"][:iface].should == {
+      @provider_class.parse_file["eth0"][:iface].should == {
         :family     => "inet",
         :method    => "static",
         :options   => [
@@ -66,14 +66,14 @@ describe provider_class do
       it "with misplaced options should fail" do
         @filetype.expects(:read).returns("address 192.168.1.1\niface eth0 inet static\n")
         lambda do
-          @provider_class.read_interfaces
+          @provider_class.parse_file
         end.should raise_error
       end
 
       it "with an option without a value should fail" do
         @filetype.expects(:read).returns("iface eth0 inet manual\naddress")
         lambda do
-          @provider_class.read_interfaces
+          @provider_class.parse_file
         end.should raise_error
       end
     end
@@ -240,6 +240,16 @@ describe provider_class do
         },
       }
 
+      @eth1_attributes = {
+        :auto            => true,
+        :"allow-auto"    => true,
+        :"allow-hotplug" => true,
+        :iface => {
+          :family   => "inet",
+          :method  => "dhcp",
+        },
+      }
+
       @filetype.stubs(:backup)
       @filetype.stubs(:write)
     end
@@ -253,7 +263,16 @@ describe provider_class do
       @provider_class.flush
     end
 
-    it "should remove interfaces that do exist whose ensure is absent"
+    it "should remove interfaces that do exist whose ensure is absent" do
+      eth1 = @provider_class.new
+      eth1.attributes = @eth1_attributes
+      eth1.expects(:ensure).returns :absent
+
+      @provider_class.expects(:format_interfaces).with([]).returns ["yep"]
+      @provider_class.flush
+    end
+
+    it "should flush interfaces that were modified"
     it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"
     it "should not flush if the interfaces file is malformed"
