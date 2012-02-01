@@ -11,10 +11,11 @@ provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
 
 describe provider_class do
   before :each do
-    @provider_class = provider_class
     @filetype = stub 'filetype'
-    @flatfile_class.stubs(:new).returns @filetype
-    Puppet::Util::FileType.expects(:filetype).with(:flat).returns @flatfile_class
+
+    @provider_class = provider_class
+    @provider_class.stubs(:filetype).returns @filetype
+
     @provider_class.initvars
   end
 

@@ -5,10 +5,10 @@
 # update the state that the resources should be in upon flushing.
 require 'puppet/provider/isomorphism'
 
-Puppet::Type.type(:network_config).provide(:interfaces,
-  :parent => Puppet::Provider::Isomorphism,
-  :file_path => "/etc/network/interfaces"
-) do
+Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provider) do
+
+  include Puppet::Provider::Isomorphism
+  self.file_path = '/etc/network/interfaces'
 
   desc "Debian interfaces style provider"
 
@@ -21,12 +21,6 @@ Puppet::Type.type(:network_config).provide(:interfaces,
     @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
   end
 
-  # self.initvars is a hook upon instantiation of the provider. It's basically
-  # the class level constructor
-  def self.initvars
-    @filetype  = Puppet::Util::FileType.filetype(:flat).new(@file_path)
-    @provider_instances = []
-  end
 
   initvars
 
@@ -46,14 +40,6 @@ Puppet::Type.type(:network_config).provide(:interfaces,
     providers
   end
 
-  # Intercept all instantiations of providers, present or absent, so that we
-  # can reference everything when we rebuild the interfaces file.
-  def self.new(*args)
-    obj = super
-    @provider_instances << obj
-    obj
-  end
-
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
@@ -69,7 +55,7 @@ Puppet::Type.type(:network_config).provide(:interfaces,
     current_interface = nil
     iface_hash = {}
 
-    lines = @filetype.read.split("\n")
+    lines = filetype.read.split("\n")
     # TODO line munging
     # Join lines that end with a backslash
     # Strip comments?
@@ -166,9 +152,9 @@ Puppet::Type.type(:network_config).provide(:interfaces,
 
     if true # Only flush the providers if something was out of sync
       lines = format_resources(providers_should)
-      @filetype.backup
+      filetype.backup
       content = lines.join("\n\n")
-      @filetype.write(content)
+      filetype.write(content)
     end
   end
 

@@ -1,7 +1,7 @@
 require 'puppet'
 require 'puppet/util/filetype'
 
-class Puppet::Provider::Isomorphism < Puppet::Provider
+module Puppet::Provider::Isomorphism
 
   def create
     @property_hash[:ensure] = :present
@@ -20,6 +20,10 @@ class Puppet::Provider::Isomorphism < Puppet::Provider
     self.class.flush
   end
 
+  def self.included(klass)
+    klass.extend Puppet::Provider::Isomorphism::ClassMethods
+  end
+
   ##############################################################################
   # Class methods
   #
@@ -28,42 +32,61 @@ class Puppet::Provider::Isomorphism < Puppet::Provider
   # update their internal state or delegate their functionality to the class.
   ##############################################################################
 
-  class << self
+  module ClassMethods
     attr_accessor :file_path
-  end
 
-  # Pass over all provider instances, and see if there is a resource with the
-  # same namevar as a provider instance. If such a resource exists, set the
-  # provider field of that resource to the existing provider.
-  def self.prefetch(resources = {})
-
-    # generate hash of {provider_name => provider}
-    providers = instances.inject({}) do |hash, instance|
-      hash[instance.name] = instance
-      hash
+    # Intercept all instantiations of providers, present or absent, so that we
+    # can reference everything when we rebuild the interfaces file.
+    def new(*args)
+      obj = super
+      @provider_instances << obj
+      obj
     end
 
-    # For each prefetched resource, try to match it to a provider
-    resources.each do |resource_name, resource|
-      if provider = providers[resource_name]
-        resource.provider = provider
+    # self.initvars is a hook upon instantiation of the provider. It's basically
+    # the class level constructor
+    def initvars
+      @provider_instances = []
+    end
+
+    # Lazily generate the filetype
+    def filetype
+      @filetype ||= Puppet::Util::FileType.filetype(:flat).new(@file_path)
+    end
+
+    # Pass over all provider instances, and see if there is a resource with the
+    # same namevar as a provider instance. If such a resource exists, set the
+    # provider field of that resource to the existing provider.
+    def prefetch(resources = {})
+
+      # generate hash of {provider_name => provider}
+      providers = instances.inject({}) do |hash, instance|
+        hash[instance.name] = instance
+        hash
+      end
+
+      # For each prefetched resource, try to match it to a provider
+      resources.each do |resource_name, resource|
+        if provider = providers[resource_name]
+          resource.provider = provider
+        end
+      end
+
+      # Generate default providers for resources that don't exist on disk
+      resources.values.select {|resource| resource.provider.nil? }.each do |resource|
+        resource.provider = new(:name => resource.name, :provider => :interfaces, :ensure => :absent)
       end
     end
 
-    # Generate default providers for resources that don't exist on disk
-    resources.values.select {|resource| resource.provider.nil? }.each do |resource|
-      resource.provider = new(:name => resource.name, :provider => :interfaces, :ensure => :absent)
-    end
-  end
-
-  def self.header
-    str = <<-HEADER
+    def header
+      str = <<-HEADER
 # HEADER: #{@file_path} is being managed by puppet. Changes to
 # HEADER: interfaces that are not being managed by puppet will persist;
 # HEADER: however changes to interfaces that are being managed by puppet will
 # HEADER: be overwritten. In addition, file order is NOT guaranteed.
 # HEADER: Last generated at: #{Time.now}
 HEADER
-    str
+      str
+    end
   end
 end
