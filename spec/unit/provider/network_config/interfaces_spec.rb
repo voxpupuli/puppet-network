@@ -137,7 +137,7 @@ describe provider_class do
     it "should create a new absent provider for resources not on disk"
   end
 
-  describe ".format_interfaces" do
+  describe ".format_resources" do
     before :each do
       @eth0_provider = stub 'eth0_provider', :name => "eth0", :ensure => :present, :attributes => {
         :auto            => true,
@@ -166,7 +166,7 @@ describe provider_class do
 
     %w{auto allow-auto allow-hotplug}.each do |attr|
       it "should allow at most one #{attr} section" do
-        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
 
         content.select {|line| line.match(/^#{attr} /)}.length.should == 1
         content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
@@ -174,13 +174,13 @@ describe provider_class do
     end
 
     it "should produce an iface block for each interface" do
-      content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+      content = @provider_class.format_resources([@lo_provider, @eth0_provider])
 
       content.select {|line| line.match(/iface eth0 inet static/)}.length.should == 1
     end
 
     it "should add all options following the iface block" do
-      content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+      content = @provider_class.format_resources([@lo_provider, @eth0_provider])
 
       block = [
         "iface eth0 inet static",
@@ -203,7 +203,7 @@ describe provider_class do
       })
 
       lambda do
-        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
       end.should raise_exception
     end
 
@@ -219,7 +219,7 @@ describe provider_class do
       })
 
       lambda do
-        content = @provider_class.format_interfaces([@lo_provider, @eth0_provider])
+        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
       end.should raise_exception
     end
   end
@@ -259,7 +259,7 @@ describe provider_class do
       eth0.attributes = @eth0_attributes
       eth0.expects(:ensure).returns :present
 
-      @provider_class.expects(:format_interfaces).with([eth0]).returns ["yep"]
+      @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
       @provider_class.flush
     end
 
@@ -268,7 +268,7 @@ describe provider_class do
       eth1.attributes = @eth1_attributes
       eth1.expects(:ensure).returns :absent
 
-      @provider_class.expects(:format_interfaces).with([]).returns ["yep"]
+      @provider_class.expects(:format_resources).with([]).returns ["yep"]
       @provider_class.flush
     end
 

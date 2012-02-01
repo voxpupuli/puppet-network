@@ -71,8 +71,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     # generate a new provider and copy in the properties. Put all of these
     # in an array and return that.
     providers = interfaces.reduce([]) do |arr, (interface, attributes)|
-      instance = new(:name => interface.to_s, :ensure => :present, :provider => :interfaces)
-      instance.attributes = attributes
+      instance = new(:name => interface.to_s, :ensure => :present, :provider => :interfaces, :attributes => attributes)
       arr << instance
       arr
     end
@@ -222,7 +221,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
     providers_should = providers_on_disk.select {|provider| provider.ensure == :present }
 
     if true # Only flush the providers if something was out of sync
-      lines = format_interfaces(providers_should)
+      lines = format_resources(providers_should)
       @filetype.backup
       content = lines.join("\n\n")
       @filetype.write(content)
@@ -230,7 +229,7 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   end
 
   # Generate an array of arrays
-  def self.format_interfaces(providers)
+  def self.format_resources(providers)
     contents = []
     contents << header
 
