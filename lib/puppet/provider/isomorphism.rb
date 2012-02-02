@@ -139,8 +139,10 @@ module Puppet::Provider::Isomorphism
     end
 
     def flush
-      if true # Only flush the providers if something was out of sync
-        lines = format_resources(@provider_instances)
+      if needs_flush # Only flush the providers if something was out of sync
+
+        providers = @provider_instances.select {|prov| prov.ensure == :present}
+        lines = format_resources(providers)
         filetype.backup
         content = lines.join("\n\n")
         filetype.write(content)
