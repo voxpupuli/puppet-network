@@ -166,62 +166,68 @@ describe provider_class do
     end
 
     %w{auto allow-auto allow-hotplug}.each do |attr|
-      it "should allow at most one #{attr} section" do
-        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
 
-        content.select {|line| line.match(/^#{attr} /)}.length.should == 1
-        content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
+      describe "writing the #{attr} section" do
+        let(:content) { content = @provider_class.format_resources([@lo_provider, @eth0_provider]) }
+
+        it "should allow at most one section" do
+          content.select {|line| line.match(/^#{attr} /)}.length.should == 1
+        end
+
+        it "should have the correct interfaces appended" do
+          content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
+        end
       end
     end
 
-    it "should produce an iface block for each interface" do
-      content = @provider_class.format_resources([@lo_provider, @eth0_provider])
+    describe "writing iface blocks" do
+      let(:content) { @provider_class.format_resources([@lo_provider, @eth0_provider]) }
 
-      content.select {|line| line.match(/iface eth0 inet static/)}.length.should == 1
-    end
+      it "should produce an iface block for each interface" do
+        content.select {|line| line.match(/iface eth0 inet static/)}.length.should == 1
+      end
 
-    it "should add all options following the iface block" do
-      content = @provider_class.format_resources([@lo_provider, @eth0_provider])
+      it "should add all options following the iface block" do
+        block = [
+          "iface eth0 inet static",
+          "address 169.254.0.1",
+          "netmask 255.255.0.0",
+        ].join("\n")
 
-      block = [
-        "iface eth0 inet static",
-        "address 169.254.0.1",
-        "netmask 255.255.0.0",
-      ].join("\n")
+        content.find {|line| line.match(/iface eth0/)}.should == block
+      end
 
-      content.find {|line| line.match(/iface eth0/)}.should == block
-    end
+      it "should fail if the ifaces attribute does not have the family attribute" do
+        @lo_provider.unstub(:attributes)
+        @lo_provider.stubs(:attributes).returns({
+          :auto            => true,
+          :"allow-auto"    => true,
+          :"allow-hotplug" => true,
+          :iface => {
+            :method  => "loopback",
+          },
+        })
 
-    it "should fail if the ifaces attribute does not have the family attribute" do
-      @lo_provider.unstub(:attributes)
-      @lo_provider.stubs(:attributes).returns({
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :method  => "loopback",
-        },
-      })
+        lambda do
+          content
+        end.should raise_exception
+      end
 
-      lambda do
-        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
-      end.should raise_exception
-    end
+      it "should fail if the ifaces attribute does not have the method attribute" do
+        @lo_provider.unstub(:attributes)
+        @lo_provider.stubs(:attributes).returns({
+          :auto            => true,
+          :"allow-auto"    => true,
+          :"allow-hotplug" => true,
+          :iface => {
+            :family => "inet",
+          },
+        })
 
-    it "should fail if the ifaces attribute does not have the method attribute" do
-      @lo_provider.unstub(:attributes)
-      @lo_provider.stubs(:attributes).returns({
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family => "inet",
-        },
-      })
-
-      lambda do
-        content = @provider_class.format_resources([@lo_provider, @eth0_provider])
-      end.should raise_exception
+        lambda do
+          content
+        end.should raise_exception
+      end
     end
   end
 
