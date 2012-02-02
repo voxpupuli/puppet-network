@@ -1,8 +1,7 @@
 # = Debian network_config provider
 #
-# This provider performs all real operations at the prefetch and flush stages
-# of a puppet transaction, so the create, exists?, and destroy methods merely
-# update the state that the resources should be in upon flushing.
+# This provider uses the isomorphism mixin to map the interfaces file to a
+# collection of network_config providers, and back.
 require 'puppet/provider/isomorphism'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
