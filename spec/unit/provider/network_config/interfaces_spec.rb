@@ -273,7 +273,15 @@ describe provider_class do
       @provider_class.flush
     end
 
-    it "should flush interfaces that were modified"
+    it "should flush interfaces that were modified" do
+      eth0 = @provider_class.new()
+      @eth0_attributes[:iface].merge!(:family => :inet6)
+      @provider_class.expects(:needs_flush=).with(true)
+      @provider_class.expects(:needs_flush).returns(true)
+      eth0.attributes = @eth0_attributes
+      @provider_class.flush
+    end
+
     it "should not modify unmanaged interfaces"
     it "should back up the file if changes are made"
     it "should not flush if the interfaces file is malformed"

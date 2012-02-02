@@ -121,8 +121,6 @@ module Puppet::Provider::Isomorphism
         define_method(attr) do
           if @property_hash[attr]
             @property_hash[attr]
-          elsif self.class.valid_attr?(self.class.name, attr)
-            :absent
           elsif defined? @resource
             @resource.should(attr)
           else
