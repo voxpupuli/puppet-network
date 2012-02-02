@@ -5,7 +5,7 @@
 # update the state that the resources should be in upon flushing.
 require 'puppet/provider/isomorphism'
 
-Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provider) do
+Puppet::Type.type(:network_config).provide(:interfaces) do
 
   include Puppet::Provider::Isomorphism
   self.file_path = '/etc/network/interfaces'
