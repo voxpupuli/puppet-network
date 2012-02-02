@@ -18,27 +18,11 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
   def create
     super
     # If we're creating a new resource, assume reasonable defaults.
+    # TODO remove this when more complete properties are defined in the type
     @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
   end
 
-
-  initvars
-
   mk_resource_methods # Instantiate accessors for resource properties
-
-  def self.instances
-    interfaces = parse_file
-
-    # Iterate over the hash provided by parse_file, and for each one
-    # generate a new provider and copy in the properties. Put all of these
-    # in an array and return that.
-    providers = interfaces.reduce([]) do |arr, (name, attributes)|
-      instance = new(:name => name.to_s, :ensure => :present, :provider => :interfaces, :attributes => attributes)
-      arr << instance
-      arr
-    end
-    providers
-  end
 
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
@@ -143,19 +127,6 @@ Puppet::Type.type(:network_config).provide(:interfaces, :parent => Puppet::Provi
       end
     end
     iface_hash
-  end
-
-  def self.flush
-    providers_on_disk = @provider_instances
-
-    providers_should = providers_on_disk.select {|provider| provider.ensure == :present }
-
-    if true # Only flush the providers if something was out of sync
-      lines = format_resources(providers_should)
-      filetype.backup
-      content = lines.join("\n\n")
-      filetype.write(content)
-    end
   end
 
   # Generate an array of arrays
