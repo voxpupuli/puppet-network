@@ -1,3 +1,8 @@
+# This defines a mixin that provides for mapping an entire file to a set of
+# puppet providers.
+#
+# Including classes should define the self.parse_file and self.format_resources
+# methods.
 require 'puppet'
 require 'puppet/util'
 require 'puppet/util/filetype'
@@ -6,6 +11,7 @@ module Puppet::Provider::Isomorphism
 
   def create
     @property_hash[:ensure] = :present
+    self.class.needs_flush = true
   end
 
   def exists?
@@ -14,6 +20,7 @@ module Puppet::Provider::Isomorphism
 
   def destroy
     @property_hash[:ensure] = :absent
+    self.class.needs_flush = true
   end
 
   # Delegate flush functionality to the class
@@ -23,6 +30,7 @@ module Puppet::Provider::Isomorphism
 
   def self.included(klass)
     klass.extend Puppet::Provider::Isomorphism::ClassMethods
+    klass.mk_resource_methods
   end
 
   ##############################################################################
@@ -34,7 +42,7 @@ module Puppet::Provider::Isomorphism
   ##############################################################################
 
   module ClassMethods
-    attr_accessor :file_path
+    attr_accessor :file_path, :needs_flush
 
     # Intercept all instantiations of providers, present or absent, so that we
     # can reference everything when we rebuild the interfaces file.
@@ -48,6 +56,7 @@ module Puppet::Provider::Isomorphism
     # the class level constructor
     def initvars
       @provider_instances = []
+      @needs_flush = false
     end
 
     # Lazily generate the filetype
@@ -100,13 +109,38 @@ module Puppet::Provider::Isomorphism
       end
     end
 
+    # Generate attr_accessors for the properties, and have them mark the file
+    # as modified if an attr_writer is called.
+    # This is basically ripped off from ParsedFile
+    def mk_resource_methods
+      [resource_type.validproperties, resource_type.parameters].flatten.each do |attr|
+        attr = symbolize(attr)
+
+        # Generate attr_reader
+        # TODO explain WTF is going on here.
+        define_method(attr) do
+          if @property_hash[attr]
+            @property_hash[attr]
+          elsif self.class.valid_attr?(self.class.name, attr)
+            :absent
+          elsif defined? @resource
+            @resource.should(attr)
+          else
+            nil
+          end
+        end
+
+        # Generate attr_writer
+        define_method("#{attr}=") do |val|
+          @property_hash[attr] = val
+          self.class.needs_flush = true
+        end
+      end
+    end
+
     def flush
-      providers_on_disk = @provider_instances
-
-      providers_should = providers_on_disk.select {|provider| provider.ensure == :present }
-
       if true # Only flush the providers if something was out of sync
-        lines = format_resources(providers_should)
+        lines = format_resources(@provider_instances)
         filetype.backup
         content = lines.join("\n\n")
         filetype.write(content)

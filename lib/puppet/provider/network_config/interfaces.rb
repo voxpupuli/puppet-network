@@ -22,8 +22,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
   end
 
-  mk_resource_methods # Instantiate accessors for resource properties
-
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
