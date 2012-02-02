@@ -112,7 +112,11 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
         case status
         when :iface
-          if line =~ /(\S+)\s+(.*)/
+          if line =~ /\S+\s+\S.*/
+            # If we're parsing an iface stanza, then we should receive a set of
+            # lines that contain two or more space delimited strings. Append
+            # them as options to the iface in an array.
+
             iface_hash[current_interface][:iface][:options] << line.chomp
           else
             raise Puppet::Error, malformed_err_str

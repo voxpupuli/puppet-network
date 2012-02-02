@@ -117,14 +117,11 @@ module Puppet::Provider::Isomorphism
         attr = symbolize(attr)
 
         # Generate attr_reader
-        # TODO explain WTF is going on here.
         define_method(attr) do
           if @property_hash[attr]
             @property_hash[attr]
           elsif defined? @resource
             @resource.should(attr)
-          else
-            nil
           end
         end
 
@@ -138,7 +135,6 @@ module Puppet::Provider::Isomorphism
 
     def flush
       if needs_flush # Only flush the providers if something was out of sync
-
         providers = @provider_instances.select {|prov| prov.ensure == :present}
         lines = format_resources(providers)
         filetype.backup
