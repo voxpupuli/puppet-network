@@ -283,7 +283,19 @@ describe provider_class do
     end
 
     it "should not modify unmanaged interfaces"
-    it "should back up the file if changes are made"
+
+    it "should back up the file if changes are made" do
+      @filetype.unstub(:backup)
+      @filetype.expects(:backup)
+
+      eth0 = @provider_class.new
+      eth0.attributes = @eth0_attributes
+      eth0.stubs(:ensure).returns :present
+
+      @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
+      @provider_class.flush
+    end
+
     it "should not flush if the interfaces file is malformed"
   end
 end
