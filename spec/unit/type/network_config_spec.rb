@@ -18,11 +18,11 @@ describe type_class do
     @resource = stub 'resource', :resource => nil, :provider => @provider
   end
 
-  it "should ensure that the name param is the namevar" do
-    @class.key_attributes.should == [:name]
-  end
-
   describe "when validating the attribute" do
+    it "should ensure that the name param is the namevar" do
+      @class.key_attributes.should == [:name]
+    end
+
     describe "attributes" do
       it "should be a descendant of the KeyValue property"
     end
@@ -56,24 +56,24 @@ describe type_class do
 
     # reconfigure
     it "should accept a boolean value for reconfigure"
-  end
 
-  describe "when validating the attributes attribute" do
-    it "should accept an empty hash" do
-      lambda do
-        @class.new(:name => "valid", :attributes => {})
-      end.should_not raise_error
-    end
+    describe "attributes" do
+      it "should accept an empty hash" do
+        lambda do
+          @class.new(:name => "valid", :attributes => {})
+        end.should_not raise_error
+      end
 
-    it "should use an empty hash as the default" do
-      lambda do
-        @class.new(:name => "valid")
-      end.should_not raise_error
-    end
-    it "should fail if a non-hash is passed" do
-      lambda do
-        @class.new(:name => "valid", :attributes => "geese" )
-      end.should raise_error
+      it "should use an empty hash as the default" do
+        lambda do
+          @class.new(:name => "valid")
+        end.should_not raise_error
+      end
+      it "should fail if a non-hash is passed" do
+        lambda do
+          @class.new(:name => "valid", :attributes => "geese" )
+        end.should raise_error
+      end
     end
   end
 end
