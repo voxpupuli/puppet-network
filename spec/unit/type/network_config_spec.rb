@@ -22,6 +22,42 @@ describe type_class do
     @class.key_attributes.should == [:name]
   end
 
+  describe "when validating the attribute" do
+    describe "attributes" do
+      it "should be a descendant of the KeyValue property"
+    end
+  end
+
+  describe "when validating the attribute value" do
+    describe "ipaddress" do
+      it "should require that a passed address is a valid IPv4 address"
+      it "should require that a passed address is a valid IPv6 address"
+      it "should fail if a malformed address is used"
+    end
+
+    describe "netmask" do
+      it "should validate a CIDR netmask"
+    end
+
+    describe "method" do
+      [:static, :manual, :dhcp].each do |mth|
+        it "should consider #{mth} a valid configuration method"
+      end
+    end
+
+    describe "family" do
+      [:inet, :inet6].each do |member|
+        it "should consider #{member} a valid address family"
+      end
+    end
+
+    # onboot
+    it "should accept a boolean value for onboot"
+
+    # reconfigure
+    it "should accept a boolean value for reconfigure"
+  end
+
   describe "when validating the attributes attribute" do
     it "should accept an empty hash" do
       lambda do
