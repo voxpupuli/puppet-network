@@ -21,13 +21,13 @@ describe type_class do
   describe "when validating the attribute" do
 
     [:name, :reconfigure].each do |param|
-      it "should have the #{param} param" do
+      it "should have the '#{param}' param" do
         @class.attrtype(param).should == :param
       end
     end
 
     [:ipaddress, :netmask, :method, :family, :onboot, :attributes].each do |property|
-      it "should have the #{property} property" do
+      it "should have the '#{property}' property" do
         @class.attrtype(property).should == :property
       end
     end
@@ -45,30 +45,53 @@ describe type_class do
     describe "ipaddress" do
       it "should require that a passed address is a valid IPv4 address"
       it "should require that a passed address is a valid IPv6 address"
-      it "should fail if a malformed address is used"
+      it "should fail if a malformed address is used" do
+        lambda do
+          @class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address')
+        end.should raise_error
+      end
     end
 
     describe "netmask" do
       it "should validate a CIDR netmask"
+      it "should fail if an invalid CIDR netmask is used" do
+        lambda do
+          @class.new(:name => 'yay', :netmask => 'This is clearly not a netmask')
+        end.should raise_error
+      end
     end
 
     describe "method" do
       [:static, :manual, :dhcp].each do |mth|
-        it "should consider #{mth} a valid configuration method"
+        it "should consider '#{mth}' a valid configuration method" do
+          @class.new(:name => 'yay', :method => mth)
+        end
       end
     end
 
     describe "family" do
-      [:inet, :inet6].each do |member|
-        it "should consider #{member} a valid address family"
+      [:inet, :inet6].each do |family|
+        it "should consider '#{family}' a valid address family" do
+          @class.new(:name => 'yay', :family => family)
+        end
       end
     end
 
-    # onboot
-    it "should accept a boolean value for onboot"
+    describe 'onboot' do
+      [true, false].each do |bool|
+        it "should accept '#{bool}' for onboot" do
+          @class.new(:name => 'yay', :onboot => true)
+        end
+      end
+    end
 
-    # reconfigure
-    it "should accept a boolean value for reconfigure"
+    describe 'reconfigure' do
+      [true, false].each do |bool|
+        it "should accept '#{bool}' for reconfigure" do
+          @class.new(:name => 'yay', :reconfigure => true)
+        end
+      end
+    end
 
     describe "attributes" do
       it "should accept an empty hash" do
