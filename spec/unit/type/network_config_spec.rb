@@ -26,7 +26,7 @@ describe type_class do
       end
     end
 
-    [:ipaddress, :netmask, :method, :family, :onboot, :attributes].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :attributes].each do |property|
       it "should have the '#{property}' property" do
         @class.attrtype(property).should == :property
       end
@@ -42,6 +42,12 @@ describe type_class do
   end
 
   describe "when validating the attribute value" do
+
+    describe "ensure" do
+      it "should be an ensurable value" do
+        @class.propertybyname(:ensure).ancestors.should include(Puppet::Property::Ensure)
+      end
+    end
     describe "ipaddress" do
       it "should require that a passed address is a valid IPv4 address"
       it "should require that a passed address is a valid IPv6 address"
