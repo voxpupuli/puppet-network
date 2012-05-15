@@ -19,6 +19,19 @@ describe type_class do
   end
 
   describe "when validating the attribute" do
+
+    [:name, :reconfigure].each do |param|
+      it "should have the #{param} param" do
+        @class.attrtype(param).should == :param
+      end
+    end
+
+    [:ipaddress, :netmask, :method, :family, :onboot, :attributes].each do |property|
+      it "should have the #{property} property" do
+        @class.attrtype(property).should == :property
+      end
+    end
+
     it "should ensure that the name param is the namevar" do
       @class.key_attributes.should == [:name]
     end
