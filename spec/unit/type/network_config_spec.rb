@@ -47,7 +47,7 @@ describe type_class do
 
     describe "ensure" do
       it "should be an ensurable value" do
-        @class.propertybyname(:ensure).ancestors.should include(Puppet::Property::Ensure)
+        @class.propertybyname(:ensure).ancestors.should be_include(Puppet::Property::Ensure)
       end
     end
     describe "ipaddress" do
