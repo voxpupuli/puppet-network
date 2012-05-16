@@ -76,8 +76,9 @@ module Puppet::Provider::Isomorphism
           :name     => provider_name,
           :ensure   => :present,
           :provider => self.name,
-          :attributes => provider_attributes, # FIXME implementation specific
         }
+
+        provider_args.merge! provider_attributes
 
         arr << new(provider_args)
         arr
