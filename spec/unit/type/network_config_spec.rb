@@ -63,18 +63,18 @@ describe type_class do
       end
 
       it "should fail if a malformed address is used" do
-        lambda do
+        expect do
           @class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address')
-        end.should raise_error
+        end.to raise_error
       end
     end
 
     describe "netmask" do
       it "should validate a CIDR netmask"
       it "should fail if an invalid CIDR netmask is used" do
-        lambda do
+        expect do
           @class.new(:name => 'yay', :netmask => 'This is clearly not a netmask')
-        end.should raise_error
+        end.to raise_error
       end
     end
 
@@ -112,20 +112,20 @@ describe type_class do
 
     describe "attributes" do
       it "should accept an empty hash" do
-        lambda do
+        expect do
           @class.new(:name => "valid", :attributes => {})
-        end.should_not raise_error
+        end.to_not raise_error
       end
 
       it "should use an empty hash as the default" do
-        lambda do
+        expect do
           @class.new(:name => "valid")
-        end.should_not raise_error
+        end.to_not raise_error
       end
       it "should fail if a non-hash is passed" do
-        lambda do
+        expect do
           @class.new(:name => "valid", :attributes => "geese" )
-        end.should raise_error
+        end.to raise_error
       end
     end
   end
