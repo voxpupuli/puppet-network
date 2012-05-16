@@ -36,6 +36,12 @@ describe type_class do
       @class.key_attributes.should == [:name]
     end
 
+    describe "ensure" do
+      it "should be an ensurable value" do
+        @class.propertybyname(:ensure).ancestors.should be_include(Puppet::Property::Ensure)
+      end
+    end
+
     describe "attributes" do
       it "should be a descendant of the KeyValue property" do
         @class.propertybyname(:attributes).ancestors.should be_include(Puppet::Property::Ensure)
@@ -44,12 +50,6 @@ describe type_class do
   end
 
   describe "when validating the attribute value" do
-
-    describe "ensure" do
-      it "should be an ensurable value" do
-        @class.propertybyname(:ensure).ancestors.should be_include(Puppet::Property::Ensure)
-      end
-    end
 
     describe "ipaddress" do
       describe "using the inet family" do
