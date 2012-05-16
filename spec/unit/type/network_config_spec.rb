@@ -50,9 +50,18 @@ describe type_class do
         @class.propertybyname(:ensure).ancestors.should be_include(Puppet::Property::Ensure)
       end
     end
+
     describe "ipaddress" do
-      it "should require that a passed address is a valid IPv4 address"
-      it "should require that a passed address is a valid IPv6 address"
+      describe "using the inet family" do
+        it "should require that a passed address is a valid IPv4 address"
+        it "should fail when passed an IPv6 address"
+      end
+
+      describe "using the inet6 family" do
+        it "should require that a passed address is a valid IPv6 address"
+        it "should fail when passed an IPv4 address"
+      end
+
       it "should fail if a malformed address is used" do
         lambda do
           @class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address')
