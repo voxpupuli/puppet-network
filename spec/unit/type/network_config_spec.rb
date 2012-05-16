@@ -37,7 +37,9 @@ describe type_class do
     end
 
     describe "attributes" do
-      it "should be a descendant of the KeyValue property"
+      it "should be a descendant of the KeyValue property" do
+        @class.propertybyname(:attributes).ancestors.should be_include(Puppet::Property::Ensure)
+      end
     end
   end
 
