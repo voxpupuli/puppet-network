@@ -32,7 +32,7 @@ describe type_class do
       end
     end
 
-    it "should ensure that the name param is the namevar" do
+    it "use the name parameter as the namevar" do
       @class.key_attributes.should == [:name]
     end
 
