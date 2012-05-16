@@ -40,14 +40,14 @@ Puppet::Type.newtype(:network_config) do
   end
 
   # Many network configurations can take arbitrary parameters, so instead of
-  # trying to list every single possible attribute, we accept a hash of
-  # attributes and let providers do specific mapping of type attributes to
+  # trying to list every single possible property, we accept a hash of
+  # properties and let providers do specific mapping of type properties to
   # on-disk state.
-  newproperty(:attributes) do
-    desc "Provider specific attributes to be passed to the provider"
+  newproperty(:options) do
+    desc "Provider specific options to be passed to the provider"
 
     def retrieve
-      provider.attributes
+      provider.options
     end
 
     def is_to_s(hash = @is)
