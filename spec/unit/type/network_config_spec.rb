@@ -52,20 +52,31 @@ describe type_class do
   describe "when validating the attribute value" do
 
     describe "ipaddress" do
+
+      let(:address4){ '127.0.0.1' }
+      let(:address6){ '::1' }
+
       describe "using the inet family" do
-        it "should require that a passed address is a valid IPv4 address"
-        it "should fail when passed an IPv6 address"
+
+        it "should require that a passed address is a valid IPv4 address" do
+          expect { @class.new(:name => 'yay', :family => :inet, :ipaddress => address4) }.to_not raise_error
+        end
+        it "should fail when passed an IPv6 address" do
+          expect { @class.new(:name => 'yay', :family => :inet, :ipaddress => address6) }.to raise_error
+        end
       end
 
       describe "using the inet6 family" do
-        it "should require that a passed address is a valid IPv6 address"
-        it "should fail when passed an IPv4 address"
+        it "should require that a passed address is a valid IPv6 address" do
+          expect { @class.new(:name => 'yay', :family => :inet6, :ipaddress => address6) }.to_not raise_error
+        end
+        it "should fail when passed an IPv4 address" do
+          expect { @class.new(:name => 'yay', :family => :inet6, :ipaddress => address4) }.to raise_error
+        end
       end
 
       it "should fail if a malformed address is used" do
-        expect do
-          @class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address')
-        end.to raise_error
+        expect { @class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
       end
     end
 
