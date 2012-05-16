@@ -27,35 +27,36 @@ describe provider_class do
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.parse_file["lo"][:auto].should be_true
+      @provider_class.parse_file["lo"][:onboot].should be_true
     end
 
     it "should parse out allow-hotplug interfaces" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.parse_file["eth0"][:"allow-hotplug"].should be_true
+      @provider_class.parse_file["eth0"][:options][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.parse_file["eth1"][:"allow-auto"].should be_true
+      @provider_class.parse_file["eth1"][:onboot].should be_true
     end
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.parse_file["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
+      @provider_class.parse_file["eth0"].should == {:family => "inet", :method => "dhcp", :options => {:"allow-hotplug" => true}}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
-      @provider_class.parse_file["eth0"][:iface].should == {
-        :family     => "inet",
+      @provider_class.parse_file["eth0"].should == {
+        :family    => "inet",
         :method    => "static",
-        :options   => [
-          "address 192.168.0.2",
-          "broadcast 192.168.0.255",
-          "netmask 255.255.255.0",
-          "gateway 192.168.0.1",
-        ]
+        :ipaddress => "192.168.0.2",
+        :netmask   => "255.255.255.0",
+        :onboot    => true,
+        :options   => {
+          "broadcast" => "192.168.0.255",
+          "gateway"   => "192.168.0.1",
+        }
       }
     end
 
@@ -84,16 +85,16 @@ describe provider_class do
     it "should create a provider for each discovered interface" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      providers.map {|prov| prov.name}.sort.should == ["eth0", "lo"]
+      providers.map(&:name).sort.should == ["eth0", "lo"]
     end
 
     it "should copy the interface attributes into the provider attributes" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      eth0_provider = providers.select {|prov| prov.name == "eth0"}.first
-      lo_provider   = providers.select {|prov| prov.name == "lo"}.first
+      eth0_provider = providers.find {|prov| prov.name == "eth0"}
+      lo_provider   = providers.find {|prov| prov.name == "lo"}
 
-      eth0_provider.attributes.should == {
+      eth0_provider.options.should == {
         :iface => {
           :family => "inet",
           :method => "dhcp",
@@ -101,6 +102,7 @@ describe provider_class do
         },
         :"allow-hotplug" => true
       }
+
       lo_provider.attributes.should == {
         :iface => {
           :family => "inet",
