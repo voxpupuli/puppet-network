@@ -52,17 +52,33 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # Ignore comments and blank lines
         next
 
-      when /^allow-|^auto/
+      when /^allow-auto|^auto/
 
-        # parse out allow-* and auto stanzas.
+        # parse out allow-auto and auto stanzas.
 
         interfaces = line.split(' ')
-        property = interfaces.delete_at(0).intern
+        interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface = iface
           iface_hash[iface] ||= {}
-          iface_hash[iface][property] = true
+          iface_hash[iface][:options] ||= {}
+          iface_hash[iface][:onboot] = true
+        end
+
+        # Reset the current parse state
+        current_interface = nil
+
+      when /^allow-hotplug/
+
+        # parse out allow-hotplug lines
+
+        interfaces = line.split(' ')
+        interfaces.delete_at(0)
+
+        interfaces.each do |iface|
+          iface_hash[iface] ||= {}
+          iface_hash[iface][:options] ||= {}
+          iface_hash[iface][:options][:"allow-hotplug"] = true
         end
 
         # Reset the current parse state
@@ -75,22 +91,24 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # iface <iface> <family> <method>
         # zero or more options for <iface>
 
-        if line =~ /^iface (\S+)\s+(\S+)\s+(\S+)/
-          iface  = $1
-          family = $2
-          method = $3
+        if match = line.match(/^iface (\S+)\s+(\S+)\s+(\S+)/)
+          iface  = match[1]
+          family = match[2]
+          method = match[3]
 
           status = :iface
           current_interface = iface
 
           # If an iface block for this interface has been seen, the file is
           # malformed.
-          if iface_hash[iface] and iface_hash[iface][:iface]
+          if iface_hash[iface] and iface_hash[iface][:family]
             raise Puppet::Error, malformed_err_str
           end
 
           iface_hash[iface] ||= {}
-          iface_hash[iface][:iface] = {:family => family, :method => method, :options => []}
+          iface_hash[iface][:family] = family
+          iface_hash[iface][:method] = method
+          iface_hash[iface][:options] ||= {}
 
         else
           # If we match on a string with a leading iface, but it isn't in the
@@ -111,12 +129,30 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
         case status
         when :iface
-          if line =~ /\S+\s+\S.*/
+          if match = line.match(/(\S+)\s+(\S.*)/)
             # If we're parsing an iface stanza, then we should receive a set of
             # lines that contain two or more space delimited strings. Append
             # them as options to the iface in an array.
 
-            iface_hash[current_interface][:iface][:options] << line.chomp
+            # TODO split this out
+
+            key = match[1]
+            val = match[2]
+
+            iface = current_interface
+
+            case key
+            when 'address'
+              puts iface
+              require 'pp'
+              pp iface_hash[iface]
+              iface_hash[iface][:ipaddress] = val
+              iface_hash[iface][:ipaddress] = val
+            when 'netmask'
+              iface_hash[iface][:netmask] = val
+            else
+              iface_hash[iface][:options][key] = val
+            end
           else
             raise Puppet::Error, malformed_err_str
           end
