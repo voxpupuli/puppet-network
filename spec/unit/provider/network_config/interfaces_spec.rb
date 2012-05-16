@@ -94,23 +94,15 @@ describe provider_class do
       eth0_provider = providers.find {|prov| prov.name == "eth0"}
       lo_provider   = providers.find {|prov| prov.name == "lo"}
 
-      eth0_provider.options.should == {
-        :iface => {
-          :family => "inet",
-          :method => "dhcp",
-          :options => []
-        },
-        :"allow-hotplug" => true
-      }
 
-      lo_provider.attributes.should == {
-        :iface => {
-          :family => "inet",
-          :method => "loopback",
-          :options => []
-        },
-        :auto => true
-      }
+      eth0_provider.family.should == "inet"
+      eth0_provider.method.should == "dhcp"
+      eth0_provider.options.should == { :"allow-hotplug" => true }
+
+      lo_provider.family.should == "inet"
+      lo_provider.method.should == "loopback"
+      lo_provider.onboot.should == true
+      lo_provider.options.should be_empty
     end
 
     describe "mapping attributes to properties" do
