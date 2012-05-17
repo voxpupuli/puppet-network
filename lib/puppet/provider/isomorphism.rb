@@ -31,6 +31,7 @@ module Puppet::Provider::Isomorphism
   def self.included(klass)
     klass.extend Puppet::Provider::Isomorphism::ClassMethods
     klass.mk_resource_methods
+    klass.initvars
   end
 
   ##############################################################################
