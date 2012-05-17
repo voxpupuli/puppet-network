@@ -10,7 +10,15 @@ require 'puppet/util/filetype'
 module Puppet::Provider::Isomorphism
 
   def create
-    @property_hash[:ensure] = :present
+    # This was ripped off from parsedfile
+    @resource.class.validproperties.each do |property|
+      if value = @resource.should(property)
+        @property_hash[property] = value
+      end
+    end
+    # XXX this is a hack. fix.
+    @property_hash[:name] = @resource.name
+
     self.class.needs_flush = true
   end
 
