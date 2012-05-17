@@ -142,12 +142,9 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             iface = current_interface
 
             case key
-            when 'address'
-              iface_hash[iface][:ipaddress] = val
-            when 'netmask'
-              iface_hash[iface][:netmask] = val
-            else
-              iface_hash[iface][:options][key] = val
+            when 'address'; iface_hash[iface][:ipaddress] = val
+            when 'netmask'; iface_hash[iface][:netmask] = val
+            else iface_hash[iface][:options][key] = val
             end
           else
             raise Puppet::Error, malformed_err_str
