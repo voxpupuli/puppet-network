@@ -143,10 +143,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
             case key
             when 'address'
-              puts iface
-              require 'pp'
-              pp iface_hash[iface]
-              iface_hash[iface][:ipaddress] = val
               iface_hash[iface][:ipaddress] = val
             when 'netmask'
               iface_hash[iface][:netmask] = val
