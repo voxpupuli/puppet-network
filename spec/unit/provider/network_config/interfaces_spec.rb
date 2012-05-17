@@ -63,6 +63,8 @@ describe provider_class do
     it "should parse out mapping lines"
     it "should parse out lines following mapping lines"
 
+    it "should allow for multiple pre and post up sections"
+
     describe "when reading an invalid interfaces" do
 
       it "with misplaced options should fail" do
