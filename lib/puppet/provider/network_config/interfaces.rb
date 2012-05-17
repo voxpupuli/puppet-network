@@ -14,13 +14,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
-  def create
-    super
-    # If we're creating a new resource, assume reasonable defaults.
-    # TODO remove this when more complete properties are defined in the type
-    @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
-  end
-
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
