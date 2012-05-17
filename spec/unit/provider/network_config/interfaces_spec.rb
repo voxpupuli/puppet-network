@@ -239,38 +239,15 @@ describe provider_class do
   end
 
   describe ".flush" do
-    before :each do
-      @eth0_attributes = {
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "static",
-          :options => [
-            "address 169.254.0.1",
-            "netmask 255.255.0.0"
-          ]
-        },
-      }
-
-      @eth1_attributes = {
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "dhcp",
-        },
-      }
-
+    before do
       @filetype.stubs(:backup)
       @filetype.stubs(:write)
+
+      @provider_class.stubs(:needs_flush).returns true
     end
 
     it "should add interfaces that do not exist" do
       eth0 = @provider_class.new
-      eth0.attributes = @eth0_attributes
       eth0.expects(:ensure).returns :present
 
       @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
@@ -279,7 +256,6 @@ describe provider_class do
 
     it "should remove interfaces that do exist whose ensure is absent" do
       eth1 = @provider_class.new
-      eth1.attributes = @eth1_attributes
       eth1.expects(:ensure).returns :absent
 
       @provider_class.expects(:format_resources).with([]).returns ["yep"]
@@ -287,11 +263,11 @@ describe provider_class do
     end
 
     it "should flush interfaces that were modified" do
-      eth0 = @provider_class.new()
-      @eth0_attributes[:iface].merge!(:family => :inet6)
       @provider_class.expects(:needs_flush=).with(true)
-      @provider_class.expects(:needs_flush).returns(true)
-      eth0.attributes = @eth0_attributes
+
+      eth0 = @provider_class.new
+      eth0.family = :inet6
+
       @provider_class.flush
     end
 
@@ -302,7 +278,6 @@ describe provider_class do
       @filetype.expects(:backup)
 
       eth0 = @provider_class.new
-      eth0.attributes = @eth0_attributes
       eth0.stubs(:ensure).returns :present
 
       @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
