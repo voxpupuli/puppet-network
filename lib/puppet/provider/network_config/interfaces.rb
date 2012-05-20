@@ -66,7 +66,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces.each do |iface|
           iface_hash[iface] ||= {}
           iface_hash[iface][:options] ||= {}
-          iface_hash[iface][:onboot] = true
+          iface_hash[iface][:onboot] = :true
         end
 
         # Reset the current parse state
@@ -169,7 +169,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     contents << header
 
     # Add onboot interfaces
-    if auto_interfaces = providers.select(&:onboot)
+    if auto_interfaces = providers.select {|provider| provider.onboot == :true }
       stanza = []
       stanza << "# The following interfaces will be started on boot"
       stanza << "auto " + auto_interfaces.map(&:name).sort.join(" ")

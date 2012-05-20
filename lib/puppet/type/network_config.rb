@@ -31,7 +31,7 @@ Puppet::Type.newtype(:network_config) do
   newproperty(:onboot, :boolean => true) do
     desc "Whether to bring the interface up on boot"
     newvalues(:true, :false)
-    defaultto true
+    defaultto :true
   end
 
   newparam(:reconfigure, :boolean => true) do
