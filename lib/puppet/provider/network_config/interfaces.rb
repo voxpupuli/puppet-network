@@ -152,7 +152,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     iface_hash
   end
 
-  # Generate an array of arrays
+  # Generate an array of sections
   def self.format_resources(providers)
     contents = []
     contents << header
@@ -168,7 +168,14 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # Determine auto and hotplug interfaces and add them, if any
     [:"allow-auto", :"allow-hotplug"].each do |attr|
       interfaces = providers.select { |provider| provider.options and provider.options[attr] }
-      contents << "#{attr} #{interfaces.map {|i| i.name}.sort.join(" ")}" unless interfaces.empty?
+      if interfaces.length > 0
+        allow_line = attr.to_s
+        interfaces.each do |interface|
+          interface.options.delete(attr)
+          allow_line << " #{interface.property(:name)}"
+        end
+        contents << allow_line
+      end
     end
 
     # Build iface stanzas
