@@ -47,7 +47,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
       when /^allow-auto|^auto/
 
-        # parse out allow-auto and auto stanzas.
+        # parse out allow-auto and auto stanzas; they are synonyms.
 
         interfaces = line.split(' ')
         interfaces.delete_at(0)
