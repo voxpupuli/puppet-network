@@ -172,7 +172,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     if auto_interfaces = providers.select(&:onboot)
       stanza = []
       stanza << "# The following interfaces will be started on boot"
-      stanza << "auto " + auto_interfaces.map {|iface| iface.property(:name)}.sort.join(" ")
+      stanza << "auto " + auto_interfaces.map(&:name).sort.join(" ")
       contents << stanza.join("\n")
     end
 
@@ -182,8 +182,11 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       if interfaces.length > 0
         allow_line = attr.to_s
         interfaces.each do |interface|
+
+          # These fields are stored as options, but they are independent
+          # stanzas. Delete them from the options and add thim to this stanza
           interface.options.delete(attr)
-          allow_line << " #{interface.property(:name)}"
+          allow_line << " #{interface.name}"
         end
         contents << allow_line
       end
@@ -192,13 +195,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # Build iface stanzas
     providers.sort_by(&:name).each do |provider|
       # TODO add validation method
-      if provider.method.nil?
-        raise Puppet::Error, "#{provider.name} does not have a method."
-      end
-
-      if provider.family.nil?
-        raise Puppet::Error, "#{provider.name} does not have a family."
-      end
+      raise Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
+      raise Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
 
       stanza = []
       stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
