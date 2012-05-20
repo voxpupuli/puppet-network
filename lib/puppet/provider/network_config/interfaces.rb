@@ -178,9 +178,17 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       if provider.family.nil?
         raise Puppet::Error, "#{provider.name} does not have a family."
       end
-      contents << block.join("\n")
-    end
 
-    contents
+      stanza = []
+      stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
+
+      if provider.options
+        provider.options.each_pair do |key, val|
+          stanza << "#{key} #{val}"
+        end
+      end
+
+      contents << stanza.join("\n")
+    end
   end
 end
