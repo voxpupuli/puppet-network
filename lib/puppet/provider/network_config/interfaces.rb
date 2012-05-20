@@ -184,7 +184,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
       if provider.options
         provider.options.each_pair do |key, val|
-          stanza << "#{key} #{val}"
+          stanza << "#{key} #{val}\n"
         end
       end
 
