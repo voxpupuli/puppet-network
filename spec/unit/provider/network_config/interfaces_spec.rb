@@ -84,6 +84,9 @@ describe provider_class do
   end
 
   describe ".instances" do
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
+
     it "should create a provider for each discovered interface" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
@@ -109,6 +112,9 @@ describe provider_class do
   end
 
   describe ".prefetch" do
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
+
     it "should match resources to providers whose names match" do
 
       @filetype.stubs(:read).returns(fixture_data('single_interface_dhcp'))
@@ -228,6 +234,9 @@ describe provider_class do
   end
 
   describe ".flush" do
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
+
     before do
       @filetype.stubs(:backup)
       @filetype.stubs(:write)
