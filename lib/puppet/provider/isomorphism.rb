@@ -163,7 +163,7 @@ module Puppet::Provider::Isomorphism
         providers = @provider_instances.select {|prov| prov.ensure == :present}
         lines = format_resources(providers)
         filetype.backup
-        content = lines.join("\n\n")
+        content = lines.join
         filetype.write(content)
       end
     end

@@ -159,7 +159,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
     # Add onboot interfaces
     if auto_interfaces = providers.select(&:onboot)
-      contents << "auto " + auto_interfaces.map {|iface| iface.property(:name)}.sort.join(" ")
+      stanza = []
+      stanza << "# The following interfaces will be started on boot"
+      stanza << "auto " + auto_interfaces.map {|iface| iface.property(:name)}.sort.join(" ")
+      contents << stanza.join("\n")
     end
 
     # Determine auto and hotplug interfaces and add them, if any
@@ -191,6 +194,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       contents << stanza.join("\n")
     end
 
-    contents
+    # Given a series of stanzas,
+    contents.map! {|line| line + "\n\n"}
   end
 end
