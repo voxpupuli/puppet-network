@@ -170,11 +170,8 @@ module Puppet::Provider::Isomorphism
 
     def header
       str = <<-HEADER
-# HEADER: #{@file_path} is being managed by puppet. Changes to
-# HEADER: interfaces that are not being managed by puppet will persist;
-# HEADER: however changes to interfaces that are being managed by puppet will
-# HEADER: be overwritten. In addition, file order is NOT guaranteed.
-# HEADER: Last generated at: #{Time.now}
+# HEADER: #{@file_path} is being managed by puppet. Changes made to this file
+# HEADER: may not persist.
 HEADER
       str
     end
