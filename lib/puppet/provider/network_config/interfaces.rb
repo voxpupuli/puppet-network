@@ -181,7 +181,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       interfaces = providers.select { |provider| provider.options and provider.options[attr] }
       if interfaces.length > 0
         allow_line = attr.to_s
-        interfaces.each do |interface|
+        interfaces.sort_by(&:name).each do |interface|
 
           # These fields are stored as options, but they are independent
           # stanzas. Delete them from the options and add thim to this stanza
