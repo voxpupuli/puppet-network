@@ -142,43 +142,36 @@ describe provider_class do
 
   describe ".format_resources" do
     before :each do
-      @eth0_provider = stub 'eth0_provider', :name => "eth0", :ensure => :present, :attributes => {
-        :auto            => :true,
-        :"allow-auto"    => :true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "static",
-          :options => [
-            "address 169.254.0.1",
-            "netmask 255.255.0.0"
-          ]
-        },
-      }
+      @eth0_provider = stub 'eth0_provider',
+        :name            => "eth0",
+        :ensure          => :present,
+        :onboot          => :true,
+        :family          => "inet",
+        :method          => "static",
+        :ipaddress       => "169.254.0.1",
+        :netmask         => "255.255.0.0",
+        :options         => { :"allow-hotplug" => true, }
 
-      @lo_provider = stub 'lo_provider', :name => "lo", :ensure => :present, :attributes => {
-        :auto            => :true,
-        :"allow-auto"    => :true,
+      @lo_provider = stub 'lo_provider',
+        :name            => "lo",
+        :onboot          => :true,
         :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "loopback",
-        },
-      }
+        :family          => "inet",
+        :method          => "loopback",
+        :ipaddress       => nil,
+        :netmask         => nil,
+        :options         => { :"allow-hotplug" => true, }
     end
 
-    %w{auto allow-auto allow-hotplug}.each do |attr|
+    let(:content) { @provider_class.format_resources([@lo_provider, @eth0_provider]) }
 
-      describe "writing the #{attr} section" do
-        let(:content) { content = @provider_class.format_resources([@lo_provider, @eth0_provider]) }
+      describe "writing the allow-hotplug section" do
+      it "should allow at most one section" do
+        content.select {|line| line.match(/^allow-hotplug /)}.length.should == 1
+      end
 
-        it "should allow at most one section" do
-          content.select {|line| line.match(/^#{attr} /)}.length.should == 1
-        end
-
-        it "should have the correct interfaces appended" do
-          content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
-        end
+      it "should have the correct interfaces appended" do
+        content.find {|line| line.match(/^allow-hotplug /)}.should include("allow-hotplug eth0 lo")
       end
     end
 
@@ -196,19 +189,12 @@ describe provider_class do
           "netmask 255.255.0.0",
         ].join("\n")
 
-        content.find {|line| line.match(/iface eth0/)}.should == block
+        content.find {|line| line.match(/iface eth0/)}.should include(block)
       end
 
-      it "should fail if the ifaces attribute does not have the family attribute" do
-        @lo_provider.unstub(:attributes)
-        @lo_provider.stubs(:attributes).returns({
-          :auto            => :true,
-          :"allow-auto"    => :true,
-          :"allow-hotplug" => true,
-          :iface => {
-            :method  => "loopback",
-          },
-        })
+      it "should fail if the family property is not defined" do
+        @lo_provider.unstub(:family)
+        @lo_provider.stubs(:family).returns nil
 
         lambda do
           content
@@ -216,15 +202,8 @@ describe provider_class do
       end
 
       it "should fail if the ifaces attribute does not have the method attribute" do
-        @lo_provider.unstub(:attributes)
-        @lo_provider.stubs(:attributes).returns({
-          :auto            => :true,
-          :"allow-auto"    => :true,
-          :"allow-hotplug" => true,
-          :iface => {
-            :family => "inet",
-          },
-        })
+        @lo_provider.unstub(:method)
+        @lo_provider.stubs(:method).returns nil
 
         lambda do
           content
