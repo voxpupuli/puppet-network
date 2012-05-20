@@ -26,7 +26,7 @@ describe type_class do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :attributes].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :options].each do |property|
       it "should have the '#{property}' property" do
         @class.attrtype(property).should == :property
       end
