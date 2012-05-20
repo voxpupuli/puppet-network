@@ -11,6 +11,9 @@ module Puppet::Provider::Isomorphism
 
   def create
     # This was ripped off from parsedfile
+    # Given a new provider, populate the property hash. If the associated
+    # resource has a specific 'should' value then use that. If no value was
+    # explicitly set, then use the default value supplied by the type.
     @resource.class.validproperties.each do |property|
       if value = @resource.should(property)
         @property_hash[property] = value

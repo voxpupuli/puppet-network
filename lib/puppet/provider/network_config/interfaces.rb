@@ -190,5 +190,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
       contents << stanza.join("\n")
     end
+
+    contents
   end
 end
