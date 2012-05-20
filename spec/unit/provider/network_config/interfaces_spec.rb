@@ -27,7 +27,7 @@ describe provider_class do
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.parse_file["lo"][:onboot].should be_true
+      @provider_class.parse_file["lo"][:onboot].should == :true
     end
 
     it "should parse out allow-hotplug interfaces" do
@@ -37,7 +37,7 @@ describe provider_class do
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.parse_file["eth1"][:onboot].should be_true
+      @provider_class.parse_file["eth1"][:onboot].should == :true
     end
 
     it "should parse out iface lines" do
@@ -52,7 +52,7 @@ describe provider_class do
         :method    => "static",
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
-        :onboot    => true,
+        :onboot    => :true,
         :options   => {
           "broadcast" => "192.168.0.255",
           "gateway"   => "192.168.0.1",
@@ -103,7 +103,7 @@ describe provider_class do
 
       lo_provider.family.should == "inet"
       lo_provider.method.should == "loopback"
-      lo_provider.onboot.should == true
+      lo_provider.onboot.should == :true
       lo_provider.options.should be_empty
     end
   end
@@ -137,8 +137,8 @@ describe provider_class do
   describe ".format_resources" do
     before :each do
       @eth0_provider = stub 'eth0_provider', :name => "eth0", :ensure => :present, :attributes => {
-        :auto            => true,
-        :"allow-auto"    => true,
+        :auto            => :true,
+        :"allow-auto"    => :true,
         :"allow-hotplug" => true,
         :iface => {
           :family   => "inet",
@@ -151,8 +151,8 @@ describe provider_class do
       }
 
       @lo_provider = stub 'lo_provider', :name => "lo", :ensure => :present, :attributes => {
-        :auto            => true,
-        :"allow-auto"    => true,
+        :auto            => :true,
+        :"allow-auto"    => :true,
         :"allow-hotplug" => true,
         :iface => {
           :family   => "inet",
@@ -196,8 +196,8 @@ describe provider_class do
       it "should fail if the ifaces attribute does not have the family attribute" do
         @lo_provider.unstub(:attributes)
         @lo_provider.stubs(:attributes).returns({
-          :auto            => true,
-          :"allow-auto"    => true,
+          :auto            => :true,
+          :"allow-auto"    => :true,
           :"allow-hotplug" => true,
           :iface => {
             :method  => "loopback",
@@ -212,8 +212,8 @@ describe provider_class do
       it "should fail if the ifaces attribute does not have the method attribute" do
         @lo_provider.unstub(:attributes)
         @lo_provider.stubs(:attributes).returns({
-          :auto            => true,
-          :"allow-auto"    => true,
+          :auto            => :true,
+          :"allow-auto"    => :true,
           :"allow-hotplug" => true,
           :iface => {
             :family => "inet",
