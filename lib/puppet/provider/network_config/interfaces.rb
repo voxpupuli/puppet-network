@@ -168,19 +168,15 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       contents << "#{attr} #{interfaces.map {|i| i.name}.sort.join(" ")}" unless interfaces.empty?
     end
 
-    # Build up iface blocks
-    iface_interfaces = providers.select { |provider| provider.attributes[:iface] }
-    iface_interfaces.each do |provider|
-      attributes = provider.attributes.dup
-      block = []
-      if attributes[:iface]
+    # Build iface stanzas
+    providers.each do |provider|
+      # TODO add validation method
+      if provider.method.nil?
+        raise Puppet::Error, "#{provider.name} does not have a method."
+      end
 
-        if [attributes[:iface][:method], attributes[:iface][:family]].any? {|val| val.nil?}
-          raise Puppet::Error, "#{provider.name} does not have a method or family"
-        end
-
-        block << "iface #{provider.name} #{attributes[:iface][:family]} #{attributes[:iface][:method]}"
-        block.concat(attributes[:iface][:options]) if attributes[:iface][:options]
+      if provider.family.nil?
+        raise Puppet::Error, "#{provider.name} does not have a family."
       end
       contents << block.join("\n")
     end
