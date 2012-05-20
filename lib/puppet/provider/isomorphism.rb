@@ -16,7 +16,12 @@ module Puppet::Provider::Isomorphism
         @property_hash[property] = value
       end
     end
-    # XXX this is a hack. fix.
+
+    # FIXME This is a hack. The name is a parameter is just that - a parameter,
+    # not a property. However, we need this for when we generate the interfaces
+    # file so I just copy it in blindly.
+    #
+    # Most likely, the name should be a property, not a parameter
     @property_hash[:name] = @resource.name
 
     self.class.needs_flush = true
