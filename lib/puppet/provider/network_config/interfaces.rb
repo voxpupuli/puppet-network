@@ -157,9 +157,14 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     contents = []
     contents << header
 
+    # Add onboot interfaces
+    if auto_interfaces = providers.select(&:onboot)
+      contents << "auto " + auto_interfaces.map {|iface| iface.property(:name)}.sort.join(" ")
+    end
+
     # Determine auto and hotplug interfaces and add them, if any
-    [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
-      interfaces = providers.select { |provider| provider.attributes[attr] }
+    [:"allow-auto", :"allow-hotplug"].each do |attr|
+      interfaces = providers.select { |provider| provider.options and provider.options[attr] }
       contents << "#{attr} #{interfaces.map {|i| i.name}.sort.join(" ")}" unless interfaces.empty?
     end
 
