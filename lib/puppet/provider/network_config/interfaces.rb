@@ -5,7 +5,6 @@
 require 'puppet/provider/isomorphism'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
-
   include Puppet::Provider::Isomorphism
   self.file_path = '/etc/network/interfaces'
 
@@ -14,12 +13,18 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
-  def create
-    super
-    # If we're creating a new resource, assume reasonable defaults.
-    # TODO remove this when more complete properties are defined in the type
-    @property_hash[:attributes] = {:iface => {:family => "inet", :method => "dhcp"}, :auto => true}
+  class MalformedInterfacesError < Puppet::Error
+    def initialize(msg = nil)
+      msg = 'Malformed debian interfaces file; cannot instantiate network_config resources' if msg.nil?
+      super
+    end
   end
+
+  def self.raise_malformed
+    @failed = true
+    raise MalformedInterfacesError
+  end
+
 
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
@@ -27,7 +32,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # supplied in the debian ifupdown package. The source can be found at
     # http://packages.debian.org/squeeze/ifupdown
 
-    malformed_err_str = "Malformed debian interfaces file; cannot instantiate network_config resources"
 
     # The debian interfaces implementation requires global state while parsing
     # the file; namely, the stanza being parsed as well as the interface being
@@ -52,17 +56,33 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # Ignore comments and blank lines
         next
 
-      when /^allow-|^auto/
+      when /^allow-auto|^auto/
 
-        # parse out allow-* and auto stanzas.
+        # parse out allow-auto and auto stanzas; they are synonyms.
 
         interfaces = line.split(' ')
-        property = interfaces.delete_at(0).intern
+        interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface = iface
           iface_hash[iface] ||= {}
-          iface_hash[iface][property] = true
+          iface_hash[iface][:options] ||= {}
+          iface_hash[iface][:onboot] = :true
+        end
+
+        # Reset the current parse state
+        current_interface = nil
+
+      when /^allow-hotplug/
+
+        # parse out allow-hotplug lines
+
+        interfaces = line.split(' ')
+        interfaces.delete_at(0)
+
+        interfaces.each do |iface|
+          iface_hash[iface] ||= {}
+          iface_hash[iface][:options] ||= {}
+          iface_hash[iface][:options][:"allow-hotplug"] = true
         end
 
         # Reset the current parse state
@@ -75,27 +95,29 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # iface <iface> <family> <method>
         # zero or more options for <iface>
 
-        if line =~ /^iface (\S+)\s+(\S+)\s+(\S+)/
-          iface  = $1
-          family = $2
-          method = $3
+        if match = line.match(/^iface (\S+)\s+(\S+)\s+(\S+)/)
+          iface  = match[1]
+          family = match[2]
+          method = match[3]
 
           status = :iface
           current_interface = iface
 
           # If an iface block for this interface has been seen, the file is
           # malformed.
-          if iface_hash[iface] and iface_hash[iface][:iface]
-            raise Puppet::Error, malformed_err_str
+          if iface_hash[iface] and iface_hash[iface][:family]
+            raise_malformed
           end
 
           iface_hash[iface] ||= {}
-          iface_hash[iface][:iface] = {:family => family, :method => method, :options => []}
+          iface_hash[iface][:family] = family
+          iface_hash[iface][:method] = method
+          iface_hash[iface][:options] ||= {}
 
         else
           # If we match on a string with a leading iface, but it isn't in the
           # expected format, malformed blar blar
-          raise Puppet::Error, malformed_err_str
+          raise_malformed
         end
 
       when /^mapping/
@@ -111,53 +133,102 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
         case status
         when :iface
-          if line =~ /\S+\s+\S.*/
+          if match = line.match(/(\S+)\s+(\S.*)/)
             # If we're parsing an iface stanza, then we should receive a set of
             # lines that contain two or more space delimited strings. Append
             # them as options to the iface in an array.
 
-            iface_hash[current_interface][:iface][:options] << line.chomp
+            # TODO split this out
+
+            key = match[1]
+            val = match[2]
+
+            iface = current_interface
+
+            case key
+            when 'address'; iface_hash[iface][:ipaddress] = val
+            when 'netmask'; iface_hash[iface][:netmask] = val
+            else iface_hash[iface][:options][key] = val
+            end
           else
-            raise Puppet::Error, malformed_err_str
+            raise_malformed
           end
         when :mapping
           raise Puppet::DevError, "Debian interfaces mapping parsing not implemented."
         when :none
-          raise Puppet::Error, malformed_err_str
+          raise_malformed
         end
       end
     end
     iface_hash
   end
 
-  # Generate an array of arrays
+  # Generate an array of sections
   def self.format_resources(providers)
     contents = []
     contents << header
 
+    # Add onboot interfaces
+    if auto_interfaces = providers.select {|provider| provider.onboot == :true }
+      stanza = []
+      stanza << "# The following interfaces will be started on boot"
+      stanza << "auto " + auto_interfaces.map(&:name).sort.join(" ")
+      contents << stanza.join("\n")
+    end
+
     # Determine auto and hotplug interfaces and add them, if any
-    [:auto, :"allow-auto", :"allow-hotplug"].each do |attr|
-      interfaces = providers.select { |provider| provider.attributes[attr] }
-      contents << "#{attr} #{interfaces.map {|i| i.name}.sort.join(" ")}" unless interfaces.empty?
-    end
+    [:"allow-auto", :"allow-hotplug"].each do |attr|
+      interfaces = providers.select { |provider| provider.options and provider.options[attr] }
+      if interfaces.length > 0
+        allow_line = attr.to_s
+        interfaces.sort_by(&:name).each do |interface|
 
-    # Build up iface blocks
-    iface_interfaces = providers.select { |provider| provider.attributes[:iface] }
-    iface_interfaces.each do |provider|
-      attributes = provider.attributes.dup
-      block = []
-      if attributes[:iface]
-
-        if [attributes[:iface][:method], attributes[:iface][:family]].any? {|val| val.nil?}
-          raise Puppet::Error, "#{provider.name} does not have a method or family"
+          # These fields are stored as options, but they are independent
+          # stanzas. Delete them from the options and add thim to this stanza
+          interface.options.delete(attr)
+          allow_line << " #{interface.name}"
         end
-
-        block << "iface #{provider.name} #{attributes[:iface][:family]} #{attributes[:iface][:method]}"
-        block.concat(attributes[:iface][:options]) if attributes[:iface][:options]
+        contents << allow_line
       end
-      contents << block.join("\n")
     end
 
-    contents
+    # Build iface stanzas
+    providers.sort_by(&:name).each do |provider|
+      # TODO add validation method
+      raise Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
+      raise Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
+
+      stanza = []
+      stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
+
+      {
+        :ipaddress => 'address',
+        :netmask   => 'netmask',
+      }.each_pair do |property, section|
+        stanza << "#{section} #{provider.send property}" if provider.send(property)
+      end
+
+      if provider.options
+        provider.options.each_pair do |key, val|
+          stanza << "#{key} #{val}"
+        end
+      end
+
+      contents << stanza.join("\n")
+    end
+
+    # Given a series of stanzas,
+    contents.map! {|line| line + "\n\n"}
+  end
+
+  def self.header
+    str = <<-HEADER
+# HEADER: #{@file_path} is being managed by puppet. Changes to
+# HEADER: interfaces that are not being managed by puppet will persist;
+# HEADER: however changes to interfaces that are being managed by puppet will
+# HEADER: be overwritten. In addition, file order is NOT guaranteed.
+# HEADER: Last generated at: #{Time.now}
+HEADER
+    str
   end
 end

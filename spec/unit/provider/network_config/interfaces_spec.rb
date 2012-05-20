@@ -27,40 +27,43 @@ describe provider_class do
 
     it "should parse out auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('loopback'))
-      @provider_class.parse_file["lo"][:auto].should be_true
+      @provider_class.parse_file["lo"][:onboot].should == :true
     end
 
     it "should parse out allow-hotplug interfaces" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.parse_file["eth0"][:"allow-hotplug"].should be_true
+      @provider_class.parse_file["eth0"][:options][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces" do
       @filetype.expects(:read).returns(fixture_data('two_interface_dhcp'))
-      @provider_class.parse_file["eth1"][:"allow-auto"].should be_true
+      @provider_class.parse_file["eth1"][:onboot].should == :true
     end
 
     it "should parse out iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
-      @provider_class.parse_file["eth0"][:iface].should == {:family => "inet", :method => "dhcp", :options => []}
+      @provider_class.parse_file["eth0"].should == {:family => "inet", :method => "dhcp", :options => {:"allow-hotplug" => true}}
     end
 
     it "should parse out lines following iface lines" do
       @filetype.expects(:read).returns(fixture_data('single_interface_static'))
-      @provider_class.parse_file["eth0"][:iface].should == {
-        :family     => "inet",
+      @provider_class.parse_file["eth0"].should == {
+        :family    => "inet",
         :method    => "static",
-        :options   => [
-          "address 192.168.0.2",
-          "broadcast 192.168.0.255",
-          "netmask 255.255.255.0",
-          "gateway 192.168.0.1",
-        ]
+        :ipaddress => "192.168.0.2",
+        :netmask   => "255.255.255.0",
+        :onboot    => :true,
+        :options   => {
+          "broadcast" => "192.168.0.255",
+          "gateway"   => "192.168.0.1",
+        }
       }
     end
 
     it "should parse out mapping lines"
     it "should parse out lines following mapping lines"
+
+    it "should allow for multiple pre and post up sections"
 
     describe "when reading an invalid interfaces" do
 
@@ -81,38 +84,37 @@ describe provider_class do
   end
 
   describe ".instances" do
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
+
     it "should create a provider for each discovered interface" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      providers.map {|prov| prov.name}.sort.should == ["eth0", "lo"]
+      providers.map(&:name).sort.should == ["eth0", "lo"]
     end
 
     it "should copy the interface attributes into the provider attributes" do
       @filetype.expects(:read).returns(fixture_data('single_interface_dhcp'))
       providers = @provider_class.instances
-      eth0_provider = providers.select {|prov| prov.name == "eth0"}.first
-      lo_provider   = providers.select {|prov| prov.name == "lo"}.first
+      eth0_provider = providers.find {|prov| prov.name == "eth0"}
+      lo_provider   = providers.find {|prov| prov.name == "lo"}
 
-      eth0_provider.attributes.should == {
-        :iface => {
-          :family => "inet",
-          :method => "dhcp",
-          :options => []
-        },
-        :"allow-hotplug" => true
-      }
-      lo_provider.attributes.should == {
-        :iface => {
-          :family => "inet",
-          :method => "loopback",
-          :options => []
-        },
-        :auto => true
-      }
+
+      eth0_provider.family.should == "inet"
+      eth0_provider.method.should == "dhcp"
+      eth0_provider.options.should == { :"allow-hotplug" => true }
+
+      lo_provider.family.should == "inet"
+      lo_provider.method.should == "loopback"
+      lo_provider.onboot.should == :true
+      lo_provider.options.should be_empty
     end
   end
 
   describe ".prefetch" do
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
+
     it "should match resources to providers whose names match" do
 
       @filetype.stubs(:read).returns(fixture_data('single_interface_dhcp'))
@@ -140,43 +142,36 @@ describe provider_class do
 
   describe ".format_resources" do
     before :each do
-      @eth0_provider = stub 'eth0_provider', :name => "eth0", :ensure => :present, :attributes => {
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "static",
-          :options => [
-            "address 169.254.0.1",
-            "netmask 255.255.0.0"
-          ]
-        },
-      }
+      @eth0_provider = stub 'eth0_provider',
+        :name            => "eth0",
+        :ensure          => :present,
+        :onboot          => :true,
+        :family          => "inet",
+        :method          => "static",
+        :ipaddress       => "169.254.0.1",
+        :netmask         => "255.255.0.0",
+        :options         => { :"allow-hotplug" => true, }
 
-      @lo_provider = stub 'lo_provider', :name => "lo", :ensure => :present, :attributes => {
-        :auto            => true,
-        :"allow-auto"    => true,
+      @lo_provider = stub 'lo_provider',
+        :name            => "lo",
+        :onboot          => :true,
         :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "loopback",
-        },
-      }
+        :family          => "inet",
+        :method          => "loopback",
+        :ipaddress       => nil,
+        :netmask         => nil,
+        :options         => { :"allow-hotplug" => true, }
     end
 
-    %w{auto allow-auto allow-hotplug}.each do |attr|
+    let(:content) { @provider_class.format_resources([@lo_provider, @eth0_provider]) }
 
-      describe "writing the #{attr} section" do
-        let(:content) { content = @provider_class.format_resources([@lo_provider, @eth0_provider]) }
+      describe "writing the allow-hotplug section" do
+      it "should allow at most one section" do
+        content.select {|line| line.match(/^allow-hotplug /)}.length.should == 1
+      end
 
-        it "should allow at most one section" do
-          content.select {|line| line.match(/^#{attr} /)}.length.should == 1
-        end
-
-        it "should have the correct interfaces appended" do
-          content.find {|line| line.match(/^#{attr} /)}.should == "#{attr} eth0 lo"
-        end
+      it "should have the correct interfaces appended" do
+        content.find {|line| line.match(/^allow-hotplug /)}.should include("allow-hotplug eth0 lo")
       end
     end
 
@@ -194,19 +189,12 @@ describe provider_class do
           "netmask 255.255.0.0",
         ].join("\n")
 
-        content.find {|line| line.match(/iface eth0/)}.should == block
+        content.find {|line| line.match(/iface eth0/)}.should include(block)
       end
 
-      it "should fail if the ifaces attribute does not have the family attribute" do
-        @lo_provider.unstub(:attributes)
-        @lo_provider.stubs(:attributes).returns({
-          :auto            => true,
-          :"allow-auto"    => true,
-          :"allow-hotplug" => true,
-          :iface => {
-            :method  => "loopback",
-          },
-        })
+      it "should fail if the family property is not defined" do
+        @lo_provider.unstub(:family)
+        @lo_provider.stubs(:family).returns nil
 
         lambda do
           content
@@ -214,15 +202,8 @@ describe provider_class do
       end
 
       it "should fail if the ifaces attribute does not have the method attribute" do
-        @lo_provider.unstub(:attributes)
-        @lo_provider.stubs(:attributes).returns({
-          :auto            => true,
-          :"allow-auto"    => true,
-          :"allow-hotplug" => true,
-          :iface => {
-            :family => "inet",
-          },
-        })
+        @lo_provider.unstub(:method)
+        @lo_provider.stubs(:method).returns nil
 
         lambda do
           content
@@ -232,38 +213,18 @@ describe provider_class do
   end
 
   describe ".flush" do
-    before :each do
-      @eth0_attributes = {
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "static",
-          :options => [
-            "address 169.254.0.1",
-            "netmask 255.255.0.0"
-          ]
-        },
-      }
+    # This set of tests should be split out and targeted against the
+    # isomorphism mixin
 
-      @eth1_attributes = {
-        :auto            => true,
-        :"allow-auto"    => true,
-        :"allow-hotplug" => true,
-        :iface => {
-          :family   => "inet",
-          :method  => "dhcp",
-        },
-      }
-
+    before do
       @filetype.stubs(:backup)
       @filetype.stubs(:write)
+
+      @provider_class.stubs(:needs_flush).returns true
     end
 
     it "should add interfaces that do not exist" do
       eth0 = @provider_class.new
-      eth0.attributes = @eth0_attributes
       eth0.expects(:ensure).returns :present
 
       @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
@@ -272,7 +233,6 @@ describe provider_class do
 
     it "should remove interfaces that do exist whose ensure is absent" do
       eth1 = @provider_class.new
-      eth1.attributes = @eth1_attributes
       eth1.expects(:ensure).returns :absent
 
       @provider_class.expects(:format_resources).with([]).returns ["yep"]
@@ -280,11 +240,11 @@ describe provider_class do
     end
 
     it "should flush interfaces that were modified" do
-      eth0 = @provider_class.new()
-      @eth0_attributes[:iface].merge!(:family => :inet6)
       @provider_class.expects(:needs_flush=).with(true)
-      @provider_class.expects(:needs_flush).returns(true)
-      eth0.attributes = @eth0_attributes
+
+      eth0 = @provider_class.new
+      eth0.family = :inet6
+
       @provider_class.flush
     end
 
@@ -295,7 +255,6 @@ describe provider_class do
       @filetype.expects(:backup)
 
       eth0 = @provider_class.new
-      eth0.attributes = @eth0_attributes
       eth0.stubs(:ensure).returns :present
 
       @provider_class.expects(:format_resources).with([eth0]).returns ["yep"]
