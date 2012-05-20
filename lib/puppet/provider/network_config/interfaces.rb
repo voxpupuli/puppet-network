@@ -169,7 +169,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     end
 
     # Build iface stanzas
-    providers.each do |provider|
+    providers.sort_by(&:name).each do |provider|
       # TODO add validation method
       if provider.method.nil?
         raise Puppet::Error, "#{provider.name} does not have a method."
