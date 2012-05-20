@@ -14,12 +14,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   defaultfor :osfamily => :debian
 
   class MalformedInterfacesError < Puppet::Error
-
     def initialize(msg = nil)
-
-      if msg.nil?
-        msg = 'Malformed debian interfaces file; cannot instantiate network_config resources'
-      end
+      msg = 'Malformed debian interfaces file; cannot instantiate network_config resources' if msg.nil?
       super
     end
   end
