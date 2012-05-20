@@ -5,7 +5,6 @@
 require 'puppet/provider/isomorphism'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
-
   include Puppet::Provider::Isomorphism
   self.file_path = '/etc/network/interfaces'
 
@@ -14,13 +13,29 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
+  class MalformedInterfacesError < Puppet::Error
+
+    def initialize(msg = nil)
+
+      if msg.nil?
+        msg = 'Malformed debian interfaces file; cannot instantiate network_config resources'
+      end
+      super
+    end
+  end
+
+  def self.raise_malformed
+    @failed = true
+    raise MalformedInterfacesError
+  end
+
+
   def self.parse_file
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
     # supplied in the debian ifupdown package. The source can be found at
     # http://packages.debian.org/squeeze/ifupdown
 
-    malformed_err_str = "Malformed debian interfaces file; cannot instantiate network_config resources"
 
     # The debian interfaces implementation requires global state while parsing
     # the file; namely, the stanza being parsed as well as the interface being
@@ -95,7 +110,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           # If an iface block for this interface has been seen, the file is
           # malformed.
           if iface_hash[iface] and iface_hash[iface][:family]
-            raise Puppet::Error, malformed_err_str
+            raise_malformed
           end
 
           iface_hash[iface] ||= {}
@@ -106,7 +121,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         else
           # If we match on a string with a leading iface, but it isn't in the
           # expected format, malformed blar blar
-          raise Puppet::Error, malformed_err_str
+          raise_malformed
         end
 
       when /^mapping/
@@ -140,12 +155,12 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             else iface_hash[iface][:options][key] = val
             end
           else
-            raise Puppet::Error, malformed_err_str
+            raise_malformed
           end
         when :mapping
           raise Puppet::DevError, "Debian interfaces mapping parsing not implemented."
         when :none
-          raise Puppet::Error, malformed_err_str
+          raise_malformed
         end
       end
     end

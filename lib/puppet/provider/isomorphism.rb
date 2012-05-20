@@ -66,7 +66,7 @@ module Puppet::Provider::Isomorphism
   ##############################################################################
 
   module ClassMethods
-    attr_accessor :file_path, :needs_flush
+    attr_accessor :file_path, :needs_flush, :failed
 
     # Intercept all instantiations of providers, present or absent, so that we
     # can reference everything when we rebuild the interfaces file.
@@ -81,6 +81,7 @@ module Puppet::Provider::Isomorphism
     def initvars
       @provider_instances = []
       @needs_flush = false
+      @failed = false
     end
 
     # Lazily generate the filetype
@@ -159,7 +160,11 @@ module Puppet::Provider::Isomorphism
     end
 
     def flush
-      if needs_flush # Only flush the providers if something was out of sync
+      # Only flush the providers if something was out of sync. If the
+      # including class
+      if failed
+        Puppet.warning "#{self} is in an error state; refusing to rewrite #{@file_path}"
+      elsif needs_flush
         providers = @provider_instances.select {|prov| prov.ensure == :present}
         lines = format_resources(providers)
         filetype.backup
