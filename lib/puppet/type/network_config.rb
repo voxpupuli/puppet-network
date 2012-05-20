@@ -47,10 +47,6 @@ Puppet::Type.newtype(:network_config) do
   newproperty(:options) do
     desc "Provider specific options to be passed to the provider"
 
-    def retrieve
-      provider.options
-    end
-
     def is_to_s(hash = @is)
       hash.keys.sort.map {|key| "#{key} => #{hash[key]}"}.join(", ")
     end
