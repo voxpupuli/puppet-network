@@ -120,7 +120,7 @@ module Puppet::Provider::Isomorphism
 
       # Generate default providers for resources that don't exist on disk
       resources.values.select {|resource| resource.provider.nil? }.each do |resource|
-        resource.provider = new(:name => resource.name, :provider => :interfaces, :ensure => :absent)
+        resource.provider = new(:name => resource.name, :provider => name, :ensure => :absent)
       end
     end
 
