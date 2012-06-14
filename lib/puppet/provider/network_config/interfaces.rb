@@ -1,11 +1,11 @@
 # = Debian network_config provider
 #
-# This provider uses the isomorphism mixin to map the interfaces file to a
+# This provider uses the filemapper mixin to map the interfaces file to a
 # collection of network_config providers, and back.
-require 'puppet/provider/isomorphism'
+require 'puppet/provider/filemapper'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
-  include Puppet::Provider::Isomorphism
+  include Puppet::Provider::FileMapper
   self.file_path = '/etc/network/interfaces'
 
   desc "Debian interfaces style provider"
