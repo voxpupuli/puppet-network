@@ -2,16 +2,23 @@
 #
 # This provider uses the filemapper mixin to map the interfaces file to a
 # collection of network_config providers, and back.
-require 'puppet/provider/filemapper'
+require 'puppetx/filemapper'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
-  include Puppet::Provider::FileMapper
-  self.file_path = '/etc/network/interfaces'
+  include PuppetX::FileMapper
 
   desc "Debian interfaces style provider"
 
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
+
+  def select_file
+    '/etc/network/interfaces'
+  end
+
+  def self.target_files
+    ['/etc/network/interfaces']
+  end
 
   class MalformedInterfacesError < Puppet::Error
     def initialize(msg = nil)
@@ -26,7 +33,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   end
 
 
-  def self.parse_file
+  def self.parse_file(filename, contents)
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
     # supplied in the debian ifupdown package. The source can be found at
@@ -40,7 +47,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     current_interface = nil
     iface_hash = {}
 
-    lines = filetype.read.split("\n")
+    lines = contents.split("\n")
     # TODO line munging
     # Join lines that end with a backslash
     # Strip comments?
@@ -164,7 +171,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   end
 
   # Generate an array of sections
-  def self.format_resources(providers)
+  def self.format_file(filename, providers)
     contents = []
     contents << header
 
