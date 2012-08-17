@@ -19,6 +19,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :netmask    => 'NETMASK',
     :method     => 'BOOTPROTO',
     :onboot     => 'ONBOOT',
+    :name       => 'DEVICE',
   }
 
   def select_file
@@ -62,6 +63,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     provider = providers[0]
     # XXX What to do if no providers passed?
     lines = []
+
+    lines << "DEVICE=#{@resource.name}"
 
     NAME_MAPPINGS.each_pair do |typename, redhat_name|
       lines << "#{redhat_name}=#{provider.property(typename).value}"
