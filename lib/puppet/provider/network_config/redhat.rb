@@ -2,6 +2,8 @@
 # TODO
 #   - aliases
 #   - bonded interfaces
+#
+# @see https://access.redhat.com/knowledge/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s1-networkscripts-interfaces.html "Interface Configuration Files"
 Puppet::Type.type(:network_config).provide(:redhat) do
   include PuppetX::FileMapper
 
