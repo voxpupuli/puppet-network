@@ -22,6 +22,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :name       => 'DEVICE',
   }
 
+  # Map provider instances to files based on their name
   def select_file
     "#{SCRIPT_DIRECTORY}/ifcfg-#{@resource.name}"
   end
