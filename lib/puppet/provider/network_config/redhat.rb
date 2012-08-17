@@ -88,7 +88,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
       lines.join('\n')
     else
-      raise Puppet::DevError, 'Unable to support multiple interfaces in a single file' if providers.length > 1
+      raise Puppet::DevError, 'Unable to support multiple interfaces in a single file'
     end
   end
 end
