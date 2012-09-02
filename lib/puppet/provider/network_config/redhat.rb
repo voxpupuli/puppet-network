@@ -45,7 +45,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Strip out all comments
     lines.map! { |line| line.sub(/#.*$/, '') }
     # Remove all blank lines
-    lines = lines.reject! { |line| line.match(/^\s+$/) }
+    lines.reject! { |line| line.match(/^\s+$/) }
 
     # Extract all known properties
     file_properties = lines.inject({}) do |hash, line|
