@@ -85,7 +85,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
       # :name is not an actual property, since it's the namevar. Therefore we
       # need to handle it separately
-      lines << "DEVICE=#{@resource.name}"
+      lines << "DEVICE=#{provider.name}"
       NAME_MAPPINGS.each_pair do |typename, redhat_name|
         lines << "#{redhat_name}=#{provider.property(typename).value}"
       end
