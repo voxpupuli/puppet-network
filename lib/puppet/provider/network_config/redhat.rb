@@ -29,16 +29,48 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   }
 
   # Map provider instances to files based on their name
+  #
+  # @return [String] The path of the file for the given interface resource
+  #
+  # @example
+  #   prov = RedhatProvider.new(:name => 'eth1')
+  #   prov.select_file # => '/etc/sysconfig/network-scripts/ifcfg-eth1'
+  #
   def select_file
+    # XXX store and keep @name around in some incarnation?
     "#{SCRIPT_DIRECTORY}/ifcfg-#{@resource.name}"
   end
 
   # Scan all files in the networking directory for interfaces
+  #
+  # @return [Array<String>] All network-script config files on this machine.
+  #
+  # @example
+  #   RedhatProvider.target_files
+  #   # => ['/etc/sysconfig/network-scripts/ifcfg-eth0', '/etc/sysconfig/network-scripts/ifcfg-eth1']
   def self.target_files
     Dir["#{SCRIPT_DIRECTORY}/ifcfg-*"]
   end
 
   # Convert a redhat network script into a hash
+  #
+  # This is a hook method that will be called by PuppetX::Filemapper
+  #
+  # @param [String] filename The path of the interfaces file being parsed
+  # @param [String] contents The contents of the given file
+  #
+  # @return [Array<Hash<Symbol, String>>] A single element array containing
+  #   the key/value pairs of properties parsed from the file.
+  #
+  # @example
+  #   RedhatProvider.parse_file('/etc/sysconfig/network-scripts/ifcfg-eth0', #<String:0xdeadbeef>)
+  #   # => [
+  #   #   {
+  #   #     :name      => 'eth0',
+  #   #     :ipaddress => '169.254.0.1',
+  #   #     :netmask   => '255.255.0.0',
+  #   #   },
+  #   # ]
   def self.parse_file(filename, contents)
     # Split up the file into lines
     lines = contents.split('\n')
