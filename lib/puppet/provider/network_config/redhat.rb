@@ -28,6 +28,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :name       => 'DEVICE',
   }
 
+  # @!attribute name
+  #   The name param of this provider. Since names aren't quite properties but
+  #   this information is needed, it's handled here.
+  #   @return [String] The device name of this interface
+  attr_accessor :name
+
   # Map provider instances to files based on their name
   #
   # @return [String] The path of the file for the given interface resource
@@ -37,8 +43,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   #   prov.select_file # => '/etc/sysconfig/network-scripts/ifcfg-eth1'
   #
   def select_file
-    # XXX store and keep @name around in some incarnation?
-    "#{SCRIPT_DIRECTORY}/ifcfg-#{@resource.name}"
+    "#{SCRIPT_DIRECTORY}/ifcfg-#{name}"
   end
 
   # Scan all files in the networking directory for interfaces
@@ -115,8 +120,6 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       provider = providers[0]
       lines = []
 
-      # :name is not an actual property, since it's the namevar. Therefore we
-      # need to handle it separately
       lines << "DEVICE=#{provider.name}"
       NAME_MAPPINGS.each_pair do |typename, redhat_name|
         lines << "#{redhat_name}=#{provider.property(typename).value}"
