@@ -28,12 +28,6 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :name       => 'DEVICE',
   }
 
-  # @!attribute name
-  #   The name param of this provider. Since names aren't quite properties but
-  #   this information is needed, it's handled here.
-  #   @return [String] The device name of this interface
-  attr_accessor :name
-
   # Map provider instances to files based on their name
   #
   # @return [String] The path of the file for the given interface resource
