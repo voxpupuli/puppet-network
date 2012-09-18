@@ -116,10 +116,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
       lines << "DEVICE=#{provider.name}"
       NAME_MAPPINGS.each_pair do |typename, redhat_name|
-        lines << "#{redhat_name}=#{provider.property(typename).value}"
+        lines << "#{redhat_name}=#{provider.send(typename)}" if provider.send(typename)
       end
       # Map any general options to key/value pairs
-      lines << options.map { |(key, val)| "#{key}=#{val}" }
+      if provider.options
+        lines << provider.options.map { |(key, val)| "#{key}=#{val}" }
+      end
 
       lines.join("\n")
     else
