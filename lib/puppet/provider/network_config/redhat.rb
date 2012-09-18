@@ -122,7 +122,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
         lines << provider.options.map { |(key, val)| "#{key}=#{val}" }
       end
 
-      lines.join("\n")
+      lines.map { |line| line + "\n" }
     else
       raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
