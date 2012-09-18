@@ -78,7 +78,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   #   # ]
   def self.parse_file(filename, contents)
     # Split up the file into lines
-    lines = contents.split('\n')
+    lines = contents.split("\n")
     # Strip out all comments
     lines.map! { |line| line.sub(/#.*$/, '') }
     # Remove all blank lines
@@ -127,7 +127,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       # Map any general options to key/value pairs
       lines << options.map { |(key, val)| "#{key}=#{val}" }
 
-      lines.join('\n')
+      lines.join("\n")
     else
       raise Puppet::DevError, 'Unable to support multiple interfaces in a single file'
     end
