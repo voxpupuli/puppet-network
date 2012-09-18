@@ -85,7 +85,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
         val = m[2].strip
         hash[key] = val
       else
-        raise Puppet::Error, "#{filename} is malformed"
+        raise Puppet::Error, %{#{filename} is malformed; "#{line}" did not match "/^(.+)=(.*)$/"}
       end
       hash
     end
@@ -123,7 +123,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
       lines.join("\n")
     else
-      raise Puppet::DevError, 'Unable to support multiple interfaces in a single file'
+      raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
   end
 end
