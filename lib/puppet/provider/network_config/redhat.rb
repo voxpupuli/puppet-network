@@ -114,7 +114,6 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       provider = providers[0]
       lines = []
 
-      lines << "DEVICE=#{provider.name}"
       NAME_MAPPINGS.each_pair do |typename, redhat_name|
         lines << "#{redhat_name}=#{provider.send(typename)}" if provider.send(typename)
       end
