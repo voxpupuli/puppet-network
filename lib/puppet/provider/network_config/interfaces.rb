@@ -228,7 +228,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     end
 
     # Given a series of stanzas,
-    contents.map {|line| line + "\n\n"}
+    contents.map {|line| line + "\n\n"}.join
   end
 
   def self.header
