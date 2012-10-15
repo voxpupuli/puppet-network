@@ -91,6 +91,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           iface_hash[iface] ||= {}
           iface_hash[iface][:options] ||= {}
           iface_hash[iface][:options][:"allow-hotplug"] = true
+          iface_hash[iface][:name]    = iface
         end
 
         # Reset the current parse state
@@ -121,6 +122,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           iface_hash[iface][:family] = family
           iface_hash[iface][:method] = method
           iface_hash[iface][:options] ||= {}
+          iface_hash[iface][:name]    = iface
 
         else
           # If we match on a string with a leading iface, but it isn't in the
