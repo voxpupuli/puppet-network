@@ -1,4 +1,4 @@
-name    'adrienthebo-network'
+name    'adrien-network'
 version '0.0.1'
 author  'Adrien Thebo <adrien@somethingsinistral.net>'
 license 'Apache 2.0'
@@ -9,4 +9,4 @@ description 'Manage persistent network interface configuration'
 source       'https://github.com/adrienthebo/puppet-network'
 project_page 'https://github.com/adrienthebo/puppet-network'
 
-dependency 'adrienthebo/filemapper', '>= 1.0.0'
+dependency 'adrien/filemapper', '>= 1.0.0'
