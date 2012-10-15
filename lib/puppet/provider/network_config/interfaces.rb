@@ -73,7 +73,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces.each do |iface|
           iface_hash[iface] ||= {}
           iface_hash[iface][:options] ||= {}
-          iface_hash[iface][:onboot] = :true
+          iface_hash[iface][:onboot]  = :true
+          iface_hash[iface][:name]    = iface
         end
 
         # Reset the current parse state
@@ -167,7 +168,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         end
       end
     end
-    iface_hash
+    iface_hash.values
   end
 
   # Generate an array of sections
