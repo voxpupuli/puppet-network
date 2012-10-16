@@ -1,0 +1,8 @@
+CHANGELOG
+
+0.0.2
+-----
+
+This is a backwards compatible maintenance release.
+
+  * Remove bugs from interfaces provider stemming from old isomorphism behavior.
