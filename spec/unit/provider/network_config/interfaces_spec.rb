@@ -91,8 +91,9 @@ describe provider_class do
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
-        :options         => { :"allow-hotplug" => true, })
-      end
+        :options         => { :"allow-hotplug" => true, }
+      )
+    end
 
     let(:lo_provider) do
       stub('lo_provider',
@@ -103,12 +104,13 @@ describe provider_class do
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
-        :options         => { :"allow-hotplug" => true, })
+        :options         => { :"allow-hotplug" => true, }
+      )
     end
 
     let(:content) { provider_class.format_file('', [lo_provider, eth0_provider]) }
 
-      describe "writing the allow-hotplug section" do
+    describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
         content.select {|line| line.match(/^allow-hotplug /)}.length.should == 1
       end
