@@ -17,28 +17,28 @@ describe provider_class do
     it "should parse out auto interfaces" do
       fixture = fixture_data('loopback')
       data = subject.parse_file('', fixture)
-
-      data["lo"][:onboot].should == :true
+      data.find { |h| h[:name] == "lo" }[:onboot].should == :true
     end
 
     it "should parse out allow-hotplug interfaces" do
       fixture = fixture_data('single_interface_dhcp')
       data = subject.parse_file('', fixture)
-      data["eth0"][:options][:"allow-hotplug"].should be_true
+      data.find { |h| h[:name] == "eth0" }[:options][:"allow-hotplug"].should be_true
     end
 
-    it "should parse out allow-auto interfaces" do
+    it "should parse out allow-auto interfaces as 'onboot'" do
       fixture = fixture_data('two_interface_dhcp')
       data = subject.parse_file('', fixture)
-      data["eth1"][:onboot].should == :true
+      data.find { |h| h[:name] == "eth1" }[:onboot].should == :true
     end
 
     it "should parse out iface lines" do
       fixture = fixture_data('single_interface_dhcp')
       data = subject.parse_file('', fixture)
-      data["eth0"].should == {
+      data.find { |h| h[:name] == "eth0" }.should == {
         :family => "inet",
         :method => "dhcp",
+        :name   => "eth0",
         :options => {:"allow-hotplug" => true}
       }
     end
@@ -46,7 +46,8 @@ describe provider_class do
     it "should parse out lines following iface lines" do
       fixture = fixture_data('single_interface_static')
       data = subject.parse_file('', fixture)
-      data["eth0"].should == {
+      data.find { |h| h[:name] == "eth0" }.should == {
+        :name      => "eth0",
         :family    => "inet",
         :method    => "static",
         :ipaddress => "192.168.0.2",
@@ -130,26 +131,19 @@ describe provider_class do
           "address 169.254.0.1",
           "netmask 255.255.0.0",
         ].join("\n")
-
-        content.find {|line| line.match(/iface eth0/)}.should be_include(block)
+        content.split('\n').find {|line| line.match(/iface eth0/)}.should be_include(block)
       end
 
       it "should fail if the family property is not defined" do
         lo_provider.unstub(:family)
         lo_provider.stubs(:family).returns nil
-
-        lambda do
-          content
-        end.should raise_exception
+        expect { content }.to raise_exception
       end
 
-      it "should fail if the ifaces attribute does not have the method attribute" do
+      it "should fail if the method property is not defined" do
         lo_provider.unstub(:method)
         lo_provider.stubs(:method).returns nil
-
-        lambda do
-          content
-        end.should raise_exception
+        expect { content }.to raise_exception
       end
     end
   end
