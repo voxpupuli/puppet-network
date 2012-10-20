@@ -43,16 +43,6 @@ Create resources on the fly with the `puppet resource` command:
       onboot    => 'true',
     }
 
-**Features**
-
- * Usable with the `puppet resource` command
- * Single pass prefetching and flushing - only a single read and write is needed
-
-**Limitations**
-
- * Only the Debian style interfaces provider is implemented
- * It's not perfect?
-
 Dependencies
 ------------
 
