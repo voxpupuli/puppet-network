@@ -5,13 +5,13 @@ require 'spec_helper'
 provider_class = Puppet::Type.type(:network_config).provider(:redhat)
 describe provider_class do
 
+    subject { provider_class }
   def fixture_data(file)
     basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec')
     File.read(File.join(basedir, file))
   end
 
   describe "when parsing" do
-    subject { provider_class }
 
     describe 'the name' do
       let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
@@ -32,7 +32,7 @@ describe provider_class do
       describe 'when static' do
         let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
         it {
-          pending 'Requires conversion from "none" to "static"'
+          pending 'Munging of BOOTPROTO none <-> static'
           data[:method].should == 'static'
         }
       end
@@ -51,11 +51,13 @@ describe provider_class do
     end
 
     describe "when reading an invalid interfaces" do
-      it "with a mangled key/value should fail"
+      it "with a mangled key/value should fail" do
+        expect { subject.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
+      end
     end
   end
 
-  describe ".format_resources" do
+  describe "when formatting resources" do
     let(:eth0_provider) do
       stub('eth0_provider',
         :name            => "eth0",
@@ -65,7 +67,7 @@ describe provider_class do
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
-        :options         => { :"allow-hotplug" => true, }
+        :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
       )
     end
 
@@ -73,12 +75,34 @@ describe provider_class do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => :true,
-        :"allow-hotplug" => true,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
-        :options         => { :"allow-hotplug" => true, })
+        :options         => {}
+      )
+    end
+
+    it 'should fail if multiple interfaces are flushed to one file' do
+      expect { subject.format_file('filepath', [eth0_provider, lo_provider]) }.to raise_error Puppet::DevError, /multiple interfaces/
+    end
+
+    describe 'with a valid configuration' do
+      let(:data) { subject.format_file('filepath', [eth0_provider]) }
+
+      it { data.should match /DEVICE=eth0/ }
+      it {
+        pending "Munging of onboot yes <-> true"
+        data.should match /ONBOOT=yes/
+      }
+      it {
+        pending 'Munging of BOOTPROTO none <-> static'
+        data.should match /BOOTPROTO=none/
+      }
+      it { data.should match /IPADDR=169\.254\.0\.1/ }
+      it { data.should match /NETMASK=255\.255\.0\.0/ }
+      it { data.should match /NM_CONTROLLED=no/ }
+      it { data.should match /USERCTL=no/ }
     end
   end
 end
