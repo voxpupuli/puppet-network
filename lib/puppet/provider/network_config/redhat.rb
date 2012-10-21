@@ -80,7 +80,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     # Extract all known properties
     file_properties = lines.inject({}) do |hash, line|
-      if (m = line.match /^(.+)=(.*)$/)
+      if (m = line.match /^\s*(.+)\s*=\s*(.*)\s*$/)
         key = m[1].strip
         val = m[2].strip
         hash[key] = val
