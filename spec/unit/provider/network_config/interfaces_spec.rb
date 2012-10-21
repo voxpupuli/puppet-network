@@ -11,7 +11,7 @@ provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
 
 describe provider_class do
 
-  describe ".parse_file" do
+  describe "when parsing" do
     subject { provider_class }
 
     it "should parse out auto interfaces" do
@@ -81,7 +81,7 @@ describe provider_class do
     end
   end
 
-  describe ".format_resources" do
+  describe "when formatting" do
     let(:eth0_provider) do
       stub('eth0_provider',
         :name            => "eth0",
