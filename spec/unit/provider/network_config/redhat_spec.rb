@@ -13,28 +13,24 @@ describe provider_class do
   describe "when parsing" do
     subject { provider_class }
 
-    it 'should use the DEVICE for the interface name' do
-      fixture = fixture_data('eth0-dhcp')
-      data = subject.parse_file('eth0', fixture)
-      data[0][:name].should == 'eth0'
+    describe 'the name' do
+      let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+      it { data[:name].should == 'eth0' }
     end
 
-    it 'should use the ONBOOT field for the onboot property' do
-      fixture = fixture_data('eth0-dhcp')
-      data = subject.parse_file('eth0', fixture)
-      data[0][:name].should be_true
+    describe 'the onboot property' do
+      let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+      it { data[:name].should be_true }
     end
 
     describe "the method property" do
-      it 'should understand "dhcp"' do
-        fixture = fixture_data('eth0-dhcp')
-        data = subject.parse_file('eth0', fixture)
-        data[0][:method].should == 'dhcp'
+      describe 'when dhcp' do
+        let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+        it { data[:method].should == 'dhcp' }
       end
 
       describe 'when static' do
         let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
-
         it {
           pending 'Requires conversion from "none" to "static"'
           data[:method].should == 'static'
@@ -46,6 +42,12 @@ describe provider_class do
       let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
       it { data[:ipaddress].should == '10.0.1.27' }
       it { data[:netmask].should   == '255.255.255.0' }
+    end
+
+    describe 'the options property' do
+      let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
+      it { data[:options]["USERCTL"].should == 'no' }
+      it { data[:options]["NM_CONTROLLED"].should == 'no' }
     end
 
     describe "when reading an invalid interfaces" do
