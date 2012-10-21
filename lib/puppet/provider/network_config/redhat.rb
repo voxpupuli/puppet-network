@@ -121,10 +121,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       end
       # Map any general options to key/value pairs
       if provider.options
-        lines << provider.options.map { |(key, val)| "#{key}=#{val}" }
+        provider.options.each_pair { |key, val| lines << "#{key}=#{val}" }
       end
 
-      lines.map { |line| line + "\n" }
+      lines.map { |line| line + "\n" }.join
     else
       raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
