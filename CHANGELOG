@@ -1,8 +1,21 @@
 CHANGELOG
 
+0.0.3
+-----
+
+This is a backwards compatible maintenance release.
+
+  * Update redhat provider to respect current API implementation of filemapper
+  * Add basic test coverage to redhat provider
+
 0.0.2
 -----
 
 This is a backwards compatible maintenance release.
 
   * Remove bugs from interfaces provider stemming from old isomorphism behavior.
+
+0.0.1
+-----
+
+Initial release.
