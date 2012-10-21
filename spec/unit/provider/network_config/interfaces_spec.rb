@@ -2,14 +2,14 @@
 
 require 'spec_helper'
 
-def fixture_data(file)
-  basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'interfaces_spec')
-  File.read(File.join(basedir, file))
-end
-
 provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
 
 describe provider_class do
+  def fixture_data(file)
+    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'interfaces_spec')
+    File.read(File.join(basedir, file))
+  end
+
 
   describe "when parsing" do
     subject { provider_class }
