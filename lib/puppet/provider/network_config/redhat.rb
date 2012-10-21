@@ -95,7 +95,9 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For each interface attribute that we recognize it, add the value to the
     # hash with our expected label
     NAME_MAPPINGS.each_pair do |property, redhat_name|
-      provider_properties[property] = file_properties.delete(redhat_name)
+      if (property_value = file_properties.delete(redhat_name))
+        provider_properties[property] = property_value
+      end
     end
 
     # For all of the remaining values, blindly toss them into the options hash.
