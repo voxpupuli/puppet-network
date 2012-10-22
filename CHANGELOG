@@ -7,7 +7,7 @@ This is a backwards compatible maintenance release.
 
   * Use non-greedy regex when matching redhat keys
   * Update redhat provider to respect current API implementation of filemapper
-  * Add basic test coverage to redhat provider
+  * Add test coverage to redhat provider
 
 0.0.2
 -----
