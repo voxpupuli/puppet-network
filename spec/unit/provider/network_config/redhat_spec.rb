@@ -50,11 +50,173 @@ describe provider_class do
       it { data[:options]["NM_CONTROLLED"].should == 'no' }
     end
 
+    describe 'complex configuration' do
+      let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
+
+      before do
+        provider_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]
+        provider_class.any_instance.expects(:select_file).never
+      end
+
+      let(:interfaces) { provider_class.instances }
+
+      describe 'bond0' do
+        subject { provider_class.instances.find { |i| i.name == 'bond0' } }
+        its(:onboot) { should be_true }
+        its(:options) { should == {
+            "MTU" => '1500',
+            "BONDING_OPTS" => %{"mode=4 miimon=100 xmit_hash_policy=layer3+4"}
+          }
+        }
+      end
+
+      describe 'bond1' do
+        subject { provider_class.instances.find { |i| i.name == 'bond1' } }
+        its(:onboot) { should be_true }
+        its(:ipaddress) { should == '172.20.1.9' }
+        its(:netmask) { should == '255.255.255.0' }
+        its(:options) { should == {
+            "MTU" => '1500',
+            "BONDING_OPTS" => %{"mode=4 miimon=100 xmit_hash_policy=layer3+4"}
+          }
+        }
+      end
+
+      describe 'eth0' do
+        subject { provider_class.instances.find { |i| i.name == 'eth0' } }
+        its(:onboot) { should be_true }
+        its(:options) { should == {
+            'HWADDR' => '00:12:79:91:28:1f',
+            'SLAVE'  => 'yes',
+            'MASTER' => 'bond0',
+            'MTU'    => '1500',
+          }
+        }
+      end
+
+      describe 'eth1' do
+        subject { provider_class.instances.find { |i| i.name == 'eth1' } }
+        its(:onboot) { should be_true }
+        its(:options) { should == {
+            'HWADDR' => '00:12:79:91:28:20',
+            'SLAVE'  => 'yes',
+            'MASTER' => 'bond0',
+            'MTU'    => '1500',
+          }
+        }
+      end
+
+      describe 'eth2' do
+        subject { provider_class.instances.find { |i| i.name == 'eth2' } }
+        its(:onboot) { should be_true }
+        its(:options) { should == {
+            'HWADDR' => '00:26:55:e9:33:c4',
+            'SLAVE'  => 'yes',
+            'MASTER' => 'bond1',
+            'MTU'    => '1500',
+          }
+        }
+      end
+
+      describe 'eth3' do
+        subject { provider_class.instances.find { |i| i.name == 'eth3' } }
+        its(:onboot) { should be_true }
+        its(:options) { should == {
+            'HWADDR' => '00:26:55:e9:33:c5',
+            'SLAVE'  => 'yes',
+            'MASTER' => 'bond1',
+            'MTU'    => '1500',
+          }
+        }
+      end
+
+      describe 'vlan100' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan100' } }
+        its(:ipaddress) { should == '172.24.61.11' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should == 'static' }
+        its(:options)   { should == {
+            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
+            'VLAN'           => 'yes',
+            'PHYSDEV'        => 'bond0',
+            'GATEWAY'        => '172.24.61.1',
+          }
+        }
+      end
+
+      describe 'vlan100:0' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan100:0' } }
+        its(:ipaddress) { should == '172.24.61.12' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should == 'static' }
+        its(:options)   { should be_nil }
+      end
+
+      describe 'vlan200' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan200' } }
+        its(:ipaddress) { should == '172.24.62.1' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should == 'static' }
+        its(:options)   { should == {
+            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
+            'VLAN'           => 'yes',
+            'PHYSDEV'        => 'bond0',
+          }
+        }
+      end
+
+      describe 'vlan300' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan300' } }
+        its(:ipaddress) { should == '172.24.63.1' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should be_true }
+        its(:options)   { should == {
+            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
+            'VLAN'           => 'yes',
+            'PHYSDEV'        => 'bond0',
+          }
+        }
+      end
+
+      describe 'vlan400' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan400' } }
+        its(:ipaddress) { should == '172.24.64.1' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should be_true }
+        its(:options)   { should == {
+            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
+            'VLAN'           => 'yes',
+            'PHYSDEV'        => 'bond0',
+          }
+        }
+      end
+
+      describe 'vlan500' do
+        subject { provider_class.instances.find { |i| i.name == 'vlan500' } }
+        its(:ipaddress) { should == '172.24.65.1' }
+        its(:netmask)   { should == '255.255.255.0' }
+        its(:onboot)    { should be_false }
+        its(:method)    { should be_true }
+        its(:options)   { should == {
+            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
+            'VLAN'           => 'yes',
+            'PHYSDEV'        => 'bond0',
+          }
+        }
+      end
+    end
+
     describe "when reading an invalid interfaces" do
       it "with a mangled key/value should fail" do
         expect { subject.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
       end
     end
+
   end
 
   describe "when formatting resources" do
@@ -66,7 +228,7 @@ describe provider_class do
         :family          => "inet",
         :method          => "static",
         :ipaddress       => "169.254.0.1",
-        :netmask         => "255.255.0.0",
+        :netmask         => "255.255.255.0",
         :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
       )
     end
@@ -100,7 +262,7 @@ describe provider_class do
         data.should match /BOOTPROTO=none/
       }
       it { data.should match /IPADDR=169\.254\.0\.1/ }
-      it { data.should match /NETMASK=255\.255\.0\.0/ }
+      it { data.should match /NETMASK=255\.255\.255\.0/ }
       it { data.should match /NM_CONTROLLED=no/ }
       it { data.should match /USERCTL=no/ }
     end

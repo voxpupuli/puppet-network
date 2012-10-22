@@ -1,0 +1,7 @@
+# Intel Corporation 82571EB Gigabit Ethernet Controller
+DEVICE=eth2
+HWADDR=00:26:55:e9:33:c4
+ONBOOT=yes
+MTU=1500
+SLAVE=yes
+MASTER=bond1
