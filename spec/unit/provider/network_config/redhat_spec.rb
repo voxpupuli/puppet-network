@@ -31,10 +31,7 @@ describe provider_class do
 
       describe 'when static' do
         let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
-        it {
-          pending 'Munging of BOOTPROTO none <-> static'
-          data[:method].should == 'static'
-        }
+        it { data[:method].should == 'static' }
       end
     end
 
@@ -268,10 +265,7 @@ describe provider_class do
       let(:data) { subject.format_file('filepath', [eth0_provider]) }
 
       it { data.should match /DEVICE=eth0/ }
-      it {
-        pending "Munging of onboot yes <-> true"
-        data.should match /ONBOOT=yes/
-      }
+      it { data.should match /ONBOOT=yes/ }
       it {
         pending 'Munging of BOOTPROTO none <-> static'
         data.should match /BOOTPROTO=none/

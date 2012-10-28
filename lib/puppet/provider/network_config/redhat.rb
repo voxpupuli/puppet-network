@@ -121,6 +121,14 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs unless pairs.empty?
 
+    if props[:onboot]
+      props[:onboot] = (props[:onboot] == 'yes')
+    end
+
+    unless ['bootp', 'dhcp'].include? props[:method]
+      props[:method] = 'static'
+    end
+
     props
   end
 
@@ -155,6 +163,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   def self.unmunge(props)
 
     pairs = {}
+
+    if props[:onboot]
+      props[:onboot] = (props[:onboot] ? 'yes' : 'no')
+    end
 
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|
       if (val = props[type_name])
