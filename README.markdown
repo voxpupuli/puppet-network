@@ -50,5 +50,5 @@ The debian interfaces provider requires the FileMapper mixin, available at https
 
 - - -
 
-Source code: https://github.com/adrienthebo/puppet-network
-Issue tracker: https://github.com/adrienthebo/puppet-network/issues
+  * Source code: https://github.com/adrienthebo/puppet-network
+  * Issue tracker: https://github.com/adrienthebo/puppet-network/issues
