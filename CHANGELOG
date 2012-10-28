@@ -1,5 +1,13 @@
 CHANGELOG
 
+0.0.4
+-----
+
+This is a backwards compatible maintenance release.
+
+  * Munge onboot and method parameters for redhat provider.
+  * Automatically quote and unquote redhat values as needed
+
 0.0.3
 -----
 
