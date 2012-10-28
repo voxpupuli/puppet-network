@@ -6,9 +6,6 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   # This provider manages the contents of /etc/networks-scripts/ifcfg-* to
   # manage non-volatile network configuration.
   #
-  # @todo interface aliasing
-  # @todo bonded interfaces
-  #
   # @see https://access.redhat.com/knowledge/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s1-networkscripts-interfaces.html "Red Hat Interface Configuration Files"
 
   include PuppetX::FileMapper
