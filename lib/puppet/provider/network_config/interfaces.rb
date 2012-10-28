@@ -1,10 +1,13 @@
-# = Debian network_config provider
-#
-# This provider uses the filemapper mixin to map the interfaces file to a
-# collection of network_config providers, and back.
 require 'puppetx/filemapper'
 
 Puppet::Type.type(:network_config).provide(:interfaces) do
+  # Debian network_config interfaces provider.
+  #
+  # This provider uses the filemapper mixin to map the interfaces file to a
+  # collection of network_config providers, and back.
+  #
+  # @see http://wiki.debian.org/NetworkConfiguration
+
   include PuppetX::FileMapper
 
   desc "Debian interfaces style provider"
