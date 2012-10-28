@@ -65,7 +65,7 @@ describe provider_class do
         its(:onboot) { should be_true }
         its(:options) { should == {
             "MTU" => '1500',
-            "BONDING_OPTS" => %{"mode=4 miimon=100 xmit_hash_policy=layer3+4"}
+            "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
           }
         }
       end
@@ -77,7 +77,7 @@ describe provider_class do
         its(:netmask) { should == '255.255.255.0' }
         its(:options) { should == {
             "MTU" => '1500',
-            "BONDING_OPTS" => %{"mode=4 miimon=100 xmit_hash_policy=layer3+4"}
+            "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
           }
         }
       end
@@ -245,11 +245,26 @@ describe provider_class do
       )
     end
 
+    let(:bond0_provider) do
+      stub('bond0_provider',
+        :name      => 'bond0',
+        :onboot    => true,
+        :ipaddress => '172.20.1.9',
+        :netmask   => '255.255.255.0',
+        :method    => 'static',
+        :options   => {
+          "MTU" => '1500',
+          "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
+        }
+
+      )
+    end
+
     it 'should fail if multiple interfaces are flushed to one file' do
       expect { subject.format_file('filepath', [eth0_provider, lo_provider]) }.to raise_error Puppet::DevError, /multiple interfaces/
     end
 
-    describe 'with a valid configuration' do
+    describe 'with test interface eth0' do
       let(:data) { subject.format_file('filepath', [eth0_provider]) }
 
       it { data.should match /DEVICE=eth0/ }
@@ -265,6 +280,12 @@ describe provider_class do
       it { data.should match /NETMASK=255\.255\.255\.0/ }
       it { data.should match /NM_CONTROLLED=no/ }
       it { data.should match /USERCTL=no/ }
+    end
+
+    describe 'with test interface bond0' do
+      let(:data) { subject.format_file('filepath', [bond0_provider]) }
+
+      it { data.should match /BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/ }
     end
   end
 end

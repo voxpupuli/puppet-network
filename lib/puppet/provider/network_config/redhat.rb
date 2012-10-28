@@ -78,14 +78,20 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Remove all blank lines
     lines.reject! { |line| line.match(/^\s*$/) }
 
+    pair_regex = %r/^\s*(.+?)\s*=\s*(.*)\s*$/
+
     # Extract all known properties
     file_properties = lines.inject({}) do |hash, line|
-      if (m = line.match /^\s*(.+?)\s*=\s*(.*)\s*$/)
+      if (m = line.match pair_regex)
         key = m[1].strip
         val = m[2].strip
+
+        # If a value is a quoted string, strip those off
+        val.gsub!(/['"]/, '')
+
         hash[key] = val
       else
-        raise Puppet::Error, %{#{filename} is malformed; "#{line}" did not match "/^(.+)=(.*)$/"}
+        raise Puppet::Error, %{#{filename} is malformed; "#{line}" did not match "#{pair_regex.to_s}"}
       end
       hash
     end
@@ -109,24 +115,29 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   end
 
   def self.format_file(filename, providers)
-    case providers.length
-    when 0
-      ''
-    when 1
-      provider = providers[0]
-      lines = []
-
-      NAME_MAPPINGS.each_pair do |typename, redhat_name|
-        lines << "#{redhat_name}=#{provider.send(typename)}" if provider.send(typename)
-      end
-      # Map any general options to key/value pairs
-      if provider.options
-        provider.options.each_pair { |key, val| lines << "#{key}=#{val}" }
-      end
-
-      lines.map { |line| line + "\n" }.join
-    else
+    unless providers.length == 1
       raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
+
+    provider = providers[0]
+    pairs    = {}
+
+    NAME_MAPPINGS.each_pair do |typename, redhat_name|
+      if (val = provider.send(typename))
+        pairs[redhat_name] = val
+      end
+    end
+    # Map any general options to key/value pairs
+    if provider.options
+      pairs.merge! provider.options
+    end
+
+    content = pairs.inject('') do |str, (key, val)|
+      # If a value has any spaces, quote it
+      val = %{"#{val}"} if val.is_a? String and val.match /\s+/
+      str << %{#{key}=#{val}\n}
+    end
+
+    content
   end
 end
