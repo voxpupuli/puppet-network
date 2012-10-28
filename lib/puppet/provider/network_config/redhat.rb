@@ -77,15 +77,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pair_regex = %r/^\s*(.+?)\s*=\s*(.*)\s*$/
 
-    # Extract all known properties
-    file_properties = lines.inject({}) do |hash, line|
+    # Convert the data into key/value pairs
+    pairs = lines.inject({}) do |hash, line|
       if (m = line.match pair_regex)
         key = m[1].strip
         val = m[2].strip
-
-        # If a value is a quoted string, strip those off
-        val.gsub!(/['"]/, '')
-
         hash[key] = val
       else
         raise Puppet::Error, %{#{filename} is malformed; "#{line}" did not match "#{pair_regex.to_s}"}
@@ -93,48 +89,88 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       hash
     end
 
-    provider_properties = {}
+    props = self.munge(pairs)
+
+    # The FileMapper mixin expects an array of providers, so we return the
+    # single interface wrapped in an array
+    [props]
+  end
+
+  # @api private
+  def self.munge(pairs)
+    props = {}
+
+    # Unquote all values
+    pairs.each_pair do |key, val|
+      if (munged = val.gsub(/['"]/, ''))
+        pairs[key] = munged
+      end
+    end
 
     # For each interface attribute that we recognize it, add the value to the
     # hash with our expected label
-    NAME_MAPPINGS.each_pair do |property, redhat_name|
-      if (property_value = file_properties.delete(redhat_name))
-        provider_properties[property] = property_value
+    NAME_MAPPINGS.each_pair do |type_name, redhat_name|
+      if (val = pairs[redhat_name])
+        # We've recognized a value that maps to an actual type property, delete
+        # it from the pairs and copy it as an actual property
+        pairs.delete(redhat_name)
+        props[type_name] = val
       end
     end
 
     # For all of the remaining values, blindly toss them into the options hash.
-    provider_properties[:options] = file_properties unless file_properties.empty?
+    props[:options] = pairs unless pairs.empty?
 
-    # The FileMapper mixin expects an array of providers, so we return the
-    # single interface wrapped in an array
-    [provider_properties]
+    props
   end
 
   def self.format_file(filename, providers)
-    unless providers.length == 1
+    if providers.length == 0
+      return ""
+    elsif providers.length > 1
       raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
 
     provider = providers[0]
-    pairs    = {}
+    props    = {}
 
-    NAME_MAPPINGS.each_pair do |typename, redhat_name|
-      if (val = provider.send(typename))
-        pairs[redhat_name] = val
+    # Map everything to a flat hash
+    props = (provider.options || {})
+
+    NAME_MAPPINGS.keys.each do |type_name|
+      if (val = provider.send(type_name))
+        props[type_name] = val
       end
     end
-    # Map any general options to key/value pairs
-    if provider.options
-      pairs.merge! provider.options
-    end
+
+    pairs = self.unmunge props
 
     content = pairs.inject('') do |str, (key, val)|
-      # If a value has any spaces, quote it
-      val = %{"#{val}"} if val.is_a? String and val.match /\s+/
       str << %{#{key}=#{val}\n}
     end
 
     content
+  end
+
+  def self.unmunge(props)
+
+    pairs = {}
+
+    NAME_MAPPINGS.each_pair do |type_name, redhat_name|
+      if (val = props[type_name])
+        props.delete(type_name)
+        pairs[redhat_name] = val
+      end
+    end
+
+    pairs.merge! props
+
+    pairs.each_pair do |key, val|
+      if val.is_a? String and val.match /\s+/
+        pairs[key] = %{"#{val}"}
+      end
+    end
+
+    pairs
   end
 end
