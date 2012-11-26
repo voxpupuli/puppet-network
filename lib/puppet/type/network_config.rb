@@ -18,7 +18,7 @@ Puppet::Type.newtype(:network_config) do
 
   newproperty(:method) do
     desc "The method for determining an IP address for the interface"
-    newvalues(:static, :manual, :dhcp)
+    newvalues(:static, :manual, :dhcp, :loopback)
     defaultto :dhcp
   end
 
