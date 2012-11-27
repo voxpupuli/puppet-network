@@ -11,7 +11,8 @@ Examples
       family  => 'inet',
       method  => 'dhcp',
       onboot  => 'true',
-      options => {'allow-hotplug' => 'true', 'pre-up' => 'sleep 2'},
+      hotplug => 'true',
+      options => {'pre-up' => 'sleep 2'},
     }
 
     network_config { 'lo':
