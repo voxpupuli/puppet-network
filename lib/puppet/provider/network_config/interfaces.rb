@@ -15,6 +15,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
+  has_feature :hotpluggable
+
   def select_file
     '/etc/network/interfaces'
   end
@@ -51,7 +53,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # Build out an empty hash for new interfaces for storing their configs.
     iface_hash = Hash.new do |hash, key|
       hash[key] = {}
-      hash[key][:name]    = key
+      hash[key][:name] = key
 
       # example
       #   {
@@ -74,13 +76,12 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       # Strip off any trailing comments
       line.sub!(/#.*$/, '')
 
-        puts "I HAVE #{line}"
       case line
       when /^\s*#|^\s*$/
         # Ignore comments and blank lines
         next
 
-      when /^auto/
+      when /^auto|^allow-auto/
         # Parse out any auto sections
         interfaces = line.split(' ')
         interfaces.delete_at(0)
@@ -92,29 +93,14 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # Reset the current parse state
         current_interface = nil
 
-      when /^allow-/
-
-        # parse out allow-auto and allow-hotplug stanzas.
-
-        interfaces = line.split(' ')
-        option = interfaces.delete_at(0)
-
-        interfaces.each do |iface|
-          iface_hash[iface][:onboot]  = :true
-        end
-
-        # Reset the current parse state
-        current_interface = nil
-
       when /^allow-hotplug/
-
         # parse out allow-hotplug lines
 
         interfaces = line.split(' ')
         interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface_hash[iface][:options][:"allow-hotplug"] = true
+          iface_hash[iface][:hotplug] = true
         end
 
         # Don't reset Reset the current parse state
@@ -167,8 +153,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             # lines that contain two or more space delimited strings. Append
             # them as options to the iface in an array.
 
-            # TODO split this out
-
             key = match[1]
             val = match[2]
 
@@ -198,28 +182,21 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     contents << header
 
     # Add onboot interfaces
-    if auto_interfaces = providers.select {|provider| provider.onboot == :true }
+    if (auto_interfaces = providers.select {|provider| provider.onboot == :true })
       stanza = []
       stanza << "# The following interfaces will be started on boot"
       stanza << "auto " + auto_interfaces.map(&:name).sort.join(" ")
       contents << stanza.join("\n")
     end
 
-    # Determine auto and hotplug interfaces and add them, if any
-    [:"allow-auto", :"allow-hotplug"].each do |attr|
-      interfaces = providers.select { |provider| provider.options and provider.options[attr] }
-      if interfaces.length > 0
-        allow_line = attr.to_s
-        interfaces.sort_by(&:name).each do |interface|
-
-          # These fields are stored as options, but they are independent
-          # stanzas. Delete them from the options and add thim to this stanza
-          interface.options.delete(attr)
-          allow_line << " #{interface.name}"
-        end
-        contents << allow_line
-      end
+    # Add hotpluggable interfaces
+    if (hotplug_interfaces = providers.select {|provider| provider.hotplug == :true })
+      stanza = []
+      stanza << "# The following interfaces are hotpluggable"
+      stanza << "allow-hotplug " + hotplug_interfaces.map(&:name).sort.join(" ")
+      contents << stanza.join("\n")
     end
+
 
     # Build iface stanzas
     providers.sort_by(&:name).each do |provider|

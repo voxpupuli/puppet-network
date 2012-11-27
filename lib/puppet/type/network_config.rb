@@ -1,6 +1,8 @@
 Puppet::Type.newtype(:network_config) do
   @doc = "Manage non-volatile network configuration information"
 
+  feature :hotpluggable, 'The system can hotplug interfaces'
+
   ensurable
 
   newparam(:name) do
@@ -36,6 +38,12 @@ Puppet::Type.newtype(:network_config) do
 
   newproperty(:onboot, :boolean => true) do
     desc "Whether to bring the interface up on boot"
+    newvalues(:true, :false)
+    defaultto :true
+  end
+
+  newproperty(:hotplug, :required_features => :hotpluggable, :boolean => true) do
+    desc "Allow/disallow hotplug support for this interface"
     newvalues(:true, :false)
     defaultto :true
   end

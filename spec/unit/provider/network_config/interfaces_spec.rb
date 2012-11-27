@@ -36,10 +36,11 @@ describe provider_class do
       fixture = fixture_data('single_interface_dhcp')
       data = subject.parse_file('', fixture)
       data.find { |h| h[:name] == "eth0" }.should == {
-        :family => "inet",
-        :method => "dhcp",
-        :name   => "eth0",
-        :options => {:"allow-hotplug" => true}
+        :family  => "inet",
+        :method  => "dhcp",
+        :name    => "eth0",
+        :hotplug => true,
+        :options => {},
       }
     end
 
@@ -87,11 +88,12 @@ describe provider_class do
         :name            => "eth0",
         :ensure          => :present,
         :onboot          => :true,
+        :hotplug         => :true,
         :family          => "inet",
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
-        :options         => { :"allow-hotplug" => true, }
+        :options         => nil
       )
     end
 
@@ -99,12 +101,12 @@ describe provider_class do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => :true,
-        :"allow-hotplug" => true,
+        :hotplug         => :true,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
-        :options         => { :"allow-hotplug" => true, }
+        :options         => nil
       )
     end
 
