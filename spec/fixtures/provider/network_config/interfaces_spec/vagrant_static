@@ -1,0 +1,19 @@
+# HEADER: This file is is being managed by puppet. Changes to
+# HEADER: interfaces that are not being managed by puppet will persist;
+# HEADER: however changes to interfaces that are being managed by puppet will
+# HEADER: be overwritten. In addition, file order is NOT guaranteed.
+# HEADER: Last generated at: Tue Nov 27 01:11:36 +0200 2012
+
+
+# The following interfaces will be started on boot
+auto eth0 eth1 lo
+
+iface eth0 inet dhcp
+allow-hotplug true
+pre-up sleep 2
+
+iface eth1 inet static
+netmask 255.255.255.0
+address 192.168.50.2
+
+iface lo inet loopback

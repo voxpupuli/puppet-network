@@ -35,7 +35,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     raise MalformedInterfacesError
   end
 
-
   def self.parse_file(filename, contents)
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
@@ -48,12 +47,26 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # parsed.
     status = :none
     current_interface = nil
-    iface_hash = {}
+
+    # Build out an empty hash for new interfaces for storing their configs.
+    iface_hash = Hash.new do |hash, key|
+      hash[key] = {}
+      hash[key][:name]    = key
+
+      # example
+      #   {
+      #     :"pre-up" => ['command one', 'command two'],
+      #     :down     => ['command three', 'command four'],
+      #   }
+      #
+      # XXX This is getting very complex. This should be broken down.
+      hash[key][:options] = Hash.new {|hash, key| hash[key] = []}
+
+      hash[key]
+    end
 
     lines = contents.split("\n")
-    # TODO line munging
-    # Join lines that end with a backslash
-    # Strip comments?
+    # TODO Join lines that end with a backslash
 
     # Iterate over all lines and determine what attributes they create
     lines.each do |line|
@@ -61,23 +74,33 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       # Strip off any trailing comments
       line.sub!(/#.*$/, '')
 
+        puts "I HAVE #{line}"
       case line
       when /^\s*#|^\s*$/
         # Ignore comments and blank lines
         next
 
-      when /^allow-auto|^auto/
-
-        # parse out allow-auto and auto stanzas; they are synonyms.
-
+      when /^auto/
+        # Parse out any auto sections
         interfaces = line.split(' ')
         interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface_hash[iface] ||= {}
-          iface_hash[iface][:options] ||= {}
           iface_hash[iface][:onboot]  = :true
-          iface_hash[iface][:name]    = iface
+        end
+
+        # Reset the current parse state
+        current_interface = nil
+
+      when /^allow-/
+
+        # parse out allow-auto and allow-hotplug stanzas.
+
+        interfaces = line.split(' ')
+        option = interfaces.delete_at(0)
+
+        interfaces.each do |iface|
+          iface_hash[iface][:onboot]  = :true
         end
 
         # Reset the current parse state
@@ -91,15 +114,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface_hash[iface] ||= {}
-          iface_hash[iface][:options] ||= {}
           iface_hash[iface][:options][:"allow-hotplug"] = true
-          iface_hash[iface][:name]    = iface
         end
 
-        # Reset the current parse state
-        current_interface = nil
-
+        # Don't reset Reset the current parse state
       when /^iface/
 
         # Format of the iface line:
@@ -121,10 +139,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             raise_malformed
           end
 
-          iface_hash[iface] ||= {}
           iface_hash[iface][:family] = family
           iface_hash[iface][:method] = method
-          iface_hash[iface][:options] ||= {}
           iface_hash[iface][:name]    = iface
 
         else
