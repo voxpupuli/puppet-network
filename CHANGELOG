@@ -1,5 +1,17 @@
 CHANGELOG
 
+0.1.0
+-----
+
+2012-11-26
+
+This is a backwards incompatible bugfix and feature release. It might work
+work with un-updated code but no guarantees are made.
+
+  * Added a `hotplug` feature to the network_config type
+  * Implemented the `hotplug` feature for osfamily => Debian
+  * Added an alias from none to static for redhat users
+
 0.0.4
 -----
 
