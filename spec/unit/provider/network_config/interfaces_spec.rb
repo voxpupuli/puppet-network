@@ -114,11 +114,11 @@ describe provider_class do
 
     describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
-        content.select {|line| line.match(/^allow-hotplug /)}.length.should == 1
+        content.scan(/^allow-hotplug .*$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.find {|line| line.match(/^allow-hotplug /)}.should be_include("allow-hotplug eth0 lo")
+        content.scan(/^allow-hotplug .*$/).first.should be_include("allow-hotplug eth0 lo")
       end
     end
 
@@ -126,7 +126,7 @@ describe provider_class do
       let(:content) { provider_class.format_file('', [lo_provider, eth0_provider]) }
 
       it "should produce an iface block for each interface" do
-        content.select {|line| line.match(/iface eth0 inet static/)}.length.should == 1
+        content.scan(/iface eth0 inet static/).length.should == 1
       end
 
       it "should add all options following the iface block" do
