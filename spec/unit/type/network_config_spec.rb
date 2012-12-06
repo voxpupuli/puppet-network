@@ -4,12 +4,11 @@ require 'spec_helper'
 
 describe Puppet::Type.type(:network_config) do
   before do
-    @provider_class = stub 'provider class', :name => "fake", :suitable? => true, :supports_parameter? => true
-    @provider = stub 'provider', :class => @provider_class
-    @provider_class.stubs(:new).returns @provider
+    provider_class = stub 'provider class', :name => "fake", :suitable? => true, :supports_parameter? => true
+    provider_class.stubs(:new)
 
-    described_class.stubs(:defaultprovider).returns @provider_class
-    described_class.stubs(:provider).returns @provider_class
+    described_class.stubs(:defaultprovider).returns provider_class
+    described_class.stubs(:provider).returns provider_class
   end
 
   describe "feature" do
@@ -22,16 +21,17 @@ describe Puppet::Type.type(:network_config) do
   describe "when validating the attribute" do
 
     [:name, :reconfigure].each do |param|
-      it "should have the '#{param}' param" do
-        described_class.attrtype(param).should == :param
+      describe param do
+        it { described_class.attrtype(param).should == :param }
       end
     end
 
     [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :options].each do |property|
-      it "should have the '#{property}' property" do
-        described_class.attrtype(property).should == :property
+      describe property do
+        it { described_class.attrtype(property).should == :property }
       end
     end
+
 
     it "use the name parameter as the namevar" do
       described_class.key_attributes.should == [:name]
