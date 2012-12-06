@@ -2,39 +2,35 @@
 
 require 'spec_helper'
 
-provider_class = Puppet::Type.type(:network_config).provider(:interfaces)
-
-describe provider_class do
+describe Puppet::Type.type(:network_config).provider(:interfaces) do
   def fixture_data(file)
     basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'interfaces_spec')
     File.read(File.join(basedir, file))
   end
 
-
   describe "when parsing" do
-    subject { provider_class }
 
     it "should parse out auto interfaces" do
       fixture = fixture_data('loopback')
-      data = subject.parse_file('', fixture)
+      data = described_class.parse_file('', fixture)
       data.find { |h| h[:name] == "lo" }[:onboot].should == :true
     end
 
     it "should parse out allow-hotplug interfaces" do
       fixture = fixture_data('single_interface_dhcp')
-      data = subject.parse_file('', fixture)
+      data = described_class.parse_file('', fixture)
       data.find { |h| h[:name] == "eth0" }[:options][:"allow-hotplug"].should be_true
     end
 
     it "should parse out allow-auto interfaces as 'onboot'" do
       fixture = fixture_data('two_interface_dhcp')
-      data = subject.parse_file('', fixture)
+      data = described_class.parse_file('', fixture)
       data.find { |h| h[:name] == "eth1" }[:onboot].should == :true
     end
 
     it "should parse out iface lines" do
       fixture = fixture_data('single_interface_dhcp')
-      data = subject.parse_file('', fixture)
+      data = described_class.parse_file('', fixture)
       data.find { |h| h[:name] == "eth0" }.should == {
         :family  => "inet",
         :method  => "dhcp",
@@ -46,7 +42,7 @@ describe provider_class do
 
     it "should parse out lines following iface lines" do
       fixture = fixture_data('single_interface_static')
-      data = subject.parse_file('', fixture)
+      data = described_class.parse_file('', fixture)
       data.find { |h| h[:name] == "eth0" }.should == {
         :name      => "eth0",
         :family    => "inet",
@@ -70,13 +66,13 @@ describe provider_class do
 
       it "with misplaced options should fail" do
         expect do
-          subject.parse_file('', "address 192.168.1.1\niface eth0 inet static\n")
+          described_class.parse_file('', "address 192.168.1.1\niface eth0 inet static\n")
         end.to raise_error
       end
 
       it "with an option without a value should fail" do
         expect do
-          subject.parse_file('', "iface eth0 inet manual\naddress")
+          described_class.parse_file('', "iface eth0 inet manual\naddress")
         end.to raise_error
       end
     end
@@ -110,7 +106,7 @@ describe provider_class do
       )
     end
 
-    let(:content) { provider_class.format_file('', [lo_provider, eth0_provider]) }
+    let(:content) { described_class.format_file('', [lo_provider, eth0_provider]) }
 
     describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
@@ -123,7 +119,7 @@ describe provider_class do
     end
 
     describe "writing iface blocks" do
-      let(:content) { provider_class.format_file('', [lo_provider, eth0_provider]) }
+      let(:content) { described_class.format_file('', [lo_provider, eth0_provider]) }
 
       it "should produce an iface block for each interface" do
         content.scan(/iface eth0 inet static/).length.should == 1
