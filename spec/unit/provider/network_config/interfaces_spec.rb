@@ -41,7 +41,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :family  => "inet",
         :method  => "dhcp",
         :name    => "eth0",
-        :hotplug => true,
+        :hotplug => :true,
         :options => {},
       }
     end

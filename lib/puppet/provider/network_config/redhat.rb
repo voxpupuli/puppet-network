@@ -126,7 +126,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     [:onboot, :hotplug].each do |bool_property|
       if props[bool_property]
-        props[bool_property] = (props[bool_property] == 'yes')
+        props[bool_property] = (props[bool_property] == 'yes' ? :true : :false)
       end
     end
 
@@ -171,7 +171,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     [:onboot, :hotplug].each do |bool_property|
       if props[bool_property]
-        props[bool_property] = (props[bool_property] ? 'yes' : 'no')
+        props[bool_property] = (props[bool_property] == :true ? 'yes' : 'no')
       end
     end
 

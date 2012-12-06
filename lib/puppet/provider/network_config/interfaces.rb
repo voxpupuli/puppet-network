@@ -100,7 +100,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface_hash[iface][:hotplug] = true
+          iface_hash[iface][:hotplug] = :true
         end
 
         # Don't reset Reset the current parse state
