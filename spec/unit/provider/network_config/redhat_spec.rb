@@ -223,7 +223,7 @@ describe provider_class do
         :ensure          => :present,
         :onboot          => :true,
         :family          => "inet",
-        :method          => "static",
+        :method          => "none",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.255.0",
         :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
@@ -266,10 +266,7 @@ describe provider_class do
 
       it { data.should match /DEVICE=eth0/ }
       it { data.should match /ONBOOT=yes/ }
-      it {
-        pending 'Munging of BOOTPROTO none <-> static'
-        data.should match /BOOTPROTO=none/
-      }
+      it { data.should match /BOOTPROTO=none/ }
       it { data.should match /IPADDR=169\.254\.0\.1/ }
       it { data.should match /NETMASK=255\.255\.255\.0/ }
       it { data.should match /NM_CONTROLLED=no/ }
