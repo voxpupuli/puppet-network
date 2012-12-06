@@ -51,5 +51,11 @@ The debian interfaces provider requires the FileMapper mixin, available at https
 
 - - -
 
+Contact
+-------
+
   * Source code: https://github.com/adrienthebo/puppet-network
   * Issue tracker: https://github.com/adrienthebo/puppet-network/issues
+
+If you have questions or concerns about this module, contact finch on #puppet
+on Freenode, or email adrien@puppetlabs.com.
