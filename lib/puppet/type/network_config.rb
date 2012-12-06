@@ -3,6 +3,12 @@ Puppet::Type.newtype(:network_config) do
 
   feature :hotpluggable, 'The system can hotplug interfaces'
 
+  feature :reconfigurable, <<-EOD
+    The provider can update live interface configuration after the non-volatile
+    network configuration is updated. This may entail a momentary network
+    disruption as it may mean bringing down the interface for a short period.
+  EOD
+
   ensurable
 
   newparam(:name) do
@@ -48,10 +54,10 @@ Puppet::Type.newtype(:network_config) do
     defaultto :true
   end
 
-  newparam(:reconfigure, :boolean => true) do
+  newparam(:reconfigure, :required_features => :reconfigurable, :boolean => true) do
     desc "Reconfigure the interface after the configuration has been updated"
     newvalues(:true, :false)
-    defaultto false
+    defaultto :false
   end
 
   # Many network configurations can take arbitrary parameters, so instead of
