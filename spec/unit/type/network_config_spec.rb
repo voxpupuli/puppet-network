@@ -12,8 +12,6 @@ describe type_class do
 
     type_class.stubs(:defaultprovider).returns @provider_class
     type_class.stubs(:provider).returns @provider_class
-
-    @resource = stub 'resource', :resource => nil, :provider => @provider
   end
 
   describe "when validating the attribute" do
@@ -115,7 +113,7 @@ describe type_class do
     describe 'onboot' do
       [true, false].each do |bool|
         it "should accept '#{bool}' for onboot" do
-          subject.new(:name => 'yay', :onboot => true)
+          subject.new(:name => 'yay', :onboot => bool)
         end
       end
     end
@@ -123,7 +121,7 @@ describe type_class do
     describe 'reconfigure' do
       [true, false].each do |bool|
         it "should accept '#{bool}' for reconfigure" do
-          subject.new(:name => 'yay', :reconfigure => true)
+          subject.new(:name => 'yay', :reconfigure => bool)
         end
       end
     end
