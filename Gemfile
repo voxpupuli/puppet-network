@@ -9,8 +9,6 @@ group :test, :development do
   gem 'rspec-puppet', '>= 0.1.5'
 end
 
-group :development do
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'rb-fsevent', '~> 0.9.1'
+if File.exists? "#{__FILE__}.local"
+  eval(File.read("#{__FILE__}.local"), binding)
 end
