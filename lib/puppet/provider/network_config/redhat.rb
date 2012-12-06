@@ -94,6 +94,20 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     props = self.munge(pairs)
 
+    # TODO remove duct tape for #13
+    #
+    # The :family property is making less and less sense because it seems that
+    # ipv6 configuration should add new properties instead of trying to collide
+    # with the ipv4 addresses. But right now, the :inet property is never used
+    # and it's creating a change on each resource update. This is a patch until
+    # the :family property is ripped out.
+    #
+    # See https://github.com/adrienthebo/puppet-network/issues/13 for the full
+    # issue that caused this, and https://github.com/adrienthebo/puppet-network/issues/16
+    # for the resolution.
+    #
+    props.merge!({:family => :inet})
+
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array
     [props]
