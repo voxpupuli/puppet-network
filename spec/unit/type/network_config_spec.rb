@@ -20,6 +20,10 @@ describe Puppet::Type.type(:network_config) do
     describe "reconfigurable" do
       it { described_class.provider_feature(:reconfigurable).should_not be_nil }
     end
+
+    describe "provider_options" do
+      it { described_class.provider_feature(:provider_options).should_not be_nil }
+    end
   end
 
   describe "when validating the attribute" do
@@ -59,6 +63,9 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe "options" do
+      it "should require the :has_options feature" do
+        described_class.propertybyname(:options).required_features.should be_include :provider_options
+      end
       it "should be a descendant of the KeyValue property" do
         pending "on conversion to specific type"
         described_class.propertybyname(:options).ancestors.should be_include(Puppet::Property::Ensure)

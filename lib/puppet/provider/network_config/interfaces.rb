@@ -15,6 +15,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
+  has_feature :provider_options
   has_feature :hotpluggable
 
   def select_file

@@ -16,6 +16,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   defaultfor :osfamily => :redhat
 
   has_feature :hotpluggable
+  has_feature :provider_options
 
   SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
 
