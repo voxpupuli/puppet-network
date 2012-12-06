@@ -32,7 +32,6 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-
     it "use the name parameter as the namevar" do
       described_class.key_attributes.should == [:name]
     end
@@ -40,6 +39,12 @@ describe Puppet::Type.type(:network_config) do
     describe "ensure" do
       it "should be an ensurable value" do
         described_class.propertybyname(:ensure).ancestors.should be_include(Puppet::Property::Ensure)
+      end
+    end
+
+    describe 'hotplug' do
+      it "should require the :hotpluggable feature" do
+        described_class.propertybyname(:hotplug).required_features.should be_include :hotpluggable
       end
     end
 
