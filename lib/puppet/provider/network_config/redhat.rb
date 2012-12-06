@@ -15,6 +15,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   confine    :osfamily => :redhat
   defaultfor :osfamily => :redhat
 
+  has_feature :hotpluggable
+
   SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
 
   NAME_MAPPINGS = {
@@ -23,6 +25,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :method     => 'BOOTPROTO',
     :onboot     => 'ONBOOT',
     :name       => 'DEVICE',
+    :hotplug    => 'HOTPLUG',
   }
 
   # Map provider instances to files based on their name
@@ -121,8 +124,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs unless pairs.empty?
 
-    if props[:onboot]
-      props[:onboot] = (props[:onboot] == 'yes')
+    [:onboot, :hotplug].each do |bool_property|
+      if props[bool_property]
+        props[bool_property] = (props[bool_property] == 'yes')
+      end
     end
 
     unless ['bootp', 'dhcp'].include? props[:method]
@@ -164,8 +169,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pairs = {}
 
-    if props[:onboot]
-      props[:onboot] = (props[:onboot] ? 'yes' : 'no')
+    [:onboot, :hotplug].each do |bool_property|
+      if props[bool_property]
+        props[bool_property] = (props[bool_property] ? 'yes' : 'no')
+      end
     end
 
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|

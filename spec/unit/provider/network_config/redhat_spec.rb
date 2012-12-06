@@ -10,6 +10,12 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     File.read(File.join(basedir, file))
   end
 
+  describe 'provider features' do
+    it 'should be hotpluggable' do
+      described_class.declared_feature?(:hotpluggable).should be_true
+    end
+  end
+
   describe "when parsing" do
 
     describe 'the name' do
@@ -31,6 +37,18 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'when static' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
         it { data[:method].should == 'static' }
+      end
+    end
+
+    describe 'the hotplug property' do
+      describe 'when true' do
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-hotplug'))[0] }
+        it { data[:hotplug].should be_true }
+      end
+
+      describe 'when false' do
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-nohotplug'))[0] }
+        it { data[:hotplug].should be_false }
       end
     end
 
@@ -221,6 +239,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :name            => "eth0",
         :ensure          => :present,
         :onboot          => :true,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "none",
         :ipaddress       => "169.254.0.1",
@@ -233,6 +252,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => :true,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
@@ -245,6 +265,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       stub('bond0_provider',
         :name      => 'bond0',
         :onboot    => true,
+        :hotplug   => true,
         :ipaddress => '172.20.1.9',
         :netmask   => '255.255.255.0',
         :method    => 'static',
