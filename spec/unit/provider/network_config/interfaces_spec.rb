@@ -8,6 +8,12 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     File.read(File.join(basedir, file))
   end
 
+  describe 'provider features' do
+    it 'should be hotpluggable' do
+      described_class.declared_feature?(:hotpluggable).should be_true
+    end
+  end
+
   describe "when parsing" do
 
     it "should parse out auto interfaces" do
