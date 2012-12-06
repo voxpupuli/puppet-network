@@ -31,6 +31,11 @@ define network::bond(
 
   require network::bond::setup
 
+  kmod::alias { $name:
+    source => 'bonding',
+    ensure => $ensure,
+  }
+
   case $osfamily {
     Debian: {
       network::bond::debian { $name:
@@ -40,6 +45,7 @@ define network::bond(
         netmask   => $netmask,
         family    => $family,
         onboot    => $onboot,
+        require   => Kmod::Alias[$name],
       }
     }
     RedHat: {
@@ -50,6 +56,7 @@ define network::bond(
         netmask   => $netmask,
         family    => $family,
         onboot    => $onboot,
+        require   => Kmod::Alias[$name],
       }
     }
   }
