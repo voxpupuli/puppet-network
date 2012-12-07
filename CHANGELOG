@@ -1,5 +1,19 @@
 CHANGELOG
 
+0.1.1
+-----
+
+2012-12-06
+
+This is a backwards compatible metadata fix and maintenance update.
+
+  * (network-#14) Fix specs for Ruby 1.9.3
+  * Add Gemfile
+  * (maint) DRY up specs
+  * Restrict filemapper dependency to 1.0.x. 1.1.x will go into RC shortly
+  and the puppet module tool will install prereleases so for the sake of
+  safety I'm restricting the dependency here.
+
 0.1.0
 -----
 
