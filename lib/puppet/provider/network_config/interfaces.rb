@@ -7,6 +7,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   # collection of network_config providers, and back.
   #
   # @see http://wiki.debian.org/NetworkConfiguration
+  # @see http://packages.debian.org/squeeze/ifupdown
 
   include PuppetX::FileMapper
 
