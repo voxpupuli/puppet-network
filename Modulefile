@@ -9,4 +9,4 @@ description 'Manage persistent network interface configuration'
 source       'https://github.com/adrienthebo/puppet-network'
 project_page 'https://github.com/adrienthebo/puppet-network'
 
-dependency 'adrien/filemapper', '>= 1.0.0'
+dependency 'adrien/filemapper', '1.0.x'
