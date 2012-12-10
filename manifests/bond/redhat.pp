@@ -5,12 +5,13 @@
 # ==
 define network::bond::redhat(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
+  $ensure       = present,
+  $ipaddress    = undef,
+  $netmask      = undef,
+  $method       = undef,
+  $family       = undef,
+  $onboot       = undef,
+  $bonding_opts = undef,
 ) {
 
   network_config { $name:
@@ -19,6 +20,10 @@ define network::bond::redhat(
     netmask   => $netmask,
     family    => $family,
     onboot    => $onboot,
+    method    => $method,
+    options   => {
+      'bonding_opts' => $bonding_opts
+    },
   }
 
   network_config { $slaves:
@@ -31,4 +36,3 @@ define network::bond::redhat(
     }
   }
 }
-
