@@ -21,12 +21,13 @@
 #
 define network::bond(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
+  $ensure       = present,
+  $ipaddress    = undef,
+  $netmask      = undef,
+  $method       = undef,
+  $family       = undef,
+  $onboot       = undef,
+  $bonding_opts = undef,
 ) {
 
   require network::bond::setup
@@ -50,13 +51,15 @@ define network::bond(
     }
     RedHat: {
       network::bond::redhat { $name:
-        slaves    => $slaves,
-        ensure    => $ensure,
-        ipaddress => $ipaddress,
-        netmask   => $netmask,
-        family    => $family,
-        onboot    => $onboot,
-        require   => Kmod::Alias[$name],
+        slaves       => $slaves,
+        ensure       => $ensure,
+        ipaddress    => $ipaddress,
+        netmask      => $netmask,
+        family       => $family,
+        onboot       => $onboot,
+        bonding_opts => $bonding_opts,
+        method       => $method,
+        require      => Kmod::Alias[$name],
       }
     }
   }
