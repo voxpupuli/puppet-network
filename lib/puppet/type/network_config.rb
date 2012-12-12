@@ -65,7 +65,7 @@ Puppet::Type.newtype(:network_config) do
     defaultto :false
   end
 
-  # `:options` provides an arbitray passthrough for provider properties, so
+  # `:options` provides an arbitrary passthrough for provider properties, so
   # that provider specific behavior doesn't clutter up the main type but still
   # allows for more powerful actions to be taken.
   newproperty(:options, :required_features => :provider_options) do
