@@ -1,5 +1,18 @@
 CHANGELOG
 
+0.2.0
+-----
+
+2012-12-30
+
+This is a backwards compatible bugfix and maintenance release.
+
+  * (network-#15) Add hotpluggable feature for redhat
+  * (network-#13) normalize boolean values
+  * (network-#13) patch inet flapping behavior in redhat
+  * (network-#1) Add :reconfigurable parameter
+  * (network-#2) Add :provider_options feature
+
 0.1.1
 -----
 
