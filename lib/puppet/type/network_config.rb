@@ -1,7 +1,18 @@
 Puppet::Type.newtype(:network_config) do
   @doc = "Manage non-volatile network configuration information"
 
+  feature :provider_options, <<-EOD
+    The provider can accept a hash of arbitrary options. The semantics of
+    these options will depend on the provider.
+  EOD
+
   feature :hotpluggable, 'The system can hotplug interfaces'
+
+  feature :reconfigurable, <<-EOD
+    The provider can update live interface configuration after the non-volatile
+    network configuration is updated. This may entail a momentary network
+    disruption as it may mean bringing down the interface for a short period.
+  EOD
 
   ensurable
 
@@ -48,17 +59,16 @@ Puppet::Type.newtype(:network_config) do
     defaultto :true
   end
 
-  newparam(:reconfigure, :boolean => true) do
+  newparam(:reconfigure, :required_features => :reconfigurable, :boolean => true) do
     desc "Reconfigure the interface after the configuration has been updated"
     newvalues(:true, :false)
-    defaultto false
+    defaultto :false
   end
 
-  # Many network configurations can take arbitrary parameters, so instead of
-  # trying to list every single possible property, we accept a hash of
-  # properties and let providers do specific mapping of type properties to
-  # on-disk state.
-  newproperty(:options) do
+  # `:options` provides an arbitrary passthrough for provider properties, so
+  # that provider specific behavior doesn't clutter up the main type but still
+  # allows for more powerful actions to be taken.
+  newproperty(:options, :required_features => :provider_options) do
     desc "Provider specific options to be passed to the provider"
 
     def is_to_s(hash = @is)

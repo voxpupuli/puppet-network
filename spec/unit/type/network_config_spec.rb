@@ -16,13 +16,27 @@ describe Puppet::Type.type(:network_config) do
     describe "hotpluggable" do
       it { described_class.provider_feature(:hotpluggable).should_not be_nil }
     end
+
+    describe "reconfigurable" do
+      it { described_class.provider_feature(:reconfigurable).should_not be_nil }
+    end
+
+    describe "provider_options" do
+      it { described_class.provider_feature(:provider_options).should_not be_nil }
+    end
   end
 
   describe "when validating the attribute" do
 
-    [:name, :reconfigure].each do |param|
-      describe param do
-        it { described_class.attrtype(param).should == :param }
+    describe :name do
+      it { described_class.attrtype(:name).should == :param }
+    end
+
+    describe :reconfigure do
+      it { described_class.attrtype(:reconfigure).should == :param }
+
+      it 'should require the :reconfigurable parameter' do
+        described_class.paramclass(:reconfigure).required_features.should be_include :reconfigurable
       end
     end
 
@@ -49,6 +63,9 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe "options" do
+      it "should require the :has_options feature" do
+        described_class.propertybyname(:options).required_features.should be_include :provider_options
+      end
       it "should be a descendant of the KeyValue property" do
         pending "on conversion to specific type"
         described_class.propertybyname(:options).ancestors.should be_include(Puppet::Property::Ensure)

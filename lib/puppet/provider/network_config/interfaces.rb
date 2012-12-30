@@ -7,6 +7,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   # collection of network_config providers, and back.
   #
   # @see http://wiki.debian.org/NetworkConfiguration
+  # @see http://packages.debian.org/squeeze/ifupdown
 
   include PuppetX::FileMapper
 
@@ -15,6 +16,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   confine    :osfamily => :debian
   defaultfor :osfamily => :debian
 
+  has_feature :provider_options
   has_feature :hotpluggable
 
   def select_file
@@ -100,7 +102,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces.delete_at(0)
 
         interfaces.each do |iface|
-          iface_hash[iface][:hotplug] = true
+          iface_hash[iface][:hotplug] = :true
         end
 
         # Don't reset Reset the current parse state

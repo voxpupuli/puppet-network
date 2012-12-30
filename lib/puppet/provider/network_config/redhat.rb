@@ -15,6 +15,9 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   confine    :osfamily => :redhat
   defaultfor :osfamily => :redhat
 
+  has_feature :hotpluggable
+  has_feature :provider_options
+
   SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
 
   NAME_MAPPINGS = {
@@ -23,6 +26,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :method     => 'BOOTPROTO',
     :onboot     => 'ONBOOT',
     :name       => 'DEVICE',
+    :hotplug    => 'HOTPLUG',
   }
 
   # Map provider instances to files based on their name
@@ -91,6 +95,20 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     props = self.munge(pairs)
 
+    # TODO remove duct tape for #13
+    #
+    # The :family property is making less and less sense because it seems that
+    # ipv6 configuration should add new properties instead of trying to collide
+    # with the ipv4 addresses. But right now, the :inet property is never used
+    # and it's creating a change on each resource update. This is a patch until
+    # the :family property is ripped out.
+    #
+    # See https://github.com/adrienthebo/puppet-network/issues/13 for the full
+    # issue that caused this, and https://github.com/adrienthebo/puppet-network/issues/16
+    # for the resolution.
+    #
+    props.merge!({:family => :inet})
+
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array
     [props]
@@ -121,8 +139,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs unless pairs.empty?
 
-    if props[:onboot]
-      props[:onboot] = (props[:onboot] == 'yes')
+    [:onboot, :hotplug].each do |bool_property|
+      if props[bool_property]
+        props[bool_property] = (props[bool_property] == 'yes' ? :true : :false)
+      end
     end
 
     unless ['bootp', 'dhcp'].include? props[:method]
@@ -164,8 +184,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pairs = {}
 
-    if props[:onboot]
-      props[:onboot] = (props[:onboot] ? 'yes' : 'no')
+    [:onboot, :hotplug].each do |bool_property|
+      if props[bool_property]
+        props[bool_property] = (props[bool_property] == :true ? 'yes' : 'no')
+      end
     end
 
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|

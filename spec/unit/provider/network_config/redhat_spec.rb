@@ -2,47 +2,64 @@
 
 require 'spec_helper'
 
-provider_class = Puppet::Type.type(:network_config).provider(:redhat)
-describe provider_class do
+describe Puppet::Type.type(:network_config).provider(:redhat) do
 
-    subject { provider_class }
+    subject { described_class }
   def fixture_data(file)
     basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec')
     File.read(File.join(basedir, file))
   end
 
+  describe 'provider features' do
+    it 'should be hotpluggable' do
+      described_class.declared_feature?(:hotpluggable).should be_true
+    end
+  end
+
   describe "when parsing" do
 
     describe 'the name' do
-      let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+      let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
       it { data[:name].should == 'eth0' }
     end
 
     describe 'the onboot property' do
-      let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+      let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
       it { data[:name].should be_true }
     end
 
     describe "the method property" do
       describe 'when dhcp' do
-        let(:data) { subject.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
         it { data[:method].should == 'dhcp' }
       end
 
       describe 'when static' do
-        let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
         it { data[:method].should == 'static' }
       end
     end
 
+    describe 'the hotplug property' do
+      describe 'when true' do
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-hotplug'))[0] }
+        it { data[:hotplug].should == :true }
+      end
+
+      describe 'when false' do
+        let(:data) { described_class.parse_file('eth0', fixture_data('eth0-nohotplug'))[0] }
+        it { data[:hotplug].should == :false }
+      end
+    end
+
     describe 'a static interface' do
-      let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
+      let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
       it { data[:ipaddress].should == '10.0.1.27' }
       it { data[:netmask].should   == '255.255.255.0' }
     end
 
     describe 'the options property' do
-      let(:data) { subject.parse_file('eth0', fixture_data('eth0-static'))[0] }
+      let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
       it { data[:options]["USERCTL"].should == 'no' }
       it { data[:options]["NM_CONTROLLED"].should == 'no' }
     end
@@ -51,14 +68,14 @@ describe provider_class do
       let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
 
       before do
-        provider_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]
-        provider_class.any_instance.expects(:select_file).never
+        described_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]
+        described_class.any_instance.expects(:select_file).never
       end
 
-      let(:interfaces) { provider_class.instances }
+      let(:interfaces) { described_class.instances }
 
       describe 'bond0' do
-        subject { provider_class.instances.find { |i| i.name == 'bond0' } }
+        subject { described_class.instances.find { |i| i.name == 'bond0' } }
         its(:onboot) { should be_true }
         its(:options) { should == {
             "MTU" => '1500',
@@ -68,7 +85,7 @@ describe provider_class do
       end
 
       describe 'bond1' do
-        subject { provider_class.instances.find { |i| i.name == 'bond1' } }
+        subject { described_class.instances.find { |i| i.name == 'bond1' } }
         its(:onboot) { should be_true }
         its(:ipaddress) { should == '172.20.1.9' }
         its(:netmask) { should == '255.255.255.0' }
@@ -80,7 +97,7 @@ describe provider_class do
       end
 
       describe 'eth0' do
-        subject { provider_class.instances.find { |i| i.name == 'eth0' } }
+        subject { described_class.instances.find { |i| i.name == 'eth0' } }
         its(:onboot) { should be_true }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:1f',
@@ -92,7 +109,7 @@ describe provider_class do
       end
 
       describe 'eth1' do
-        subject { provider_class.instances.find { |i| i.name == 'eth1' } }
+        subject { described_class.instances.find { |i| i.name == 'eth1' } }
         its(:onboot) { should be_true }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:20',
@@ -104,7 +121,7 @@ describe provider_class do
       end
 
       describe 'eth2' do
-        subject { provider_class.instances.find { |i| i.name == 'eth2' } }
+        subject { described_class.instances.find { |i| i.name == 'eth2' } }
         its(:onboot) { should be_true }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c4',
@@ -116,7 +133,7 @@ describe provider_class do
       end
 
       describe 'eth3' do
-        subject { provider_class.instances.find { |i| i.name == 'eth3' } }
+        subject { described_class.instances.find { |i| i.name == 'eth3' } }
         its(:onboot) { should be_true }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c5',
@@ -128,7 +145,7 @@ describe provider_class do
       end
 
       describe 'vlan100' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan100' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan100' } }
         its(:ipaddress) { should == '172.24.61.11' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -143,7 +160,7 @@ describe provider_class do
       end
 
       describe 'vlan100:0' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan100:0' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
         its(:ipaddress) { should == '172.24.61.12' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -152,7 +169,7 @@ describe provider_class do
       end
 
       describe 'vlan200' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan200' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan200' } }
         its(:ipaddress) { should == '172.24.62.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -166,7 +183,7 @@ describe provider_class do
       end
 
       describe 'vlan300' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan300' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan300' } }
         its(:ipaddress) { should == '172.24.63.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -180,7 +197,7 @@ describe provider_class do
       end
 
       describe 'vlan400' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan400' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan400' } }
         its(:ipaddress) { should == '172.24.64.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -194,7 +211,7 @@ describe provider_class do
       end
 
       describe 'vlan500' do
-        subject { provider_class.instances.find { |i| i.name == 'vlan500' } }
+        subject { described_class.instances.find { |i| i.name == 'vlan500' } }
         its(:ipaddress) { should == '172.24.65.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should be_false }
@@ -210,7 +227,7 @@ describe provider_class do
 
     describe "when reading an invalid interfaces" do
       it "with a mangled key/value should fail" do
-        expect { subject.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
+        expect { described_class.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
       end
     end
 
@@ -222,6 +239,7 @@ describe provider_class do
         :name            => "eth0",
         :ensure          => :present,
         :onboot          => :true,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "none",
         :ipaddress       => "169.254.0.1",
@@ -234,6 +252,7 @@ describe provider_class do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => :true,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
@@ -246,6 +265,7 @@ describe provider_class do
       stub('bond0_provider',
         :name      => 'bond0',
         :onboot    => true,
+        :hotplug   => true,
         :ipaddress => '172.20.1.9',
         :netmask   => '255.255.255.0',
         :method    => 'static',
@@ -258,11 +278,11 @@ describe provider_class do
     end
 
     it 'should fail if multiple interfaces are flushed to one file' do
-      expect { subject.format_file('filepath', [eth0_provider, lo_provider]) }.to raise_error Puppet::DevError, /multiple interfaces/
+      expect { described_class.format_file('filepath', [eth0_provider, lo_provider]) }.to raise_error Puppet::DevError, /multiple interfaces/
     end
 
     describe 'with test interface eth0' do
-      let(:data) { subject.format_file('filepath', [eth0_provider]) }
+      let(:data) { described_class.format_file('filepath', [eth0_provider]) }
 
       it { data.should match /DEVICE=eth0/ }
       it { data.should match /ONBOOT=yes/ }
@@ -274,7 +294,7 @@ describe provider_class do
     end
 
     describe 'with test interface bond0' do
-      let(:data) { subject.format_file('filepath', [bond0_provider]) }
+      let(:data) { described_class.format_file('filepath', [bond0_provider]) }
 
       it { data.should match /BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/ }
     end
