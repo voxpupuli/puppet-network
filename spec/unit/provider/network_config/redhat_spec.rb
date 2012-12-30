@@ -43,12 +43,12 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     describe 'the hotplug property' do
       describe 'when true' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-hotplug'))[0] }
-        it { data[:hotplug].should == :true }
+        it { data[:hotplug].should == true }
       end
 
       describe 'when false' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-nohotplug'))[0] }
-        it { data[:hotplug].should == :false }
+        it { data[:hotplug].should == false }
       end
     end
 
@@ -238,7 +238,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       stub('eth0_provider',
         :name            => "eth0",
         :ensure          => :present,
-        :onboot          => :true,
+        :onboot          => true,
         :hotplug         => true,
         :family          => "inet",
         :method          => "none",
