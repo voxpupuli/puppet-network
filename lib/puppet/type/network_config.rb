@@ -1,3 +1,5 @@
+require 'puppet/property/boolean'
+
 Puppet::Type.newtype(:network_config) do
   @doc = "Manage non-volatile network configuration information"
 
@@ -47,22 +49,18 @@ Puppet::Type.newtype(:network_config) do
     defaultto :inet
   end
 
-  newproperty(:onboot, :boolean => true) do
+  newproperty(:onboot, :parent => Puppet::Property::Boolean) do
     desc "Whether to bring the interface up on boot"
-    newvalues(:true, :false)
     defaultto :true
   end
 
-  newproperty(:hotplug, :required_features => :hotpluggable, :boolean => true) do
+  newproperty(:hotplug, :required_features => :hotpluggable, :parent => Puppet::Property::Boolean) do
     desc "Allow/disallow hotplug support for this interface"
-    newvalues(:true, :false)
     defaultto :true
   end
 
-  newparam(:reconfigure, :required_features => :reconfigurable, :boolean => true) do
+  newparam(:reconfigure, :required_features => :reconfigurable, :parent => Puppet::Property::Boolean) do
     desc "Reconfigure the interface after the configuration has been updated"
-    newvalues(:true, :false)
-    defaultto :false
   end
 
   # `:options` provides an arbitrary passthrough for provider properties, so
