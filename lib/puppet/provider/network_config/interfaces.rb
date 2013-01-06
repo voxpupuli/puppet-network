@@ -39,6 +39,82 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     raise MalformedInterfacesError
   end
 
+  class Instance
+
+    attr_reader :name
+
+    # Booleans
+    attr_accessor :onboot, :hotplug
+
+
+    # These fields are going to get rearranged to resolve issue 16
+    # https://github.com/adrienthebo/puppet-network/issues/16
+    attr_accessor :ipaddress, :netmask, :family, :method
+
+    # Options hash
+    attr_reader :options
+
+    def initialize(name)
+      @name = name
+
+      @options = Hash.new {|hash, key| hash[key] = []}
+    end
+
+    def to_hash
+      h = {
+        :name      => @name,
+        :onboot    => @onboot,
+        :hotplug   => @hotplug,
+        :ipaddress => @ipaddress,
+        :netmask   => @netmask,
+        :family    => @family,
+        :method    => @method,
+        :options   => squeeze_options
+      }
+
+      h.inject({}) do |hash, (key, val)|
+        hash[key] = val unless val.nil?
+        hash
+      end
+    end
+
+    def squeeze_options
+      @options.inject({}) do |hash, (key, value)|
+        if value.size <= 1
+          hash[key] = value.pop
+        else
+          hash[key] = value
+        end
+
+      hash
+      end
+    end
+
+    class << self
+
+      def reset!
+        @interfaces = {}
+      end
+
+      # @return [Array<Instance>] All class instances
+      def all_instances
+        @interfaces ||= {}
+        @interfaces
+      end
+
+      def [](name)
+        if all_instances[name]
+          obj = all_instances[name]
+        else
+          obj = self.new(name)
+          all_instances[name] = obj
+        end
+
+        obj
+      end
+    end
+  end
+
   def self.parse_file(filename, contents)
     # Debian has a very irregular format for the interfaces file. The
     # parse_file method is somewhat derived from the ifup executable
@@ -51,23 +127,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # parsed.
     status = :none
     current_interface = nil
-
-    # Build out an empty hash for new interfaces for storing their configs.
-    iface_hash = Hash.new do |hash, key|
-      hash[key] = {}
-      hash[key][:name] = key
-
-      # example
-      #   {
-      #     :"pre-up" => ['command one', 'command two'],
-      #     :down     => ['command three', 'command four'],
-      #   }
-      #
-      # XXX This is getting very complex. This should be broken down.
-      hash[key][:options] = Hash.new {|hash, key| hash[key] = []}
-
-      hash[key]
-    end
 
     lines = contents.split("\n")
     # TODO Join lines that end with a backslash
@@ -88,8 +147,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces = line.split(' ')
         interfaces.delete_at(0)
 
-        interfaces.each do |iface|
-          iface_hash[iface][:onboot]  = :true
+        interfaces.each do |name|
+          Instance[name].onboot = true
         end
 
         # Reset the current parse state
@@ -101,8 +160,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         interfaces = line.split(' ')
         interfaces.delete_at(0)
 
-        interfaces.each do |iface|
-          iface_hash[iface][:hotplug] = :true
+        interfaces.each do |name|
+          Instance[name].hotplug = true
         end
 
         # Don't reset Reset the current parse state
@@ -114,22 +173,21 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # zero or more options for <iface>
 
         if match = line.match(/^iface (\S+)\s+(\S+)\s+(\S+)/)
-          iface  = match[1]
+          name   = match[1]
           family = match[2]
           method = match[3]
 
-          status = :iface
-          current_interface = iface
-
           # If an iface block for this interface has been seen, the file is
           # malformed.
-          if iface_hash[iface] and iface_hash[iface][:family]
-            raise_malformed
-          end
+          raise_malformed if Instance[name] and Instance[name].family
 
-          iface_hash[iface][:family] = family
-          iface_hash[iface][:method] = method
-          iface_hash[iface][:name]    = iface
+          status = :iface
+          current_interface = name
+
+          # This is done automatically
+          #Instance[name].name   = name
+          Instance[name].family = family
+          Instance[name].method = method
 
         else
           # If we match on a string with a leading iface, but it isn't in the
@@ -158,12 +216,12 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             key = match[1]
             val = match[2]
 
-            iface = current_interface
+            name = current_interface
 
             case key
-            when 'address'; iface_hash[iface][:ipaddress] = val
-            when 'netmask'; iface_hash[iface][:netmask] = val
-            else iface_hash[iface][:options][key] = val
+            when 'address'; Instance[name].ipaddress    = val
+            when 'netmask'; Instance[name].netmask      = val
+            else            Instance[name].options[key] << val
             end
           else
             raise_malformed
@@ -175,7 +233,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         end
       end
     end
-    iface_hash.values
+
+    Instance.all_instances.map {|name, instance| instance.to_hash }
   end
 
   # Generate an array of sections

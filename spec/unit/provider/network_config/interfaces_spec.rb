@@ -8,6 +8,10 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     File.read(File.join(basedir, file))
   end
 
+  after :each do
+    described_class::Instance.reset!
+  end
+
   describe 'provider features' do
     it 'should be hotpluggable' do
       described_class.declared_feature?(:hotpluggable).should be_true
@@ -19,19 +23,19 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     it "should parse out auto interfaces" do
       fixture = fixture_data('loopback')
       data = described_class.parse_file('', fixture)
-      data.find { |h| h[:name] == "lo" }[:onboot].should == :true
+      data.find { |h| h[:name] == "lo" }[:onboot].should == true
     end
 
-    it "should parse out allow-hotplug interfaces" do
+    it "should parse out allow-hotplug interfaces as 'hotplug'" do
       fixture = fixture_data('single_interface_dhcp')
       data = described_class.parse_file('', fixture)
-      data.find { |h| h[:name] == "eth0" }[:options][:"allow-hotplug"].should be_true
+      data.find { |h| h[:name] == "eth0" }[:hotplug].should be_true
     end
 
     it "should parse out allow-auto interfaces as 'onboot'" do
       fixture = fixture_data('two_interface_dhcp')
       data = described_class.parse_file('', fixture)
-      data.find { |h| h[:name] == "eth1" }[:onboot].should == :true
+      data.find { |h| h[:name] == "eth1" }[:onboot].should == true
     end
 
     it "should parse out iface lines" do
@@ -41,7 +45,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :family  => "inet",
         :method  => "dhcp",
         :name    => "eth0",
-        :hotplug => :true,
+        :hotplug => true,
         :options => {},
       }
     end
@@ -55,7 +59,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :method    => "static",
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
-        :onboot    => :true,
+        :onboot    => true,
         :options   => {
           "broadcast" => "192.168.0.255",
           "gateway"   => "192.168.0.1",
