@@ -48,6 +48,7 @@ Dependencies
 ------------
 
 The debian interfaces provider requires the FileMapper mixin, available at https://github.com/adrienthebo/puppet-filemapper
+
 The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean
 
 Note: you many also need to update your master's plugins (run on your puppet master):
