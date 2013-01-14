@@ -251,7 +251,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     let(:lo_provider) do
       stub('lo_provider',
         :name            => "lo",
-        :onboot          => :true,
+        :onboot          => true,
         :hotplug         => true,
         :family          => "inet",
         :method          => "loopback",

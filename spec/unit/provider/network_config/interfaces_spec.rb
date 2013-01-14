@@ -93,8 +93,22 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       stub('eth0_provider',
         :name            => "eth0",
         :ensure          => :present,
-        :onboot          => :true,
-        :hotplug         => :true,
+        :onboot          => true,
+        :hotplug         => true,
+        :family          => "inet",
+        :method          => "static",
+        :ipaddress       => "169.254.0.1",
+        :netmask         => "255.255.0.0",
+        :options         => nil
+      )
+    end
+
+    let(:eth1_provider) do
+      stub('eth1_provider',
+        :name            => "eth1",
+        :ensure          => :present,
+        :onboot          => false,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "static",
         :ipaddress       => "169.254.0.1",
@@ -106,8 +120,8 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     let(:lo_provider) do
       stub('lo_provider',
         :name            => "lo",
-        :onboot          => :true,
-        :hotplug         => :true,
+        :onboot          => true,
+        :hotplug         => true,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
@@ -116,7 +130,17 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       )
     end
 
-    let(:content) { described_class.format_file('', [lo_provider, eth0_provider]) }
+    let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
+
+    describe "writing the auto section" do
+      it "should allow at most one section" do
+        content.scan(/^auto .*$/).length.should == 1
+      end
+
+      it "should have the correct interfaces appended" do
+        content.scan(/^auto .*$/).first.should be_include("auto eth0 lo")
+      end
+    end
 
     describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
@@ -124,7 +148,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^allow-hotplug .*$/).first.should be_include("allow-hotplug eth0 lo")
+        content.scan(/^allow-hotplug .*$/).first.should be_include("allow-hotplug eth0 eth1 lo")
       end
     end
 
