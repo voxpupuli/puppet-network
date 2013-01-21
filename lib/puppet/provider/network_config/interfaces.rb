@@ -277,7 +277,13 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
       if provider.options
         provider.options.each_pair do |key, val|
-          stanza << "#{key} #{val}"
+          if val.is_a? String
+            stanza << "#{key} #{val}"
+          elsif val.is_a? Array
+            val.each { |entry| stanza << "#{key} #{entry}" }
+          else
+            raise Puppet::Error, "#{self} options key #{key} expects a String or Array, got #{val.class}"
+          end
         end
       end
 
