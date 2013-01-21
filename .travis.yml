@@ -1,5 +1,8 @@
 ---
 language: ruby
+before_script:
+  - "bundle exec puppet module install adrien/boolean"
+  - "bundle exec puppet module install adrien/filemapper"
 script: "bundle exec rspec --color --format documentation"
 notifications:
   email: false
