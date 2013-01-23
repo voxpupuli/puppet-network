@@ -113,7 +113,13 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
-        :options         => nil
+        :options         => {
+          'pre-up'    => '/bin/touch /tmp/eth1-up',
+          'post-down' => [
+            '/bin/touch /tmp/eth1-down1',
+            '/bin/touch /tmp/eth1-down2',
+          ],
+        }
       )
     end
 
@@ -178,6 +184,32 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         lo_provider.unstub(:method)
         lo_provider.stubs(:method).returns nil
         expect { content }.to raise_exception
+      end
+    end
+
+    describe "writing the options section" do
+      let(:content) { described_class.format_file('', [eth1_provider]) }
+
+      describe "with a string value" do
+
+        it "should write a single entry" do
+          content.scan(/pre-up .*$/).size.should == 1
+        end
+
+        it "should write the value as an modified string" do
+          content.scan(/^pre-up .*$/).first.should == "pre-up /bin/touch /tmp/eth1-up"
+        end
+      end
+
+      describe "with an array value" do
+        it "should write an entry per array value" do
+          content.scan(/post-down .*$/).size.should == 2
+        end
+
+        it "should write the values in order" do
+          content.scan(/^post-down .*$/)[0].should == "post-down /bin/touch /tmp/eth1-down1"
+          content.scan(/^post-down .*$/)[1].should == "post-down /bin/touch /tmp/eth1-down2"
+        end
       end
     end
   end
