@@ -1,5 +1,25 @@
 CHANGELOG
 
+0.3.0
+-----
+
+2013-01-23
+
+This is a backwards compatible bugfix and maintenance release.
+
+  * New type: network_route
+  * Debian provider for network_route
+  * Better behavior of boolean properties in network_config
+  * (network-#18) Support multiple options for debian network_config
+
+Build status is now available at https://travis-ci.org/adrienthebo/puppet-network
+
+Thanks:
+
+  * Patrick Otto for the network_route type and Debian provider
+  * Robert Starmer for testing, debugging, and documentation
+  * Wolf Noble for insight and encouragement all along the way
+
 0.2.0
 -----
 
