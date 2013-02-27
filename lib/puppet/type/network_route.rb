@@ -13,10 +13,9 @@ Puppet::Type.newtype(:network_route) do
   newproperty(:network) do
     isrequired
     desc "The target network address"
-
     validate do |value|
       begin
-        t = IPAddr.new(value)
+        t = IPAddr.new(value) unless value == "default"
       rescue ArgumentError
         fail("Invalid value for network: #{value}")
       end
