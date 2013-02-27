@@ -172,7 +172,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # iface <iface> <family> <method>
         # zero or more options for <iface>
 
-        if match = line.match(/^iface (\S+)\s+(\S+)\s+(\S+)/)
+        if match = line.match(/^iface\s+(\S+)\s+(\S+)\s+(\S+)/)
           name   = match[1]
           family = match[2]
           method = match[3]

@@ -50,6 +50,18 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       }
     end
 
+    it "should ignore variable whitespace in iface lines (network-#26)" do
+      fixture = fixture_data('iface_whitespace')
+      data = described_class.parse_file('', fixture)
+      data.find { |h| h[:name] == "eth0" }.should == {
+        :family  => "inet",
+        :method  => "dhcp",
+        :name    => "eth0",
+        :hotplug => true,
+        :options => {},
+      }
+    end
+
     it "should parse out lines following iface lines" do
       fixture = fixture_data('single_interface_static')
       data = described_class.parse_file('', fixture)
