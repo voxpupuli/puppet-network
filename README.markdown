@@ -10,7 +10,7 @@ Examples
 
 Interface configuration
 
-    network_config { 'eth0':
+    network_interface { 'eth0':
       ensure  => 'present',
       family  => 'inet',
       method  => 'dhcp',
@@ -19,14 +19,14 @@ Interface configuration
       options => {'pre-up' => 'sleep 2'},
     }
 
-    network_config { 'lo':
+    network_interface { 'lo':
       ensure => 'present',
       family => 'inet',
       method => 'loopback',
       onboot => 'true',
     }
 
-    network_config { 'eth1':
+    network_interface { 'eth1':
       ensure    => 'present',
       family    => 'inet',
       ipaddress => '169.254.0.1',
@@ -46,9 +46,9 @@ Route configuration
 
 Create resources on the fly with the `puppet resource` command:
 
-    root@debian-6:~# puppet resource network_config eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0
+    root@debian-6:~# puppet resource network_interface eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0
     notice: /Network_config[eth1]/ensure: created
-    network_config { 'eth1':
+    network_interface { 'eth1':
       ensure    => 'present',
       family    => 'inet',
       ipaddress => '169.254.0.1',
@@ -72,7 +72,7 @@ Dependencies
 The debian interfaces provider requires the FileMapper mixin, available at https://github.com/adrienthebo/puppet-filemapper
 The debian routes provider requires the package ifupdown-extras
 
-The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean
+The network_interface type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean
 
 Note: you many also need to update your master's plugins (run on your puppet master):
 

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Puppet::Type.type(:network_config) do
+describe Puppet::Type.type(:network_interface) do
   before do
     provider_class = stub 'provider class', :name => "fake", :suitable? => true, :supports_parameter? => true
     provider_class.stubs(:new)

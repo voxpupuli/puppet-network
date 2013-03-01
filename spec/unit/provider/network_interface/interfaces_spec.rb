@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe Puppet::Type.type(:network_config).provider(:interfaces) do
+describe Puppet::Type.type(:network_interface).provider(:interfaces) do
   def fixture_data(file)
-    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'interfaces_spec')
+    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_interface', 'interfaces_spec')
     File.read(File.join(basedir, file))
   end
 

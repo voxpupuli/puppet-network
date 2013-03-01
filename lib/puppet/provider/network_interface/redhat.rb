@@ -1,7 +1,7 @@
 require 'puppetx/filemapper'
 
-Puppet::Type.type(:network_config).provide(:redhat) do
-  # Red Hat network_config network scripts provider.
+Puppet::Type.type(:network_interface).provide(:redhat) do
+  # Red Hat network_interface network scripts provider.
   #
   # This provider manages the contents of /etc/networks-scripts/ifcfg-* to
   # manage non-volatile network configuration.
