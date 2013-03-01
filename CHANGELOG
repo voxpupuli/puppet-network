@@ -9,8 +9,8 @@ This is a backwards compatible bugfix and maintenance release.
 
   * New type: network_route
   * Debian provider for network_route
-  * Better behavior of boolean properties in network_config
-  * (network-#18) Support multiple options for debian network_config
+  * Better behavior of boolean properties in network_interface
+  * (network-#18) Support multiple options for debian network_interface
 
 Build status is now available at https://travis-ci.org/adrienthebo/puppet-network
 
@@ -55,7 +55,7 @@ This is a backwards compatible metadata fix and maintenance update.
 This is a backwards incompatible bugfix and feature release. It might work
 work with un-updated code but no guarantees are made.
 
-  * Added a `hotplug` feature to the network_config type
+  * Added a `hotplug` feature to the network_interface type
   * Implemented the `hotplug` feature for osfamily => Debian
   * Added an alias from none to static for redhat users
 

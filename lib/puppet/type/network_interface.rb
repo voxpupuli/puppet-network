@@ -1,6 +1,6 @@
 require 'puppet/property/boolean'
 
-Puppet::Type.newtype(:network_config) do
+Puppet::Type.newtype(:network_interface) do
   @doc = "Manage non-volatile network configuration information"
 
   feature :provider_options, <<-EOD

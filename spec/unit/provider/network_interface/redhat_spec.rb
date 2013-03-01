@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-describe Puppet::Type.type(:network_config).provider(:redhat) do
+describe Puppet::Type.type(:network_interface).provider(:redhat) do
 
     subject { described_class }
   def fixture_data(file)
-    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec')
+    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_interface', 'redhat_spec')
     File.read(File.join(basedir, file))
   end
 
@@ -65,7 +65,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     end
 
     describe 'complex configuration' do
-      let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
+      let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_interface', 'redhat_spec', 'virbonding') }
 
       before do
         described_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]

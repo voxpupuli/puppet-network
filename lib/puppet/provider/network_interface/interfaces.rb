@@ -1,10 +1,10 @@
 require 'puppetx/filemapper'
 
-Puppet::Type.type(:network_config).provide(:interfaces) do
-  # Debian network_config interfaces provider.
+Puppet::Type.type(:network_interface).provide(:interfaces) do
+  # Debian network_interface interfaces provider.
   #
   # This provider uses the filemapper mixin to map the interfaces file to a
-  # collection of network_config providers, and back.
+  # collection of network_interface providers, and back.
   #
   # @see http://wiki.debian.org/NetworkConfiguration
   # @see http://packages.debian.org/squeeze/ifupdown
@@ -29,7 +29,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
   class MalformedInterfacesError < Puppet::Error
     def initialize(msg = nil)
-      msg = 'Malformed debian interfaces file; cannot instantiate network_config resources' if msg.nil?
+      msg = 'Malformed debian interfaces file; cannot instantiate network_interface resources' if msg.nil?
       super
     end
   end
