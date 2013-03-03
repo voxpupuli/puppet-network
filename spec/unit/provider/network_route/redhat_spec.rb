@@ -9,21 +9,32 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
   end
 
   describe "when parsing" do
-    it "should parse out iface lines" do
-      fixture = fixture_data('simple_routes')
+    describe "a well formed file" do
+      let(:data) { described_class.parse_file('', fixture_data('simple_routes')) }
 
-      data = described_class.parse_file('', fixture)
-      data.find { |h| h[:name] == '172.17.67.0/30' }.should == {
-        :name       => '172.17.67.0/30',
-        :network    => '172.17.67.0',
-        :netmask    => '255.255.255.252',
-        :gateway    => '172.18.6.2',
-        :interface  => 'vlan200',
-      }
+      it "should parse out normal network routes" do
+        data.find { |h| h[:name] == '172.17.67.0/30' }.should == {
+          :name       => '172.17.67.0/30',
+          :network    => '172.17.67.0',
+          :netmask    => '255.255.255.252',
+          :gateway    => '172.18.6.2',
+          :interface  => 'vlan200',
+        }
+      end
+
+      it "should parse out default routes" do
+        data.find { |h| h[:name] == 'default' }.should == {
+          :name       => 'default',
+          :network    => 'default',
+          :netmask    => '',
+          :gateway    => '10.0.0.1',
+          :interface  => 'eth1',
+        }
+      end
     end
 
-    describe "when reading an invalid routes file" do
-      it "with missing options should fail" do
+    describe "an invalid file" do
+      it "should fail" do
         expect do
           described_class.parse_file('', "192.168.1.1/30 via\n")
         end.to raise_error
@@ -88,7 +99,8 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
         end
       end
     end
-    describe "For default route" do
+
+    describe "for default routes" do
       it "should have the correct fields appended" do
         content.scan(/^default .*$/).first.should be_include("default via 10.0.0.1 dev eth1")
       end
