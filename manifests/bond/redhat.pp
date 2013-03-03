@@ -25,12 +25,17 @@ define network::bond::redhat(
   $xmit_hash_policy = undef,
 ) {
 
+  $bonding_opts = template("network/bond/opts-redhat.erb")
+
   network_config { $name:
-    ensure    => $ensure,
-    ipaddress => $ipaddress,
-    netmask   => $netmask,
-    family    => $family,
-    onboot    => $onboot,
+    ensure           => $ensure,
+    ipaddress        => $ipaddress,
+    netmask          => $netmask,
+    family           => $family,
+    onboot           => $onboot,
+    options          => {
+      'BONDING_OPTS' => $bonding_opts,
+    }
   }
 
   network_config { $slaves:
