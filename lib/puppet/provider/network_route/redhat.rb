@@ -24,7 +24,6 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     Dir["/etc/sysconfig/network-scripts/route-*"]
   end
 
-
   def self.parse_file(filename, contents)
     # Build out an empty hash for new routes for storing their configs.
     route_hash = Hash.new do |hash, key|
@@ -45,21 +44,21 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
       route = line.split
       if route.length < 4
-        raise_malformed
+        raise Puppet::Error, "Malformed redhat route file, cannot instantiate network_route resources"
       end
-      if route[0] != "default"
+      if route[0] == "default"
+        cidr_target = "default"
+        route_hash[cidr_target][:network] = "default"
+        route_hash[cidr_target][:netmask] = ''
+        route_hash[cidr_target][:gateway] = route[2]
+        route_hash[cidr_target][:interface] = route[4]
+      else
         # use the CIDR version of the target as :name
         network, netmask = route[0].split("/")
         cidr_target = "#{network}/#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
 
         route_hash[cidr_target][:network] = network
         route_hash[cidr_target][:netmask] = netmask
-        route_hash[cidr_target][:gateway] = route[2]
-        route_hash[cidr_target][:interface] = route[4]
-      else
-        cidr_target = "default"
-        route_hash[cidr_target][:network] = "default"
-        route_hash[cidr_target][:netmask] = ''
         route_hash[cidr_target][:gateway] = route[2]
         route_hash[cidr_target][:interface] = route[4]
       end
@@ -75,10 +74,9 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     contents << header
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      raise Puppet::Error, "#{provider.name} does not have a network." if provider.network.nil?
-      raise Puppet::Error, "#{provider.name} does not have a netmask." if provider.netmask.nil?
-      raise Puppet::Error, "#{provider.name} does not have a gateway." if provider.gateway.nil?
-      raise Puppet::Error, "#{provider.name} does not have an interface" if provider.interface.nil?
+      [:network, :netmask, :gateway, :interface].each do |prop|
+        raise Puppet::Error, "#{provider.name} does not have a #{property}." if provider.send(prop).nil?
+      end
       if provider.network == "default"
         contents << "#{provider.network} via #{provider.gateway} dev #{provider.interface}\n"
       else
