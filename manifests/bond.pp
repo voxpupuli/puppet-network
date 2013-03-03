@@ -59,5 +59,8 @@ define network::bond(
         require   => Kmod::Alias[$name],
       }
     }
+    default: {
+      fail("network::bond does not support osfamily '${osfamily}'")
+    }
   }
 }
