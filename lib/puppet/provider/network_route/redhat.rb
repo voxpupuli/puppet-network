@@ -25,12 +25,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   end
 
   def self.parse_file(filename, contents)
-    # Build out an empty hash for new routes for storing their configs.
-    route_hash = Hash.new do |hash, key|
-      hash[key] = {}
-      hash[key][:name] = key
-      hash[key]
-    end
+    routes = []
 
     lines = contents.split("\n")
     lines.each do |line|
@@ -46,26 +41,33 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       if route.length < 4
         raise Puppet::Error, "Malformed redhat route file, cannot instantiate network_route resources"
       end
+
+      new_route = {}
+
       if route[0] == "default"
         cidr_target = "default"
-        route_hash[cidr_target][:network] = "default"
-        route_hash[cidr_target][:netmask] = ''
-        route_hash[cidr_target][:gateway] = route[2]
-        route_hash[cidr_target][:interface] = route[4]
+
+        new_route[:name]    = cidr_target
+        new_route[:network] = "default"
+        new_route[:netmask] = ''
+        new_route[:gateway] = route[2]
+        new_route[:interface] = route[4]
       else
         # use the CIDR version of the target as :name
         network, netmask = route[0].split("/")
         cidr_target = "#{network}/#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
 
-        route_hash[cidr_target][:network] = network
-        route_hash[cidr_target][:netmask] = netmask
-        route_hash[cidr_target][:gateway] = route[2]
-        route_hash[cidr_target][:interface] = route[4]
+        new_route[:name]    = cidr_target
+        new_route[:network] = network
+        new_route[:netmask] = netmask
+        new_route[:gateway] = route[2]
+        new_route[:interface] = route[4]
       end
 
+      routes << new_route
     end
 
-    route_hash.values
+    routes
   end
 
   # Generate an array of sections
