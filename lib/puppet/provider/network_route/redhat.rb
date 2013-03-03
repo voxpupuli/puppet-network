@@ -14,10 +14,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   desc "RHEL style routes provider"
 
   confine    :osfamily => :redhat
-
   defaultfor :osfamily => :redhat
-
-  has_feature :provider_options
 
   def select_file
     "/etc/sysconfig/network-scripts/route-#{@resource[:interface]}"
@@ -27,17 +24,6 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     Dir["/etc/sysconfig/network-scripts/route-*"]
   end
 
-  class MalformedRoutesError < Puppet::Error
-    def initialize(msg = nil)
-      msg = 'Malformed redhat route file; cannot instantiate network_route resources' if msg.nil?
-      super
-    end
-  end
-
-  def self.raise_malformed
-    @failed = true
-    raise MalformedRoutesError
-  end
 
   def self.parse_file(filename, contents)
     # Build out an empty hash for new routes for storing their configs.
