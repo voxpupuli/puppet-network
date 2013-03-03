@@ -7,7 +7,6 @@
 #
 # == Examples
 #
-#
 #     network::bond { 'bond0':
 #       ipaddress => '172.16.1.2',
 #       netmask   => '255.255.128.0',
@@ -27,6 +26,15 @@ define network::bond(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+
+  $mode             = "active-backup",
+  $miimon           = "100",
+  $downdelay        = "200",
+  $updelay          = "200",
+  $lacp_rate        = "slow",
+  $primary          = $slaves[0],
+  $primary_reselect = "always",
+  $xmit_hash_policy = "layer2",
 ) {
 
   require network::bond::setup

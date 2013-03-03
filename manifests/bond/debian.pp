@@ -11,6 +11,15 @@ define network::bond::debian(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+
+  $mode             = undef,
+  $miimon           = undef,
+  $downdelay        = undef,
+  $updelay          = undef,
+  $lacp_rate        = undef,
+  $primary          = undef,
+  $primary_reselect = undef,
+  $xmit_hash_policy = undef,
 ) {
 
   network_config { $name:

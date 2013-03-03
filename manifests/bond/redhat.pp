@@ -1,8 +1,11 @@
 # = Define: network::bond::redhat
 #
-# Instantiate bonded interfaces on Debian based systems.
+# Instantiate bonded interfaces on Redhat based systems.
 #
-# ==
+# == See also
+#
+# * Red Hat Deployment Guide 25.7.2 "Using Channel Bonding" https://access.redhat.com/knowledge/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/sec-Using_Channel_Bonding.html
+#
 define network::bond::redhat(
   $slaves,
   $ensure    = present,
@@ -11,6 +14,15 @@ define network::bond::redhat(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+
+  $mode             = undef,
+  $miimon           = undef,
+  $downdelay        = undef,
+  $updelay          = undef,
+  $lacp_rate        = undef,
+  $primary          = undef,
+  $primary_reselect = undef,
+  $xmit_hash_policy = undef,
 ) {
 
   network_config { $name:
