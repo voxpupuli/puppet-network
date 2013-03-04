@@ -148,6 +148,10 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       )
     end
 
+    before do
+      described_class.stubs(:header).returns "# HEADER: stubbed header\n"
+    end
+
     let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
 
     describe "writing the auto section" do
@@ -156,7 +160,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^auto .*$/).first.should be_include("auto eth0 lo")
+        content.scan(/^auto .*$/).first.should match("auto eth0 lo")
       end
     end
 
@@ -166,7 +170,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^allow-hotplug .*$/).first.should be_include("allow-hotplug eth0 eth1 lo")
+        content.scan(/^allow-hotplug .*$/).first.should match("allow-hotplug eth0 eth1 lo")
       end
     end
 
@@ -183,7 +187,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           "address 169.254.0.1",
           "netmask 255.255.0.0",
         ].join("\n")
-        content.split('\n').find {|line| line.match(/iface eth0/)}.should be_include(block)
+        content.split('\n').find {|line| line.match(/iface eth0/)}.should match(block)
       end
 
       it "should fail if the family property is not defined" do
