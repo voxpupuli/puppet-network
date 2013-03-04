@@ -17,6 +17,8 @@ Puppet::Type.newtype(:network_config) do
     disruption as it may mean bringing down the interface for a short period.
   EOD
 
+  feature :ipv6, "The provider supports IPv6 configuration"
+
   ensurable
 
   newparam(:name) do
@@ -42,7 +44,7 @@ Puppet::Type.newtype(:network_config) do
     end
   end
 
-  newproperty(:ip6address) do
+  newproperty(:ip6address, :required_features => :ipv6) do
     desc "The IPv6 address/subnet mask"
 
     validate do |value|
