@@ -7,6 +7,7 @@ group :test, :development do
   gem 'rspec', '~> 2.10.0'
   gem 'mocha', '~> 0.10.5'
   gem 'rspec-puppet', '>= 0.1.5'
+  gem 'puppetlabs_spec_helper'
 end
 
 if File.exists? "#{__FILE__}.local"
