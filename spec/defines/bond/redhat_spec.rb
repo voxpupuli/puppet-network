@@ -24,7 +24,7 @@ describe 'network::bond::redhat', :type => :define do
     end
 
     ['eth0', 'eth1'].each do |slave|
-      it do
+      it "should add a network_config resource for #{slave}" do
         should contain_network_config(slave).with({
           'ensure' => 'present',
           'method' => 'static',
@@ -37,7 +37,7 @@ describe 'network::bond::redhat', :type => :define do
       end
     end
 
-    it do
+    it "should add a network_config resource for bond0" do
       should contain_network_config('bond0').with({
         'ensure'         => 'present',
         'method'         => 'static',
