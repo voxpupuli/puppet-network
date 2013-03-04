@@ -290,7 +290,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       contents << stanza.join("\n")
     end
 
-    # Given a series of stanzas,
     contents.map {|line| line + "\n\n"}.join
   end
 
