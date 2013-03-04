@@ -148,6 +148,10 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       )
     end
 
+    before do
+      described_class.stubs(:header).returns "# HEADER: stubbed header\n"
+    end
+
     let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
 
     describe "writing the auto section" do
