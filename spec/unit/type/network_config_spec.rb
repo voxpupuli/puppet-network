@@ -66,10 +66,6 @@ describe Puppet::Type.type(:network_config) do
       it "should require the :has_options feature" do
         described_class.propertybyname(:options).required_features.should be_include :provider_options
       end
-      it "should be a descendant of the KeyValue property" do
-        pending "on conversion to specific type"
-        described_class.propertybyname(:options).ancestors.should be_include(Puppet::Property::Ensure)
-      end
     end
   end
 
