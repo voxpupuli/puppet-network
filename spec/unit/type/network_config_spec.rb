@@ -75,39 +75,35 @@ describe Puppet::Type.type(:network_config) do
 
   describe "when validating the attribute value" do
 
-    describe "ipaddress" do
+    let(:address4){ '127.0.0.1' }
+    let(:address6){ '::1' }
 
-      let(:address4){ '127.0.0.1' }
-      let(:address6){ '::1' }
+    describe "ipaddress" do
 
       it "should require that a passed address is a valid IPv4 address" do
         expect { described_class.new(:name => 'yay', :ipaddress => address4) }.to_not raise_error
       end
       it "should fail when passed an IPv6 address" do
-        pending "implementation of IP address validation"
         expect { described_class.new(:name => 'yay', :ipaddress => address6) }.to raise_error
       end
     end
 
-    describe "ip6address", :pending => true do
+    describe "ip6address" do
       it "should require that a passed address is a valid IPv6 address" do
-        expect { described_class.new(:name => 'yay', :ipaddress => address6) }.to_not raise_error
+        expect { described_class.new(:name => 'yay', :ip6address => address6) }.to_not raise_error
       end
       it "should fail when passed an IPv4 address" do
-        pending "implementation of IP address validation"
-        expect { described_class.new(:name => 'yay', :ipaddress => address4) }.to raise_error
+        expect { described_class.new(:name => 'yay', :ip6address => address4) }.to raise_error
       end
     end
 
     it "should fail if a malformed address is used" do
-      pending "implementation of IP address validation"
       expect { described_class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
     end
 
     describe "netmask" do
       it "should validate a CIDR netmask"
       it "should fail if an invalid CIDR netmask is used" do
-        pending "implementation of IP address validation"
         expect do
           described_class.new(:name => 'yay', :netmask => 'This is clearly not a netmask')
         end.to raise_error

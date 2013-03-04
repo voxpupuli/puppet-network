@@ -1,4 +1,5 @@
 require 'puppet/property/boolean'
+require 'ipaddr'
 
 Puppet::Type.newtype(:network_config) do
   @doc = "Manage non-volatile network configuration information"
@@ -24,11 +25,30 @@ Puppet::Type.newtype(:network_config) do
   end
 
   newproperty(:ipaddress) do
-    desc "The IP address of the network interfaces"
+    desc "The IPv4 address of the network interfaces"
+
+    validate do |value|
+      addr = IPAddr.new(value)
+      addr.ipv4? or raise ArgumentError, "#{value} is not an IPv4 address"
+    end
   end
 
   newproperty(:netmask) do
-    desc "The subnet mask to apply to the interface"
+    desc "The IPv4 subnet mask to apply to the interface"
+
+    validate do |value|
+      addr = IPAddr.new(value)
+      addr.ipv4? or raise ArgumentError, "#{value} is not an IPv4 address"
+    end
+  end
+
+  newproperty(:ip6address) do
+    desc "The IPv6 address/subnet mask"
+
+    validate do |value|
+      addr = IPAddr.new(value)
+      addr.ipv6? or raise ArgumentError, "#{value} is not an IPv6 address"
+    end
   end
 
   newproperty(:method) do
