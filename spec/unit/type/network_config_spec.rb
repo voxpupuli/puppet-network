@@ -40,7 +40,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :onboot, :options].each do |property|
+    [:ensure, :ipaddress, :ip6address, :netmask, :method, :onboot, :options].each do |property|
       describe property do
         it { described_class.attrtype(property).should == :property }
       end
