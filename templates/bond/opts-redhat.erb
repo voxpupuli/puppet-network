@@ -1,8 +1,1 @@
-<%= if @mode -%>mode=<%= @mode -%> <% end -%>
-<%= if @miimon -%>miimon=<%= @miimon -%> <% end -%>
-<%= if @downdelay -%>downdelay=<%= @downdelay -%> <% end -%>
-<%= if @updelay -%>updelay=<%= @updelay -%> <% end -%>
-<%= if @lacp_rate -%>lacp_rate=<%= @lacp_rate -%> <% end -%>
-<%= if @primary -%>primary=<%= @primary -%> <% end -%>
-<%= if @primary_reselect -%>primary_reselect=<%= @primary_reselect -%> <% end -%>
-<%= if @xmit_hash_policy -%>xmit_hash_policy=<%= @xmit_hash_policy -%> <% end -%>
+<%= %w[mode miimon downdelay updelay lacp_rate primary primary_reselect xmit_hash_policy].select { |thing| scope[thing] }.map {|thing| "#{thing}=#{scope[thing]}"}.join(' ') -%>
