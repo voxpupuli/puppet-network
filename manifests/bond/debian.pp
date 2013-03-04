@@ -43,6 +43,7 @@ define network::bond::debian(
     ipaddress => $ipaddress,
     netmask   => $netmask,
     family    => $family,
+    method    => $method,
     onboot    => $onboot,
     options   => $opts,
   }
