@@ -268,10 +268,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       stanza = []
       stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
 
-      {
-        :ipaddress => 'address',
-        :netmask   => 'netmask',
-      }.each_pair do |property, section|
+      [
+        [:ipaddress, 'address'],
+        [:netmask,   'netmask'],
+      ].each do |(property, section)|
         stanza << "#{section} #{provider.send property}" if provider.send(property)
       end
 
