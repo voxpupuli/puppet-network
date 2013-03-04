@@ -77,24 +77,34 @@ describe Puppet::Type.type(:network_config) do
     describe "ipaddress" do
 
       it "should require that a passed address is a valid IPv4 address" do
-        expect { described_class.new(:name => 'yay', :ipaddress => address4) }.to_not raise_error
+        expect {
+          described_class.new(:name => 'yay', :ipaddress => address4)
+        }.to_not raise_error
       end
       it "should fail when passed an IPv6 address" do
-        expect { described_class.new(:name => 'yay', :ipaddress => address6) }.to raise_error
+        expect {
+          described_class.new(:name => 'yay', :ipaddress => address6)
+        }.to raise_error Puppet::Error, /not an IPv4 address/
       end
+    it "should fail if a malformed address is used" do
+      expect {
+        described_class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address')
+      }.to raise_error Puppet::Error, /invalid address/
+    end
+
     end
 
     describe "ip6address" do
       it "should require that a passed address is a valid IPv6 address" do
-        expect { described_class.new(:name => 'yay', :ip6address => address6) }.to_not raise_error
+        expect {
+          described_class.new(:name => 'yay', :ip6address => address6)
+        }.to_not raise_error
       end
       it "should fail when passed an IPv4 address" do
-        expect { described_class.new(:name => 'yay', :ip6address => address4) }.to raise_error
+        expect {
+          described_class.new(:name => 'yay', :ip6address => address4)
+        }.to raise_error Puppet::Error, /not an IPv6 address/
       end
-    end
-
-    it "should fail if a malformed address is used" do
-      expect { described_class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
     end
 
     describe "netmask" do

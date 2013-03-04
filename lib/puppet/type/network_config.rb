@@ -29,7 +29,7 @@ Puppet::Type.newtype(:network_config) do
 
     validate do |value|
       addr = IPAddr.new(value)
-      addr.ipv4? or raise ArgumentError, "#{value} is not an IPv4 address"
+      addr.ipv4? or raise "#{value} is not an IPv4 address"
     end
   end
 
@@ -38,7 +38,7 @@ Puppet::Type.newtype(:network_config) do
 
     validate do |value|
       addr = IPAddr.new(value)
-      addr.ipv4? or raise ArgumentError, "#{value} is not an IPv4 address"
+      addr.ipv4? or raise "#{value} is not an IPv4 address"
     end
   end
 
@@ -47,7 +47,7 @@ Puppet::Type.newtype(:network_config) do
 
     validate do |value|
       addr = IPAddr.new(value)
-      addr.ipv6? or raise ArgumentError, "#{value} is not an IPv6 address"
+      addr.ipv6? or raise "#{value} is not an IPv6 address"
     end
   end
 
