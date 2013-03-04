@@ -14,14 +14,14 @@ define network::bond::debian(
   $family    = undef,
   $onboot    = undef,
 
-  $mode,
-  $miimon,
-  $downdelay,
-  $updelay,
-  $lacp_rate,
-  $primary,
-  $primary_reselect,
-  $xmit_hash_policy,
+  $mode             = undef,
+  $miimon           = undef,
+  $downdelay        = undef,
+  $updelay          = undef,
+  $lacp_rate        = undef,
+  $primary          = undef,
+  $primary_reselect = undef,
+  $xmit_hash_policy = undef,
 ) {
 
   $raw = {
