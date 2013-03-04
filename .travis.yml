@@ -3,6 +3,7 @@ language: ruby
 before_script:
   - "bundle exec puppet module install adrien/boolean"
   - "bundle exec puppet module install adrien/filemapper"
+  - "bundle exec puppet module install puppetlabs/stdlib"
 script: "spec/travis_rspec.rb --color --format documentation"
 notifications:
   email: false
