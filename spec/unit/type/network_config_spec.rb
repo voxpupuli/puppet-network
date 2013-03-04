@@ -11,25 +11,27 @@ describe Puppet::Type.type(:network_config) do
     described_class.stubs(:provider).returns provider_class
   end
 
-  describe "feature" do
-
-    describe "hotpluggable" do
-      it { described_class.provider_feature(:hotpluggable).should_not be_nil }
-    end
-
-    describe "reconfigurable" do
-      it { described_class.provider_feature(:reconfigurable).should_not be_nil }
-    end
-
-    describe "provider_options" do
-      it { described_class.provider_feature(:provider_options).should_not be_nil }
+  [:hotpluggable, :reconfigurable, :provider_options, :ipv6].each do |feature|
+    it "should have the #{feature} feature" do
+      described_class.provider_feature(feature).should be_kind_of Puppet::Util::ProviderFeatures::ProviderFeature
     end
   end
 
-  describe "when validating the attribute" do
+  [:ensure, :ipaddress, :ip6address, :netmask, :method, :onboot, :options].each do |property|
+    it "should have the #{property} property" do
+      described_class.attrtype(property).should == :property
+    end
+  end
 
-    describe :name do
-      it { described_class.attrtype(:name).should == :param }
+  describe "attribute" do
+    describe "name parameter" do
+      it "should have the name parameter" do
+        described_class.attrtype(:name).should == :param
+      end
+
+      it "use the name parameter as the namevar" do
+        described_class.key_attributes.should == [:name]
+      end
     end
 
     describe :reconfigure do
@@ -38,16 +40,6 @@ describe Puppet::Type.type(:network_config) do
       it 'should require the :reconfigurable parameter' do
         described_class.paramclass(:reconfigure).required_features.should be_include :reconfigurable
       end
-    end
-
-    [:ensure, :ipaddress, :ip6address, :netmask, :method, :onboot, :options].each do |property|
-      describe property do
-        it { described_class.attrtype(property).should == :property }
-      end
-    end
-
-    it "use the name parameter as the namevar" do
-      described_class.key_attributes.should == [:name]
     end
 
     describe "ensure" do
