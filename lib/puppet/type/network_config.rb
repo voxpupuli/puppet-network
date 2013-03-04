@@ -43,12 +43,6 @@ Puppet::Type.newtype(:network_config) do
     defaultto :dhcp
   end
 
-  newproperty(:family) do
-    desc "The address family to use for the interface"
-    newvalues(:inet, :inet6)
-    defaultto :inet
-  end
-
   newproperty(:onboot, :parent => Puppet::Property::Boolean) do
     desc "Whether to bring the interface up on boot"
     defaultto :true

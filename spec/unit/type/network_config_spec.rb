@@ -40,7 +40,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :options].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :onboot, :options].each do |property|
       describe property do
         it { described_class.attrtype(property).should == :property }
       end
@@ -80,31 +80,28 @@ describe Puppet::Type.type(:network_config) do
       let(:address4){ '127.0.0.1' }
       let(:address6){ '::1' }
 
-      describe "using the inet family" do
-
-        it "should require that a passed address is a valid IPv4 address" do
-          expect { described_class.new(:name => 'yay', :family => :inet, :ipaddress => address4) }.to_not raise_error
-        end
-        it "should fail when passed an IPv6 address" do
-          pending "implementation of IP address validation"
-          expect { described_class.new(:name => 'yay', :family => :inet, :ipaddress => address6) }.to raise_error
-        end
+      it "should require that a passed address is a valid IPv4 address" do
+        expect { described_class.new(:name => 'yay', :ipaddress => address4) }.to_not raise_error
       end
-
-      describe "using the inet6 family" do
-        it "should require that a passed address is a valid IPv6 address" do
-          expect { described_class.new(:name => 'yay', :family => :inet6, :ipaddress => address6) }.to_not raise_error
-        end
-        it "should fail when passed an IPv4 address" do
-          pending "implementation of IP address validation"
-          expect { described_class.new(:name => 'yay', :family => :inet6, :ipaddress => address4) }.to raise_error
-        end
-      end
-
-      it "should fail if a malformed address is used" do
+      it "should fail when passed an IPv6 address" do
         pending "implementation of IP address validation"
-        expect { described_class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
+        expect { described_class.new(:name => 'yay', :ipaddress => address6) }.to raise_error
       end
+    end
+
+    describe "ip6address", :pending => true do
+      it "should require that a passed address is a valid IPv6 address" do
+        expect { described_class.new(:name => 'yay', :ipaddress => address6) }.to_not raise_error
+      end
+      it "should fail when passed an IPv4 address" do
+        pending "implementation of IP address validation"
+        expect { described_class.new(:name => 'yay', :ipaddress => address4) }.to raise_error
+      end
+    end
+
+    it "should fail if a malformed address is used" do
+      pending "implementation of IP address validation"
+      expect { described_class.new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
     end
 
     describe "netmask" do
@@ -121,14 +118,6 @@ describe Puppet::Type.type(:network_config) do
       [:static, :manual, :dhcp].each do |mth|
         it "should consider '#{mth}' a valid configuration method" do
           described_class.new(:name => 'yay', :method => mth)
-        end
-      end
-    end
-
-    describe "family" do
-      [:inet, :inet6].each do |family|
-        it "should consider '#{family}' a valid address family" do
-          described_class.new(:name => 'yay', :family => family)
         end
       end
     end
