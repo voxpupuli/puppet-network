@@ -51,8 +51,19 @@ define network::bond(
         ensure    => $ensure,
         ipaddress => $ipaddress,
         netmask   => $netmask,
+        method    => $method,
         family    => $family,
         onboot    => $onboot,
+
+        mode             => $mode,
+        miimon           => $miimon,
+        downdelay        => $downdelay,
+        updelay          => $updelay,
+        lacp_rate        => $lacp_rate,
+        primary          => $primary,
+        primary_reselect => $primary_reselect,
+        xmit_hash_policy => $xmit_hash_policy,
+
         require   => Kmod::Alias[$name],
       }
     }
@@ -63,7 +74,18 @@ define network::bond(
         ipaddress => $ipaddress,
         netmask   => $netmask,
         family    => $family,
+        method    => $method,
         onboot    => $onboot,
+
+        mode             => $mode,
+        miimon           => $miimon,
+        downdelay        => $downdelay,
+        updelay          => $updelay,
+        lacp_rate        => $lacp_rate,
+        primary          => $primary,
+        primary_reselect => $primary_reselect,
+        xmit_hash_policy => $xmit_hash_policy,
+
         require   => Kmod::Alias[$name],
       }
     }
