@@ -1,0 +1,7 @@
+---
+fixtures:
+  repositories:
+    kmod: 'https://github.com/camptocamp/puppet-kmod'
+    stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib'
+    boolean: 'https://github.com/adrienthebo/puppet-boolean'
+    filemapper: 'https://github.com/adrienthebo/puppet-filemapper'
