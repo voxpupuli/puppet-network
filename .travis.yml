@@ -1,10 +1,7 @@
 ---
 language: ruby
-before_script:
-  - "bundle exec puppet module install adrien/boolean"
-  - "bundle exec puppet module install adrien/filemapper"
-  - "bundle exec puppet module install puppetlabs/stdlib"
-script: "spec/travis_rspec.rb --color --format documentation"
+before_script: 'bundle exec rake fixture:prepare'
+script: 'SPEC_OPTS="--format documentation" bundle exec rake spec'
 notifications:
   email: false
 rvm:
