@@ -11,7 +11,6 @@ define network::bond::debian(
   $ipaddress = undef,
   $netmask   = undef,
   $method    = undef,
-  $family    = undef,
   $onboot    = undef,
 
   $mode             = undef,
@@ -42,7 +41,6 @@ define network::bond::debian(
     ensure    => $ensure,
     ipaddress => $ipaddress,
     netmask   => $netmask,
-    family    => $family,
     method    => $method,
     onboot    => $onboot,
     options   => $opts,

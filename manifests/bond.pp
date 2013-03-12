@@ -24,7 +24,6 @@ define network::bond(
   $ipaddress = undef,
   $netmask   = undef,
   $method    = undef,
-  $family    = undef,
   $onboot    = undef,
 
   $mode             = "active-backup",
@@ -52,7 +51,6 @@ define network::bond(
         ipaddress => $ipaddress,
         netmask   => $netmask,
         method    => $method,
-        family    => $family,
         onboot    => $onboot,
 
         mode             => $mode,
@@ -73,7 +71,6 @@ define network::bond(
         ensure    => $ensure,
         ipaddress => $ipaddress,
         netmask   => $netmask,
-        family    => $family,
         method    => $method,
         onboot    => $onboot,
 

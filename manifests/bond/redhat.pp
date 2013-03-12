@@ -12,7 +12,6 @@ define network::bond::redhat(
   $ipaddress = undef,
   $netmask   = undef,
   $method    = undef,
-  $family    = undef,
   $onboot    = undef,
 
   $mode             = undef,
@@ -32,7 +31,6 @@ define network::bond::redhat(
     method    => $method,
     ipaddress => $ipaddress,
     netmask   => $netmask,
-    family    => $family,
     onboot    => $onboot,
     options          => {
       'BONDING_OPTS' => $bonding_opts,
