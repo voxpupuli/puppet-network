@@ -9,7 +9,10 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   end
 
   after :each do
-    described_class::Instance.reset!
+    v_level = $VERBOSE
+    $VERBOSE = nil
+    Puppet::Type::Network_config::ProviderInterfaces::Instance.reset!
+    $VERBOSE = v_level
   end
 
   describe 'provider features' do
@@ -79,10 +82,26 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       }
     end
 
-    it "should parse out mapping lines"
-    it "should parse out lines following mapping lines"
+    # mapping sections aren't support, and might not ever be supported.
+    # it "should parse out mapping lines"
+    # it "should parse out lines following mapping lines"
 
-    it "should allow for multiple pre and post up sections"
+    it "should allow for multiple options sections" do
+      fixture = fixture_data('single_interface_options')
+      data = described_class.parse_file('', fixture)
+      data.find { |h| h[:name] == "eth0" }.should == {
+        :name      => "eth0",
+        :family    => "inet",
+        :method    => "dhcp",
+        :options   => {
+          "pre-up" => "/bin/touch /tmp/eth0-up",
+          "post-down" => [
+            "/bin/touch /tmp/eth0-down1",
+            "/bin/touch /tmp/eth0-down2",
+          ],
+        }
+      }
+    end
 
     describe "when reading an invalid interfaces" do
 

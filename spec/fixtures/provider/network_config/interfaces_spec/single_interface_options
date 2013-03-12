@@ -1,0 +1,11 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+iface eth0 inet dhcp
+pre-up /bin/touch /tmp/eth0-up
+post-down /bin/touch /tmp/eth0-down1
+post-down /bin/touch /tmp/eth0-down2
