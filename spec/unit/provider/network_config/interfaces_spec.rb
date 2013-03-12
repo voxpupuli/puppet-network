@@ -82,8 +82,9 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       }
     end
 
-    it "should parse out mapping lines"
-    it "should parse out lines following mapping lines"
+    # mapping sections aren't support, and might not ever be supported.
+    # it "should parse out mapping lines"
+    # it "should parse out lines following mapping lines"
 
     it "should allow for multiple options sections" do
       fixture = fixture_data('single_interface_options')
