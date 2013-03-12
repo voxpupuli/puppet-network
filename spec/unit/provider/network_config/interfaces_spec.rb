@@ -9,7 +9,10 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   end
 
   after :each do
-    described_class::Instance.reset!
+    v_level = $VERBOSE
+    $VERBOSE = nil
+    Puppet::Type::Network_config::ProviderInterfaces::Instance.reset!
+    $VERBOSE = v_level
   end
 
   describe 'provider features' do
