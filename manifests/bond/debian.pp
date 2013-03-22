@@ -55,7 +55,11 @@ define network::bond::debian(
     method      => 'manual',
     onboot      => 'true',
     hotplug     => 'true',
-    options     => { 'bond-master' => $name },
+    options     => {
+      'bond-master' => $name, 
+      'pre-up'      => 'ifconfig $IFACE up',
+      'post-down'   => 'ifconfig $IFACE down'
+    },
     before      => Network_config[$name],
   }
 }
