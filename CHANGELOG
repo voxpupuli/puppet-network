@@ -1,5 +1,17 @@
 CHANGELOG
 
+0.4.0
+-----
+
+2013-03-22
+
+This is a backwards compatible feature release
+
+  * New provider for network_route: redhat
+  * Module built with sane umask (0022); permissions should just work
+
+Thanks to Eric Sakowski for implementing the redhat network_route provider
+
 0.3.0
 -----
 
