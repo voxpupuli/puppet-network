@@ -46,11 +46,20 @@ define network::bond::debian(
     method    => $method,
     onboot    => $onboot,
     options   => $opts,
-  }
+  } 
 
   network_config { $slaves:
-    ensure      => absent,
+    ensure      => present,
     reconfigure => true,
+    family      => 'inet',
+    method      => 'manual',
+    onboot      => 'true',
+    hotplug     => 'true',
+    options     => {
+      'bond-master' => $name, 
+      'pre-up'      => 'ifconfig $IFACE up',
+      'post-down'   => 'ifconfig $IFACE down'
+    },
     before      => Network_config[$name],
   }
 }

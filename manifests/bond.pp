@@ -147,6 +147,17 @@ define network::bond(
     ensure => $ensure,
   }
 
+  #If we're not in active-backup mode, undefine the primary interface
+  $primary_true = $mode ? {
+    /(active-backup|1)/ => $primary,
+    default             => undef,
+  }
+  #Undefine lacp_rate if not in lacp
+  $lacp_true = $mode ? {
+    /(802.3ad|4)/ => $lacp_rate,
+    default       => undef,
+  }
+
   case $osfamily {
     Debian: {
       network::bond::debian { $name:
@@ -162,8 +173,8 @@ define network::bond(
         miimon           => $miimon,
         downdelay        => $downdelay,
         updelay          => $updelay,
-        lacp_rate        => $lacp_rate,
-        primary          => $primary,
+        lacp_rate        => $lacp_true,
+        primary          => $primary_true,
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
@@ -184,8 +195,8 @@ define network::bond(
         miimon           => $miimon,
         downdelay        => $downdelay,
         updelay          => $updelay,
-        lacp_rate        => $lacp_rate,
-        primary          => $primary,
+        lacp_rate        => $lacp_true,
+        primary          => $primary_true,
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
