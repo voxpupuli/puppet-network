@@ -6,7 +6,7 @@ class network::bond::setup {
       # is available by default
     }
     Debian: {
-      package { 'ifenslave':
+      package { 'ifenslave-2.6':
         ensure => present,
       }
     }
