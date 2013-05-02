@@ -49,7 +49,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   #   RedhatProvider.target_files
   #   # => ['/etc/sysconfig/network-scripts/ifcfg-eth0', '/etc/sysconfig/network-scripts/ifcfg-eth1']
   def self.target_files
-    Dir["#{SCRIPT_DIRECTORY}/ifcfg-*"]
+    Dir["#{SCRIPT_DIRECTORY}/ifcfg-[a-z]+[0-9]+(:[0-9]+)?"]
   end
 
   # Convert a redhat network script into a hash
