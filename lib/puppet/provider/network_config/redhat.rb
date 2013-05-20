@@ -18,7 +18,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   has_feature :hotpluggable
   has_feature :provider_options
 
+  # @return [String] The path to network-script directory on redhat systems
   SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
+
+  # @return [Regexp] The regular expression for interface scripts on redhat systems
+  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+\d+(?::\d)?\Z]
 
   NAME_MAPPINGS = {
     :ipaddress  => 'IPADDR',
@@ -43,13 +47,17 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
   # Scan all files in the networking directory for interfaces
   #
+  # @param script_dir [String] The path to the networking scripts, defaults to
+  #   {#SCRIPT_DIRECTORY}
+  #
   # @return [Array<String>] All network-script config files on this machine.
   #
   # @example
   #   RedhatProvider.target_files
   #   # => ['/etc/sysconfig/network-scripts/ifcfg-eth0', '/etc/sysconfig/network-scripts/ifcfg-eth1']
-  def self.target_files
-    Dir["#{SCRIPT_DIRECTORY}/ifcfg-[a-z]+[0-9]+(:[0-9]+)?"]
+  def self.target_files(script_dir = SCRIPT_DIRECTORY)
+    entries = Dir.entries(script_dir).select {|entry| entry.match SCRIPT_REGEX}
+    entries.map {|entry| File.expand_path(entry)}
   end
 
   # Convert a redhat network script into a hash
