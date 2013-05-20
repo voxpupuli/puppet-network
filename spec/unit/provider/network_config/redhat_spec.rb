@@ -4,15 +4,43 @@ require 'spec_helper'
 
 describe Puppet::Type.type(:network_config).provider(:redhat) do
 
-    subject { described_class }
+  subject { described_class }
+
+  def fixture_path
+    File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec')
+  end
+
+  def fixture_file(file)
+    File.join(fixture_path, file)
+  end
+
   def fixture_data(file)
-    basedir = File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec')
-    File.read(File.join(basedir, file))
+    File.read(fixture_file(file))
   end
 
   describe 'provider features' do
     it 'should be hotpluggable' do
       described_class.declared_feature?(:hotpluggable).should be_true
+    end
+  end
+
+  describe "selecting files to parse" do
+    let(:network_scripts_path) { fixture_file('network-scripts') }
+
+    subject { described_class.target_files(network_scripts_path).map {|file| File.basename(file) } }
+
+    valid_files = %w[ifcfg-bond0 ifcfg-bond1 ifcfg-eth0 ifcfg-eth1 ifcfg-eth2
+                     ifcfg-eth3 ifcfg-vlan100 ifcfg-vlan100:0 ifcfg-vlan200
+                     ifcfg-vlan300 ifcfg-vlan400 ifcfg-vlan500]
+
+    invalid_files = %w[.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak]
+
+    valid_files.each do |file|
+      it { should be_include file }
+    end
+
+    invalid_files.each do |file|
+      it { should_not be_include file }
     end
   end
 

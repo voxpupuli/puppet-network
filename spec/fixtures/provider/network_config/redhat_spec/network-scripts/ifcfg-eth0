@@ -1,0 +1,7 @@
+# Broadcom Corporation NetXtreme BCM5704 Gigabit Ethernet
+DEVICE=eth0
+ONBOOT=yes
+HWADDR=00:12:79:91:28:1f
+MTU=1500
+SLAVE=yes
+MASTER=bond0
