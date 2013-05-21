@@ -30,7 +30,6 @@ describe 'network::bond::debian', :type => :define do
     end
 
     it "should add a network_config resource for bond0" do
-      pending "rspec-puppet support for unordered hash matching"
       should contain_network_config('bond0').with({
         'ensure'         => 'present',
         'method'         => 'static',
@@ -75,7 +74,6 @@ describe 'network::bond::debian', :type => :define do
     end
 
     it "should add a network_config resource for bond0" do
-      pending "rspec-puppet support for unordered hash matching"
       should contain_network_config('bond0').with({
         'ensure'         => 'present',
         'method'         => 'static',
