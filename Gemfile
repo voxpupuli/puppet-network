@@ -8,7 +8,7 @@ group :test, :development do
   gem 'mocha', '~> 0.10.5'
   gem 'rspec-puppet', :git => 'https://github.com/adrienthebo/rspec-puppet',
     :ref => 'recursive_param_compare'
-  gem 'puppetlabs_spec_helper'
+  gem 'rake'
 end
 
 if File.exists? "#{__FILE__}.local"
