@@ -1,5 +1,23 @@
 CHANGELOG
 
+0.5.0
+-----
+
+2013-05-21
+
+This is a backwards compatible feature and bugfix release
+
+  * New defined type: network::bond, with Debian and Redhat backends
+  * New facts for current network configuration:
+    * network_public_ip
+    * network_nexthop_ip
+    * network_primary_interface
+    * network_primary_ip
+  * (network-#36) More strict selection of redhat network interface scripts
+
+Thanks to Eric Sakowsku, Wolf Noble, Vlastimil Holer, and Dan Fruehauf for
+their contributions to this release.
+
 0.4.0
 -----
 
