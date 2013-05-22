@@ -6,7 +6,8 @@ gem 'facter', '>= 1.6.2'
 group :test, :development do
   gem 'rspec', '~> 2.10.0'
   gem 'mocha', '~> 0.10.5'
-  gem 'rspec-puppet', :git => 'https://github.com/adrienthebo/rspec-puppet',
+  gem 'rspec-puppet',
+    :git => 'https://github.com/adrienthebo/rspec-puppet',
     :ref => 'recursive_param_compare'
   gem 'rake'
 end
