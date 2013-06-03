@@ -15,7 +15,7 @@ This is a backwards compatible feature and bugfix release
     * network_primary_ip
   * (network-#36) More strict selection of redhat network interface scripts
 
-Thanks to Eric Sakowsku, Wolf Noble, Vlastimil Holer, and Dan Fruehauf for
+Thanks to Eric Sakowski, Wolf Noble, Vlastimil Holer, and Dan Fruehauf for
 their contributions to this release.
 
 0.4.0
