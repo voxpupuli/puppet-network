@@ -25,7 +25,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
 
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+\d+(?::\d|\.#{vlan_range_regex})?\Z]
+  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+\d+(?::\d+|\.#{vlan_range_regex})?\Z]
 
   NAME_MAPPINGS = {
     :ipaddress  => 'IPADDR',
