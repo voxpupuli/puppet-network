@@ -107,8 +107,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'bond0' do
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
         its(:onboot) { should be_true }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
-            "MTU" => '1500',
             "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
           }
         }
@@ -119,8 +119,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:onboot) { should be_true }
         its(:ipaddress) { should == '172.20.1.9' }
         its(:netmask) { should == '255.255.255.0' }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
-            "MTU" => '1500',
             "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
           }
         }
@@ -129,11 +129,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth0' do
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
         its(:onboot) { should be_true }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:1f',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0',
-            'MTU'    => '1500',
           }
         }
       end
@@ -141,11 +141,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth1' do
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
         its(:onboot) { should be_true }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:20',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0',
-            'MTU'    => '1500',
           }
         }
       end
@@ -153,11 +153,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth2' do
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
         its(:onboot) { should be_true }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c4',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1',
-            'MTU'    => '1500',
           }
         }
       end
@@ -165,11 +165,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth3' do
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
         its(:onboot) { should be_true }
+        its(:mtu) { should == '1500' }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c5',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1',
-            'MTU'    => '1500',
           }
         }
       end
@@ -274,6 +274,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :method          => "none",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.255.0",
+        :mtu             => '1500',
         :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
       )
     end
@@ -299,8 +300,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :ipaddress => '172.20.1.9',
         :netmask   => '255.255.255.0',
         :method    => 'static',
+        :mtu       => '1500',
         :options   => {
-          "MTU" => '1500',
           "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
         }
 
