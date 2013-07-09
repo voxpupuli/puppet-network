@@ -31,9 +31,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
     valid_files = %w[ifcfg-bond0 ifcfg-bond1 ifcfg-eth0 ifcfg-eth1 ifcfg-eth2
                      ifcfg-eth3 ifcfg-vlan100 ifcfg-vlan100:0 ifcfg-vlan200
-                     ifcfg-vlan300 ifcfg-vlan400 ifcfg-vlan500]
+                     ifcfg-vlan300 ifcfg-vlan400 ifcfg-vlan500 ifcfg-eth0.0
+                     ifcfg-eth0.1 ifcfg-eth0.4095 ifcfg-eth0:10000000]
 
-    invalid_files = %w[.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak]
+    invalid_files = %w[.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak
+                       ifcfg-eth0.4096]
 
     valid_files.each do |file|
       it { should be_include file }
