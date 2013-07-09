@@ -21,8 +21,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   # @return [String] The path to network-script directory on redhat systems
   SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
 
+  # The valid vlan ID range is 0-4095; 4096 is out of range
+  vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
+
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+\d+(?::\d)?\Z]
+  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+\d+(?::\d|\.#{vlan_range_regex})?\Z]
 
   NAME_MAPPINGS = {
     :ipaddress  => 'IPADDR',
