@@ -40,7 +40,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :options].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :mtu, :options].each do |property|
       describe property do
         it { described_class.attrtype(property).should == :property }
       end
@@ -146,6 +146,56 @@ describe Puppet::Type.type(:network_config) do
         it "should accept '#{bool}' for reconfigure" do
           described_class.new(:name => 'yay', :reconfigure => bool)
         end
+      end
+    end
+
+    describe "mtu" do
+      it "should validate a tiny mtu size" do
+        described_class.new(:name => 'yay', :mtu => '42')
+      end
+
+      it "should validate a normal mtu size" do
+        described_class.new(:name => 'yay', :mtu => '1500')
+      end
+
+      it "should validate a large mtu size" do
+        described_class.new(:name => 'yay', :mtu => '16384')
+      end
+
+      it "should fail if an random string is passed" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => 'This is clearly not a mtu')
+        end.to raise_error
+      end
+
+      it "should fail on values < 42" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => '41')
+        end.to raise_error
+      end
+
+      it "should fail on zero" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => '0')
+        end.to raise_error
+      end
+
+      it "should fail on values > 65536" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => '65537')
+        end.to raise_error
+      end
+
+      it "should fail on negative values" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => '-1500')
+        end.to raise_error
+      end
+
+      it "should fail on non-integer values" do
+        expect do
+          described_class.new(:name => 'yay', :mtu => '1500.1')
+        end.to raise_error
       end
     end
 
