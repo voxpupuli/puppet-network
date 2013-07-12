@@ -15,5 +15,6 @@ pre-up sleep 2
 iface eth1 inet static
 netmask 255.255.255.0
 address 192.168.50.2
+mtu 1500
 
 iface lo inet loopback
