@@ -75,6 +75,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
         :onboot    => true,
+        :mtu       => "1500",
         :options   => {
           "broadcast" => "192.168.0.255",
           "gateway"   => "192.168.0.1",
@@ -130,6 +131,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
+        :mtu             => "1500",
         :options         => nil
       )
     end
@@ -144,6 +146,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :method          => "static",
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
+        :mtu             => "576",
         :options         => {
           'pre-up'    => '/bin/touch /tmp/eth1-up',
           'post-down' => [
@@ -163,6 +166,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
+        :mtu             => "65536",
         :options         => nil
       )
     end
@@ -205,6 +209,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           "iface eth0 inet static",
           "address 169.254.0.1",
           "netmask 255.255.0.0",
+          "mtu 1500",
         ].join("\n")
         content.split('\n').find {|line| line.match(/iface eth0/)}.should match(block)
       end
