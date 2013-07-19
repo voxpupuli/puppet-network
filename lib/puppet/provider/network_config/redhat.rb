@@ -34,6 +34,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :onboot     => 'ONBOOT',
     :name       => 'DEVICE',
     :hotplug    => 'HOTPLUG',
+    :mtu        => 'MTU',
   }
 
   # Map provider instances to files based on their name
