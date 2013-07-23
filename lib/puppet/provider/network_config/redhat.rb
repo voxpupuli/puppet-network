@@ -130,6 +130,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   def self.munge(pairs)
     props = {}
 
+    parse_map = NAME_MAPPINGS.inject({}) { |h, (k, v)| h[v] = k; h }
+
     # Unquote all values
     pairs.each_pair do |key, val|
       if (munged = val.gsub(/['"]/, ''))
@@ -137,19 +139,16 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       end
     end
 
-    # For each interface attribute that we recognize it, add the value to the
-    # hash with our expected label
-    NAME_MAPPINGS.each_pair do |type_name, redhat_name|
-      if (val = pairs[redhat_name])
-        # We've recognized a value that maps to an actual type property, delete
-        # it from the pairs and copy it as an actual property
-        pairs.delete(redhat_name)
-        props[type_name] = val
+    pairs.each_pair do |key, value|
+      case key
+      when *(parse_map.keys)
+        name = parse_map[key]
+        props[name] = value
+      else
+        props[:options] ||= {}
+        props[:options][key] = value
       end
     end
-
-    # For all of the remaining values, blindly toss them into the options hash.
-    props[:options] = pairs unless pairs.empty?
 
     [:onboot, :hotplug].each do |bool_property|
       if props[bool_property]
