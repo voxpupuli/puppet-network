@@ -148,6 +148,19 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       end
     end
 
+    # if we encounter VLAN=yes set the interface mode to :vlan
+    pairs.each_pair do |key, val|
+      if (key == 'VLAN' and val == 'yes')
+        props[:mode] = :vlan
+      end
+    end
+    pairs.delete('VLAN')
+
+    # mode is a property so it should always have a value
+    unless (props.key?(:mode))
+      props[:mode] = :raw 
+    end
+
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs unless pairs.empty?
 
@@ -181,6 +194,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       if (val = provider.send(type_name))
         props[type_name] = val
       end
+    end
+
+    # :mode does not exist in NAME_MAPPINGS so we have to fetch it manually
+    # note that the inverse operation is in .munge instead of parse_file
+    if (val = provider.send(:mode) and val == :vlan)
+      props['VLAN'] = 'yes'
     end
 
     pairs = self.unmunge props
