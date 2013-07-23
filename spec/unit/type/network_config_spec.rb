@@ -40,7 +40,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :mtu, :options].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :mtu, :mode, :options].each do |property|
       describe property do
         it { described_class.attrtype(property).should == :property }
       end
@@ -196,6 +196,22 @@ describe Puppet::Type.type(:network_config) do
         expect do
           described_class.new(:name => 'yay', :mtu => '1500.1')
         end.to raise_error
+      end
+    end
+
+    describe 'mode' do
+      [:raw, :vlan].each do |value|
+        it "should accept '#{value}' for interface mode" do
+          described_class.new(:name => 'yay', :mode => value)
+        end
+      end
+      it "should fail on undefined values" do
+        expect do
+          described_class.new(:name => 'yay', :mode => 'foo')
+        end.to raise_error
+      end
+      it "should default to :raw" do
+        described_class.new(:name => 'yay')[:mode].should == :raw
       end
     end
 
