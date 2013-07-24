@@ -29,7 +29,7 @@ namespace :fixture do
 
   desc "Remove all fixture repositories"
   task :remove do
-    fixtures["repositories"].each_pair do |name, remote|
+    fixtures("repositories").each_pair do |name, remote|
       fixture_target = "spec/fixtures/modules/#{name}"
       FileUtils.rm_rf fixture_target if File.exist? fixture_target
     end
