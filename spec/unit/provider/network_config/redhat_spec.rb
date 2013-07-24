@@ -330,4 +330,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it { data.should match /BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/ }
     end
   end
+
+  describe 'when flushing a dirty file' do
+    it {
+      File.expects(:chmod).with(0644, '/not/a/real/file')
+      File.expects(:unlink).never
+      described_class.stubs(:perform_write)
+      described_class.dirty_file!('/not/a/real/file')
+      described_class.flush_file('/not/a/real/file') 
+    }
+  end
 end
