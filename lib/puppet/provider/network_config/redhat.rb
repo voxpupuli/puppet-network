@@ -219,4 +219,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pairs
   end
+
+  def self.post_flush_hook(filename)
+    File.chmod(0644, filename)
+  end
 end
