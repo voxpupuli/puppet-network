@@ -89,7 +89,7 @@ Dependencies
 ------------
 
 The debian interfaces provider requires the FileMapper mixin, available at https://github.com/adrienthebo/puppet-filemapper
-The debian routes provider requires the package ifupdown-extras
+The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra)
 
 The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean
 
