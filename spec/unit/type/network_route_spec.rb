@@ -54,6 +54,11 @@ describe Puppet::Type.type(:network_route) do
         r = described_class.new(:name => '192.168.1.0/24', :network => '192.168.1.0', :netmask => '24', :gateway => '23.23.23.42', :interface => 'eth0')
         r[:netmask].should == '255.255.255.0'
       end
+
+      it "should convert netmasks of the expanded netmask form" do
+        r = described_class.new(:name => '192.168.1.0/24', :network => '192.168.1.0', :netmask => '255.255.128.0', :gateway => '23.23.23.42', :interface => 'eth0')
+        r[:netmask].should == '255.255.128.0'
+      end
     end
 
     describe "gateway" do
