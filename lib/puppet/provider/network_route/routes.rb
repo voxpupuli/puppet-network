@@ -87,10 +87,10 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      raise Puppet::Error, "#{provider.name} does not have a network." if provider.network.nil?
-      raise Puppet::Error, "#{provider.name} does not have a netmask." if provider.netmask.nil?
-      raise Puppet::Error, "#{provider.name} does not have a gateway." if provider.gateway.nil?
-      raise Puppet::Error, "#{provider.name} does not have an interface" if provider.interface.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'network'." if provider.network.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'netmask'." if provider.netmask.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
       contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface}\n"
     end
