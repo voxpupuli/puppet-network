@@ -5,6 +5,8 @@ Puppet::Type.newtype(:network_route) do
 
   ensurable
 
+  IPV4_ADDRESS_REGEX = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/
+
   newparam(:name) do
     isnamevar
     desc "The name of the network route"
@@ -27,13 +29,18 @@ Puppet::Type.newtype(:network_route) do
     desc "The subnet mask to apply to the route"
 
     validate do |value|
-      unless (value.length <= 2 or value =~ /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/) # yikes
+      unless (value.length <= 2 or value =~ IPV4_ADDRESS_REGEX)
         fail("Invalid value for argument netmask: #{value}")
       end
     end
 
     munge do |value|
-      r = IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
+      case value
+      when IPV4_ADDRESS_REGEX
+        value
+      when /^\d+$/
+        IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
+      end
     end
   end
 
