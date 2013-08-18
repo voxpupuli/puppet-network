@@ -1,5 +1,14 @@
 CHANGELOG
 
+0.4.1
+-----
+
+2013-08-17
+
+This is a backwards compatible bugfix release
+
+  * Update Modulefile dependency for adrien/boolean to >= 1.0.0
+
 0.4.0
 -----
 
