@@ -65,6 +65,41 @@ Route configuration
       network   => 'default'
     }
   
+GRE tunnel configuration
+
+  node 'server1' inherits default {
+    network::gre { 'gre1_example':
+      ensure    => 'present',
+      ipaddress => '172.16.16.2',
+      netmask   => '255.255.255.252',
+      method    => 'tunnel',
+      family    => 'inet',
+      onboot    => 'true',
+      dstaddr   => '172.16.16.1',
+      local     => '192.168.135.69',
+      endpoint  => '192.168.135.170',
+      ttl       => '255',
+      mode      => 'gre',
+    }
+  }
+
+  node 'server2' inherits default {
+    network::gre { 'gre1_example':
+      ensure    => 'present',
+      ipaddress => '172.16.16.1',
+      netmask   => '255.255.255.252',
+      method    => 'tunnel',
+      family    => 'inet',
+      onboot    => 'true',
+      dstaddr   => '172.16.16.2',
+      local     => '192.168.135.170',
+      endpoint  => '192.168.135.69',
+      ttl       => '255',
+      mode      => 'gre',
+    }
+  }
+
+
 Create resources on the fly with the `puppet resource` command:
 
     root@debian-6:~# puppet resource network_config eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0
