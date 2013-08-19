@@ -153,6 +153,26 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   end
 
   describe "when formatting" do
+    let(:gre_provider) do
+      stub('gre_provider',
+        :name            => "gre",
+	:ensure          => :present,
+	:onboot          => true,
+	:hotplug         => true,
+	:family          => "inet",
+	:method          => "gre",
+	:ipaddress       => "169.254.0.1",
+	:netmask         => "255.255.0.0",
+	:local           => "192.168.2.1",
+	:endpoint        => "192.168.2.120",
+	:dstaddr         => "172.16.16.1",
+	:ttl             => "255",
+	:mode            => "gre",
+        :options         => nil,
+	:mtu		 => nil
+      )
+    end
+
     let(:eth0_provider) do
       stub('eth0_provider',
         :name            => "eth0",
@@ -226,15 +246,15 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       described_class.stubs(:header).returns "# HEADER: stubbed header\n"
     end
 
-    let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
-
+    let(:content) { described_class.format_file('', [ lo_provider, eth0_provider, eth1_provider, gre_provider ]) }
+   
     describe "writing the auto section" do
       it "should allow at most one section" do
         content.scan(/^auto .*$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^auto .*$/).first.should match("auto eth0 lo")
+        content.scan(/^auto .*$/).first.should match("auto eth0 gre lo")
       end
     end
 
@@ -244,7 +264,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^allow-hotplug .*$/).first.should match("allow-hotplug eth0 eth1 lo")
+        content.scan(/^allow-hotplug .*$/).first.should match("allow-hotplug eth0 eth1 gre lo")
       end
     end
 

@@ -31,9 +31,29 @@ Puppet::Type.newtype(:network_config) do
     desc "The subnet mask to apply to the interface"
   end
 
+  newproperty(:mode) do
+    desc "The specified mode of the interface"
+  end
+
+  newproperty(:endpoint) do
+    desc "The address endpoint used in a tunnel configuration"
+  end
+
+  newproperty(:ttl) do
+    desc "Time to live settings"
+  end
+
+  newproperty(:local) do
+    desc "The address of the local machine in a tunnel configuration"
+  end
+
+  newproperty(:dstaddr) do
+    desc "The address of the destination machine in a tunnel configuration"
+  end
+
   newproperty(:method) do
     desc "The method for determining an IP address for the interface"
-    newvalues(:static, :manual, :dhcp, :loopback)
+    newvalues(:static, :manual, :dhcp, :loopback, :tunnel)
 
     # Redhat systems frequently use 'none' in place of 'static', although
     # ultimately any values but dhcp or bootp are ignored and the interface
