@@ -52,14 +52,14 @@ Route configuration
       ensure    => 'present',
       gateway   => '10.0.2.2',
       interface => 'eth0',
-      netmask   => '24',
+      netmask   => '255.255.255.0',
       network   => '172.17.67.0'
     }
     network_route { 'default':
       ensure    => 'present',
       gateway   => '10.0.2.2',
       interface => 'eth0',
-      netmask  	=> '',
+      netmask  	=> '0.0.0.0',
       network   => 'default'
     }
   
