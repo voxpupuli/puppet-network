@@ -49,7 +49,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
         new_route[:name]    = cidr_target
         new_route[:network] = "default"
-        new_route[:netmask] = ''
+        new_route[:netmask] = '0.0.0.0'
         new_route[:gateway] = route[2]
         new_route[:interface] = route[4]
       else
