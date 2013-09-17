@@ -26,7 +26,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
         data.find { |h| h[:name] == 'default' }.should == {
           :name       => 'default',
           :network    => 'default',
-          :netmask    => '',
+          :netmask    => '0.0.0.0',
           :gateway    => '10.0.0.1',
           :interface  => 'eth1',
         }
