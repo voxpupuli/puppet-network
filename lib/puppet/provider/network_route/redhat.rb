@@ -89,7 +89,13 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       if provider.network == "default"
         contents << "#{provider.network} via #{provider.gateway} dev #{provider.interface}\n"
       else
-        contents << "#{provider.network}/#{provider.netmask} via #{provider.gateway} dev #{provider.interface}\n"
+        # Always use netmask in CIDR notation
+        if provider.netmask.include?('.')
+          netmask_cidr = "#{IPAddr.new(provider.netmask).to_i.to_s(2).count('1')}"
+        else
+          netmask_cidr = provider.netmask
+        end
+        contents << "#{provider.network}/#{netmask_cidr} via #{provider.gateway} dev #{provider.interface}\n"
       end
     end
     contents.join
