@@ -94,6 +94,27 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it { data[:options]["NM_CONTROLLED"].should == 'no' }
     end
 
+    describe 'custom functions' do
+      let(:fixture) { fixture_data('eth0-static') }
+      let(:fixture_with_functions) do
+        fixture + <<-END.gsub(/^\s+\|/, '')
+        |check_link_down() {
+        |  return 1;
+        |}
+        |function check_link_down {
+        | return 1;
+        |}
+        END
+      end
+
+      let(:data) { described_class.parse_file('eth0', fixture)[0] }
+      let(:data_with_functions) { described_class.parse_file('eth0', fixture_with_functions)[0] }
+
+      it 'should ignore functions' do
+        data.should == data_with_functions
+      end
+    end
+
     describe 'complex configuration' do
       let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
 
