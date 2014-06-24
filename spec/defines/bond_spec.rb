@@ -51,7 +51,7 @@ describe 'network::bond', :type => :define do
       let(:facts) {{:osfamily => 'SparrowOS'}}
 
       it "should fail to compile" do
-        expect { subject }.to raise_error Puppet::Error, /network::bond does not support osfamily 'SparrowOS'/
+        expect { should compile }.to raise_error(/network::bond does not support osfamily 'SparrowOS'/)
       end
     end
   end
