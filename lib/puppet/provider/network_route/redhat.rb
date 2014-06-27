@@ -55,7 +55,14 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       else
         # use the CIDR version of the target as :name
         network, netmask = route[0].split("/")
-        cidr_target = "#{network}/#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
+        # netmask in dot-decimal notation for route specification
+        if netmask.include?('.')
+          netmask_cidr = "#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
+        else
+          netmask_cidr = netmask
+          netmask = "#{IPAddr.new(route[0]).inspect.split('/')[1].match(/[0-9\.]+/)}"
+        end
+        cidr_target = "#{network}/#{netmask_cidr}"
 
         new_route[:name]    = cidr_target
         new_route[:network] = network
@@ -82,7 +89,13 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       if provider.network == "default"
         contents << "#{provider.network} via #{provider.gateway} dev #{provider.interface}\n"
       else
-        contents << "#{provider.network}/#{provider.netmask} via #{provider.gateway} dev #{provider.interface}\n"
+        # Always use netmask in CIDR notation
+        if provider.netmask.include?('.')
+          netmask_cidr = "#{IPAddr.new(provider.netmask).to_i.to_s(2).count('1')}"
+        else
+          netmask_cidr = provider.netmask
+        end
+        contents << "#{provider.network}/#{netmask_cidr} via #{provider.gateway} dev #{provider.interface}\n"
       end
     end
     contents.join
