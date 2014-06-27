@@ -9,7 +9,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
   end
 
   describe "when parsing" do
-    describe "a well formed file" do
+    describe "a simple well formed file" do
       let(:data) { described_class.parse_file('', fixture_data('simple_routes')) }
 
       it "should parse out normal network routes" do
@@ -33,6 +33,21 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
       end
     end
 
+    describe "an advanced, well formed file" do
+      let(:data) { described_class.parse_file('', fixture_data('advanced_routes')) }
+
+      it "should parse out normal network routes" do
+        data.find { |h| h[:name] == '172.17.67.0/30' }.should == {
+          :name       => '172.17.67.0/30',
+          :network    => '172.17.67.0',
+          :netmask    => '255.255.255.252',
+          :gateway    => '172.18.6.2',
+          :interface  => 'vlan200',
+          :options    => 'table 200',
+        }
+      end
+    end
+
     describe "an invalid file" do
       it "should fail" do
         expect do
@@ -49,7 +64,8 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
         :network    => '172.17.67.0',
         :netmask    => '30',
         :gateway    => '172.18.6.2',
-        :interface  => 'vlan200'
+        :interface  => 'vlan200',
+        :options    => 'table 200'
       )
     end
 
@@ -59,7 +75,8 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
         :network    => '172.28.45.0',
         :netmask    => '30',
         :gateway    => '172.18.6.2',
-        :interface  => 'eth0'
+        :interface  => 'eth0',
+        :options    => 'table 200'
       )
     end
 
@@ -69,7 +86,8 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
         :network    => 'default',
         :netmask    => '',
         :gateway    => '10.0.0.1',
-        :interface  => 'eth1'
+        :interface  => 'eth1',
+        :options    => 'table 200'
       )
     end
 
@@ -79,11 +97,11 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
       describe "For standard (non-default) routes" do
         it "should write 5 fields" do
           content.scan(/^172.17.67.0\/30 .*$/).length.should == 1
-          content.scan(/^172.17.67.0\/30 .*$/).first.split(' ').length.should == 5
+          content.scan(/^172.17.67.0\/30 .*$/).first.split(' ', 5).length.should == 5
         end
 
         it "should have the correct fields appended" do
-          content.scan(/^172.17.67.0\/30 .*$/).first.should be_include("172.17.67.0/30 via 172.18.6.2 dev vlan200")
+          content.scan(/^172.17.67.0\/30 .*$/).first.should be_include("172.17.67.0/30 via 172.18.6.2 dev vlan200 table 200")
         end
 
         it "should fail if the netmask property is not defined" do
