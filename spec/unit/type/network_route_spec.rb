@@ -17,7 +17,7 @@ describe Puppet::Type.type(:network_route) do
       it { described_class.attrtype(:name).should == :param }
     end
 
-    [:ensure, :network, :netmask, :gateway, :interface].each do |property|
+    [:ensure, :network, :netmask, :gateway, :interface, :options].each do |property|
       describe property do
         it { described_class.attrtype(property).should == :property }
       end
