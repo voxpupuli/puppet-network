@@ -61,4 +61,15 @@ Puppet::Type.newtype(:network_route) do
     isrequired
     desc "The interface to use for the route"
   end
+
+  # `:options` provides an arbitrary passthrough for provider properties, so
+  # that provider specific behavior doesn't clutter up the main type but still
+  # allows for more powerful actions to be taken.
+  newproperty(:options, :required_features => :provider_options) do
+    desc "Provider specific options to be passed to the provider"
+
+    validate do |value|
+      raise ArgumentError, "#{self.class} requires a string for the options property" unless value.is_a?(String)
+    end
+  end
 end

@@ -9,7 +9,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
   end
 
   describe "when parsing" do
-    it "should parse out iface lines" do
+    it "should parse out simple iface lines" do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
@@ -19,6 +19,20 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         :netmask    => '255.255.255.0',
         :gateway    => '172.18.6.2',
         :interface  => 'vlan200',
+      }
+    end
+
+    it "should parse out advanced routes" do
+      fixture = fixture_data('advanced_routes')
+      data = described_class.parse_file('', fixture)
+
+      data.find { |h| h[:name] == '172.17.67.0/24' }.should == {
+        :name       => '172.17.67.0/24',
+        :network    => '172.17.67.0',
+        :netmask    => '255.255.255.0',
+        :gateway    => '172.18.6.2',
+        :interface  => 'vlan200',
+        :options    => 'table 200',
       }
     end
 
@@ -38,7 +52,8 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         :network    => '172.17.67.0',
         :netmask    => '255.255.255.0',
         :gateway    => '172.18.6.2',
-        :interface  => 'vlan200'
+        :interface  => 'vlan200',
+        :options    => 'table 200'
       )
     end
 
@@ -48,20 +63,21 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         :network    => '172.28.45.0',
         :netmask    => '255.255.255.0',
         :gateway    => '172.18.6.2',
-        :interface  => 'eth0'
+        :interface  => 'eth0',
+        :options    => 'table 200'
       )
     end
 
     let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
 
     describe "writing the route line" do
-      it "should write all 4 fields" do
+      it "should write all 5 fields" do
         content.scan(/^172.17.67.0 .*$/).length.should == 1
-        content.scan(/^172.17.67.0 .*$/).first.split(' ').length.should == 4
+        content.scan(/^172.17.67.0 .*$/).first.split(/\s/, 5).length.should == 5
       end
 
       it "should have the correct fields appended" do
-        content.scan(/^172.17.67.0 .*$/).first.should be_include("172.17.67.0 255.255.255.0 172.18.6.2 vlan200")
+        content.scan(/^172.17.67.0 .*$/).first.should be_include("172.17.67.0 255.255.255.0 172.18.6.2 vlan200 table 200")
       end
 
       it "should fail if the netmask property is not defined" do

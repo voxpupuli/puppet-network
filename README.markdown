@@ -44,6 +44,7 @@ Route configuration
       gateway   => '172.18.6.2',
       interface => 'vlan200',
       netmask   => '255.255.255.0',
+      options   => 'table 200',
     }
 
   For RedHat Enterprise:
@@ -54,6 +55,7 @@ Route configuration
       interface => 'eth0',
       netmask   => '255.255.255.0',
       network   => '172.17.67.0'
+      options   => 'table 200',
     }
     network_route { 'default':
       ensure    => 'present',
@@ -83,6 +85,7 @@ Create resources on the fly with the `puppet resource` command:
       gateway   => '192.168.1.1',
       interface => 'eth0',
       netmask   => '255.255.255.0',
+      options   => 'table 200',
     }
 
 Dependencies

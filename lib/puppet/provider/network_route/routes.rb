@@ -16,7 +16,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
   confine    :osfamily => :debian
 
-  # $ dpkg -S /etc/network/if-up.d/20static-routes 
+  # $ dpkg -S /etc/network/if-up.d/20static-routes
   # ifupdown-extra: /etc/network/if-up.d/20static-routes
   confine    :exists   => '/etc/network/if-up.d/20static-routes'
 
@@ -62,7 +62,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
         next
       end
 
-      route = line.split
+      route = line.split(' ', 5)
 
       if route.length < 4
         raise_malformed
@@ -75,6 +75,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
       route_hash[cidr_target][:netmask] = route[1]
       route_hash[cidr_target][:gateway] = route[2]
       route_hash[cidr_target][:interface] = route[3]
+      route_hash[cidr_target][:options] = route[4] if route[4]
     end
 
     route_hash.values
@@ -92,7 +93,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
-      contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface}\n"
+      contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface} #{provider.options}\n"
     end
 
     contents.join
