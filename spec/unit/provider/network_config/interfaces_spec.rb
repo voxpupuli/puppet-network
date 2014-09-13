@@ -237,7 +237,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         end
 
         it "should write the value as an modified string" do
-          content.scan(/^pre-up .*$/).first.should == "pre-up /bin/touch /tmp/eth1-up"
+          content.scan(/^\s*pre-up .*$/).first.should == "    pre-up /bin/touch /tmp/eth1-up"
         end
       end
 
@@ -247,8 +247,8 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         end
 
         it "should write the values in order" do
-          content.scan(/^post-down .*$/)[0].should == "post-down /bin/touch /tmp/eth1-down1"
-          content.scan(/^post-down .*$/)[1].should == "post-down /bin/touch /tmp/eth1-down2"
+          content.scan(/^\s*post-down .*$/)[0].should == "    post-down /bin/touch /tmp/eth1-down1"
+          content.scan(/^\s*post-down .*$/)[1].should == "    post-down /bin/touch /tmp/eth1-down2"
         end
       end
     end
