@@ -182,7 +182,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
         its(:ipaddress) { should == '172.24.61.11' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
         its(:options)   { should == {
@@ -197,16 +197,16 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
         its(:ipaddress) { should == '172.24.61.12' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
-        its(:options)   { should be_nil }
+        its(:options)   { should == :absent }
       end
 
       describe 'vlan200' do
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
         its(:ipaddress) { should == '172.24.62.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
         its(:options)   { should == {
@@ -220,7 +220,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
         its(:ipaddress) { should == '172.24.63.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
         its(:mode)      { should == :vlan }
         its(:options)   { should == {
@@ -234,7 +234,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
         its(:ipaddress) { should == '172.24.64.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
         its(:mode)      { should == :vlan }
         its(:options)   { should == {
@@ -248,7 +248,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
         its(:ipaddress) { should == '172.24.65.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
         its(:mode)      { should == :vlan }
         its(:options)   { should == {
