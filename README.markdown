@@ -3,7 +3,7 @@ puppet-network
 
 Manage non-volatile network and route configuration.
 
-Travis Test status: [![Build Status](https://travis-ci.org/adrienthebo/puppet-network.png?branch=master)](https://travis-ci.org/adrienthebo/puppet-network)
+Travis Test status: [![Build Status](https://travis-ci.org/puppet-community/puppet-network.png?branch=master)](https://travis-ci.org/puppet-community/puppet-network)
 
 Examples
 --------
