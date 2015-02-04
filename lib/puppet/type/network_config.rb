@@ -87,6 +87,14 @@ Puppet::Type.newtype(:network_config) do
     end
   end
 
+  newproperty(:mode) do
+    desc "The exclusive mode the interface should operate in"
+    # :bond and :bridge may be added in the future
+    newvalues(:raw, :vlan)
+
+    defaultto :raw
+  end
+
   # `:options` provides an arbitrary passthrough for provider properties, so
   # that provider specific behavior doesn't clutter up the main type but still
   # allows for more powerful actions to be taken.
