@@ -65,37 +65,37 @@ Route configuration
       network   => 'default'
     }
   
-GRE tunnel configuration Ubuntu/Debian only
+GRE tunnel configuration
 
   node 'server1' inherits default {
-    network_config { 'gre1':
+    network::gre { 'gre1_example':
       ensure    => 'present',
-      family    => 'inet',
+      ipaddress => '172.16.16.2',
+      netmask   => '255.255.255.252',
       method    => 'tunnel',
-      ipaddress => '172.16.16.2',     #sets IP address for local GRE tunnel host
-      dstaddr   => '172.16.16.1',     #sets IP address for remote GRE tunnel host
-      netmask   => '255.255.255.252', #sets netmask for GRE tunnel
-      local     => '192.168.135.69',  #IP address of local interface the tunnel will apply to
-      endpoint  => '192.168.135.170', #IP address of remote host the tunnel will terminate at
-      ttl       => '255',             #TTL for tunnel
-      mode      => 'gre',
+      family    => 'inet',
       onboot    => 'true',
+      dstaddr   => '172.16.16.1',
+      local     => '192.168.135.69',
+      endpoint  => '192.168.135.170',
+      ttl       => '255',
+      mode      => 'gre',
     }
   }
 
   node 'server2' inherits default {
-    network_config { 'gre1':
+    network::gre { 'gre1_example':
       ensure    => 'present',
-      family    => 'inet',
-      method    => 'tunnel',
       ipaddress => '172.16.16.1',
-      dstaddr   => '172.16.16.2',
       netmask   => '255.255.255.252',
+      method    => 'tunnel',
+      family    => 'inet',
+      onboot    => 'true',
+      dstaddr   => '172.16.16.2',
       local     => '192.168.135.170',
       endpoint  => '192.168.135.69',
       ttl       => '255',
       mode      => 'gre',
-      onboot    => 'true',
     }
   }
 
