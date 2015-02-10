@@ -98,8 +98,8 @@ define network::gre(
   $local     = undef,
   $endpoint  = undef,
 
-  $mode             = "gre",
-  $ttl              = "255",
+  $mode      = "gre",
+  $ttl       = "255",
 ) {
 
   case $::osfamily {
@@ -115,8 +115,8 @@ define network::gre(
         local     => $local,
         endpoint  => $endpoint,
 
-        mode             => $mode,
-        ttl              => $ttl,
+        mode      => $mode,
+        ttl       => $ttl,
 
       }
     }
