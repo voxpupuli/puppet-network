@@ -120,7 +120,21 @@ define network::gre(
 
       }
     }
+    RedHat: {
+      network::gre::redhat { $name:
+        ensure    => $ensure,
+        ipaddress => $ipaddress,
+        netmask   => $netmask,
+        method    => $method,
+        family    => $family,
+        onboot    => $onboot,
+        dstaddr   => $dstaddr,
+        local     => $local,
+        endpoint  => $endpoint,
 
+        mode      => $mode,
+      }
+    }
     default: {
       fail("network::bond does not support osfamily '${::osfamily}'")
     }
