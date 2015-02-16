@@ -190,6 +190,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           #Instance[name].name   = name
           Instance[name].family = family
           Instance[name].method = method
+          Instance[name].mode   = :raw
 
         else
           # If we match on a string with a leading iface, but it isn't in the
