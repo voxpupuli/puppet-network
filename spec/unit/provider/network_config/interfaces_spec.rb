@@ -47,6 +47,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       data.find { |h| h[:name] == "eth0" }.should == {
         :family  => "inet",
         :method  => "dhcp",
+        :mode    => :raw,
         :name    => "eth0",
         :hotplug => true,
         :options => {},
@@ -59,6 +60,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       data.find { |h| h[:name] == "eth0" }.should == {
         :family  => "inet",
         :method  => "dhcp",
+        :mode    => :raw,
         :name    => "eth0",
         :hotplug => true,
         :options => {},
@@ -72,6 +74,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :name      => "eth0",
         :family    => "inet",
         :method    => "static",
+        :mode      => :raw,
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
         :onboot    => true,
@@ -94,6 +97,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :name      => "eth0",
         :family    => "inet",
         :method    => "dhcp",
+        :mode      => :raw,
         :options   => {
           "pre-up" => "/bin/touch /tmp/eth0-up",
           "post-down" => [
@@ -111,6 +115,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :name      => "eth0",
         :family    => "inet",
         :method    => "static",
+        :mode      => :raw,
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
         :onboot    => true,
