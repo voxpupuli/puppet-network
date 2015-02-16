@@ -211,7 +211,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => true,
-        :hotplug         => true,
+        :hotplug         => false,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
@@ -230,21 +230,37 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
     describe "writing the auto section" do
       it "should allow at most one section" do
-        content.scan(/^auto .*$/).length.should == 1
+        content.scan(/^auto .+$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^auto .*$/).first.should match("auto eth0 lo")
+        content.scan(/^auto .+$/).first.should match("auto eth0 lo")
+      end
+    end
+
+    describe "writing only the auto section" do
+      let(:content) { described_class.format_file('', [lo_provider]) }
+
+      it "should skip the allow-hotplug line" do
+        content.scan(/^allow-hotplug .*$/).length.should == 0
       end
     end
 
     describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
-        content.scan(/^allow-hotplug .*$/).length.should == 1
+        content.scan(/^allow-hotplug .+$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^allow-hotplug .*$/).first.should match("allow-hotplug eth0 eth1 lo")
+        content.scan(/^allow-hotplug .+$/).first.should match("allow-hotplug eth0 eth1")
+      end
+    end
+
+    describe "writing only the allow-hotplug section" do
+      let(:content) { described_class.format_file('', [eth1_provider]) }
+
+      it "should skip the auto line" do
+        content.scan(/^auto .*$/).length.should == 0
       end
     end
 
