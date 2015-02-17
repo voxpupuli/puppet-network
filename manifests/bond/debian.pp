@@ -7,13 +7,13 @@
 # * Debian Network Bonding http://wiki.debian.org/Bonding
 define network::bond::debian(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
-  $options   = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $options          = undef,
   $slave_options    = undef,
 
   $mode             = undef,
@@ -27,13 +27,13 @@ define network::bond::debian(
 ) {
 
   $raw = {
-    'bond-slaves'    => join($slaves, ' '),
-    'bond-mode'      => $mode,
-    'bond-miimon'    => $miimon,
-    'bond-downdelay' => $downdelay,
-    'bond-updelay'   => $updelay,
-    'bond-lacp-rate' => $lacp_rate,
-    'bond-primary'   => $primary,
+    'bond-slaves'           => join($slaves, ' '),
+    'bond-mode'             => $mode,
+    'bond-miimon'           => $miimon,
+    'bond-downdelay'        => $downdelay,
+    'bond-updelay'          => $updelay,
+    'bond-lacp-rate'        => $lacp_rate,
+    'bond-primary'          => $primary,
     'bond-primary-reselect' => $primary_reselect,
     'bond-xmit-hash-policy' => $xmit_hash_policy,
   }

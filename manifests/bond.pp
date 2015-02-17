@@ -131,15 +131,15 @@
 #
 define network::bond(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
-  $lacp_rate = undef,
-  $options   = undef,
-  $slave_options = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $lacp_rate        = undef,
+  $options          = undef,
+  $slave_options    = undef,
 
   $mode             = "active-backup",
   $miimon           = "100",
@@ -160,14 +160,14 @@ define network::bond(
   case $::osfamily {
     Debian: {
       network::bond::debian { $name:
-        ensure    => $ensure,
-        slaves    => $slaves,
-        ipaddress => $ipaddress,
-        netmask   => $netmask,
-        method    => $method,
-        family    => $family,
-        onboot    => $onboot,
-        options   => $options,
+        ensure           => $ensure,
+        slaves           => $slaves,
+        ipaddress        => $ipaddress,
+        netmask          => $netmask,
+        method           => $method,
+        family           => $family,
+        onboot           => $onboot,
+        options          => $options,
         slave_options    => $slave_options,
 
         mode             => $mode,
@@ -179,19 +179,19 @@ define network::bond(
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
-        require   => Kmod::Alias[$name],
+        require          => Kmod::Alias[$name],
       }
     }
     RedHat: {
       network::bond::redhat { $name:
-        ensure    => $ensure,
-        slaves    => $slaves,
-        ipaddress => $ipaddress,
-        netmask   => $netmask,
-        family    => $family,
-        method    => $method,
-        onboot    => $onboot,
-        options   => $options,
+        ensure           => $ensure,
+        slaves           => $slaves,
+        ipaddress        => $ipaddress,
+        netmask          => $netmask,
+        family           => $family,
+        method           => $method,
+        onboot           => $onboot,
+        options          => $options,
         slave_options    => $slave_options,
 
         mode             => $mode,
@@ -203,7 +203,7 @@ define network::bond(
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
-        require   => Kmod::Alias[$name],
+        require          => Kmod::Alias[$name],
       }
     }
     default: {

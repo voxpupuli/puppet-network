@@ -8,13 +8,13 @@
 #
 define network::bond::redhat(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
-  $options   = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $options          = undef,
   $slave_options    = undef,
 
   $mode             = undef,
