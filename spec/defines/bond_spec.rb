@@ -10,6 +10,8 @@ describe 'network::bond', :type => :define do
       'ipaddress' => '172.18.1.2',
       'netmask'   => '255.255.128.0',
       'slaves'    => ['eth0', 'eth1'],
+      'options'   => { 'NM_CONTROLLED' => 'no' },
+      'slave_options'    => { 'NM_CONTROLLED' => 'yes' },
 
       'mode'             => 'active-backup',
       'miimon'           => '100',

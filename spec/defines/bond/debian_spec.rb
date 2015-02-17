@@ -53,11 +53,13 @@ describe 'network::bond::debian', :type => :define do
   describe "with non-default bonding params" do
     let(:params) do
       {
-        'ensure'    => 'present',
-        'method'    => 'static',
-        'ipaddress' => '10.20.2.1',
-        'netmask'   => '255.255.255.192',
-        'slaves'    => ['eth0', 'eth1', 'eth2'],
+        'ensure'           => 'present',
+        'method'           => 'static',
+        'ipaddress'        => '10.20.2.1',
+        'netmask'          => '255.255.255.192',
+        'slaves'           => ['eth0', 'eth1', 'eth2'],
+        'options'          => { 'bond-future-option' => 'yes' },
+        'slave_options'    => { 'slave-future-option' => 'no' },
 
         'mode'             => 'balance-rr',
         'miimon'           => '50',
@@ -87,6 +89,7 @@ describe 'network::bond::debian', :type => :define do
           'bond-updelay'          => '100',
           'bond-lacp-rate'        => 'fast',
           'bond-xmit-hash-policy' => 'layer3+4',
+          'bond-future-option'    => 'yes'
         },
       })
     end

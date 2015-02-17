@@ -28,6 +28,14 @@
 #
 # Whether to bring the interface up on boot.
 #
+# [*options*]
+#
+# Hash with custom interfaces options.
+#
+# [*slave_options*]
+#
+# Hash with custom slave interfaces options.
+#
 # === bonding parameters
 #
 # [*slaves*]
@@ -130,6 +138,8 @@ define network::bond(
   $family    = undef,
   $onboot    = undef,
   $lacp_rate = undef,
+  $options   = undef,
+  $slave_options = undef,
 
   $mode             = "active-backup",
   $miimon           = "100",
@@ -143,20 +153,22 @@ define network::bond(
   require network::bond::setup
 
   kmod::alias { $name:
-    source => 'bonding',
     ensure => $ensure,
+    source => 'bonding',
   }
 
   case $::osfamily {
     Debian: {
       network::bond::debian { $name:
-        slaves    => $slaves,
         ensure    => $ensure,
+        slaves    => $slaves,
         ipaddress => $ipaddress,
         netmask   => $netmask,
         method    => $method,
         family    => $family,
         onboot    => $onboot,
+        options   => $options,
+        slave_options    => $slave_options,
 
         mode             => $mode,
         miimon           => $miimon,
@@ -172,13 +184,15 @@ define network::bond(
     }
     RedHat: {
       network::bond::redhat { $name:
-        slaves    => $slaves,
         ensure    => $ensure,
+        slaves    => $slaves,
         ipaddress => $ipaddress,
         netmask   => $netmask,
         family    => $family,
         method    => $method,
         onboot    => $onboot,
+        options   => $options,
+        slave_options    => $slave_options,
 
         mode             => $mode,
         miimon           => $miimon,
