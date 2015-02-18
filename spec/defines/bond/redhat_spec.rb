@@ -26,9 +26,10 @@ describe 'network::bond::redhat', :type => :define do
     ['eth0', 'eth1'].each do |slave|
       it "should add a network_config resource for #{slave}" do
         should contain_network_config(slave).with({
-          'ensure' => 'present',
-          'method' => 'static',
-          'onboot' => true,
+          'ensure'  => 'present',
+          'method'  => 'static',
+          'onboot'  => true,
+          'hotplug' => false,
           'options'  => {
             'MASTER' => 'bond0',
             'SLAVE'  => 'yes',
@@ -60,6 +61,7 @@ describe 'network::bond::redhat', :type => :define do
         'slaves'           => ['eth0', 'eth1', 'eth2'],
         'options'          => { 'NM_CONTROLLED' => 'yes' },
         'slave_options'    => { 'NM_CONTROLLED' => 'no' },
+        'hotplug'          => 'false',
 
         'mode'             => 'balance-rr',
         'miimon'           => '50',
@@ -75,6 +77,7 @@ describe 'network::bond::redhat', :type => :define do
           'ensure'  => 'present',
           'method'  => 'static',
           'onboot'  => true,
+          'hotplug' => false,
           'options' => {
             'MASTER'        => 'bond0',
             'SLAVE'         => 'yes',
@@ -90,6 +93,7 @@ describe 'network::bond::redhat', :type => :define do
         'method'    => 'static',
         'ipaddress' => '10.20.2.1',
         'netmask'   => '255.255.255.192',
+        'hotplug'   => false,
         'options'   => {
           'BONDING_OPTS'  => 'mode=balance-rr miimon=50 downdelay=100 updelay=100 lacp_rate=fast xmit_hash_policy=layer3+4',
           'NM_CONTROLLED' => 'yes',

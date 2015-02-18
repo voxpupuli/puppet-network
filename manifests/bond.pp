@@ -28,6 +28,10 @@
 #
 # Whether to bring the interface up on boot.
 #
+# [*hotplug*]
+#
+# Whether to allow hotplug for the interface.
+#
 # [*options*]
 #
 # Hash with custom interfaces options.
@@ -137,6 +141,7 @@ define network::bond(
   $method           = undef,
   $family           = undef,
   $onboot           = undef,
+  $hotplug          = undef,
   $lacp_rate        = undef,
   $options          = undef,
   $slave_options    = undef,
@@ -167,6 +172,7 @@ define network::bond(
         method           => $method,
         family           => $family,
         onboot           => $onboot,
+        hotplug          => $hotplug,
         options          => $options,
         slave_options    => $slave_options,
 
@@ -191,6 +197,7 @@ define network::bond(
         family           => $family,
         method           => $method,
         onboot           => $onboot,
+        hotplug          => $hotplug,
         options          => $options,
         slave_options    => $slave_options,
 

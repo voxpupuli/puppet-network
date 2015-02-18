@@ -14,6 +14,7 @@ define network::bond::redhat(
   $method           = undef,
   $family           = undef,
   $onboot           = undef,
+  $hotplug          = undef,
   $options          = undef,
   $slave_options    = undef,
 
@@ -39,6 +40,7 @@ define network::bond::redhat(
     netmask   => $netmask,
     family    => $family,
     onboot    => $onboot,
+    hotplug   => $hotplug,
     options   => $opts,
   }
 
@@ -53,6 +55,7 @@ define network::bond::redhat(
     ensure  => $ensure,
     method  => static,
     onboot  => true,
+    hotplug => false,
     options => $opts_slave,
   }
 }
