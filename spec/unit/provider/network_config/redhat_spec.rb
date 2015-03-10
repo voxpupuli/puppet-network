@@ -319,6 +319,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
     end
 
+    describe 'when DEVICE is not present' do
+      let(:data) { described_class.parse_file('ifcfg-eth1', fixture_data('eth1-dhcp'))[0] }
+      it { data[:name].should == 'eth1' }
+    end
+
   end
 
   describe "when formatting resources" do
@@ -430,7 +435,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       File.expects(:unlink).never
       described_class.stubs(:perform_write)
       described_class.dirty_file!('/not/a/real/file')
-      described_class.flush_file('/not/a/real/file') 
+      described_class.flush_file('/not/a/real/file')
     }
   end
 end

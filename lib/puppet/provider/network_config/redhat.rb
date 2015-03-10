@@ -121,6 +121,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     #
     props.merge!({:family => :inet})
 
+    # If there is no DEVICE property in the interface configuration we retrieve
+    # the interface name from the file name itself
+    unless props.has_key?(:name)
+        props.merge!({:name => filename.split("ifcfg-")[1]})
+    end
+
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array
     [props]
