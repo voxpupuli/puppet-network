@@ -28,6 +28,18 @@
 #
 # Whether to bring the interface up on boot.
 #
+# [*hotplug*]
+#
+# Whether to allow hotplug for the interface.
+#
+# [*options*]
+#
+# Hash with custom interfaces options.
+#
+# [*slave_options*]
+#
+# Hash with custom slave interfaces options.
+#
 # === bonding parameters
 #
 # [*slaves*]
@@ -123,13 +135,16 @@
 #
 define network::bond(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
-  $lacp_rate = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $hotplug          = undef,
+  $lacp_rate        = undef,
+  $options          = undef,
+  $slave_options    = undef,
 
   $mode             = "active-backup",
   $miimon           = "100",
@@ -143,20 +158,23 @@ define network::bond(
   require network::bond::setup
 
   kmod::alias { $name:
-    source => 'bonding',
     ensure => $ensure,
+    source => 'bonding',
   }
 
   case $::osfamily {
     Debian: {
       network::bond::debian { $name:
-        slaves    => $slaves,
-        ensure    => $ensure,
-        ipaddress => $ipaddress,
-        netmask   => $netmask,
-        method    => $method,
-        family    => $family,
-        onboot    => $onboot,
+        ensure           => $ensure,
+        slaves           => $slaves,
+        ipaddress        => $ipaddress,
+        netmask          => $netmask,
+        method           => $method,
+        family           => $family,
+        onboot           => $onboot,
+        hotplug          => $hotplug,
+        options          => $options,
+        slave_options    => $slave_options,
 
         mode             => $mode,
         miimon           => $miimon,
@@ -167,18 +185,21 @@ define network::bond(
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
-        require   => Kmod::Alias[$name],
+        require          => Kmod::Alias[$name],
       }
     }
     RedHat: {
       network::bond::redhat { $name:
-        slaves    => $slaves,
-        ensure    => $ensure,
-        ipaddress => $ipaddress,
-        netmask   => $netmask,
-        family    => $family,
-        method    => $method,
-        onboot    => $onboot,
+        ensure           => $ensure,
+        slaves           => $slaves,
+        ipaddress        => $ipaddress,
+        netmask          => $netmask,
+        family           => $family,
+        method           => $method,
+        onboot           => $onboot,
+        hotplug          => $hotplug,
+        options          => $options,
+        slave_options    => $slave_options,
 
         mode             => $mode,
         miimon           => $miimon,
@@ -189,7 +210,7 @@ define network::bond(
         primary_reselect => $primary_reselect,
         xmit_hash_policy => $xmit_hash_policy,
 
-        require   => Kmod::Alias[$name],
+        require          => Kmod::Alias[$name],
       }
     }
     default: {

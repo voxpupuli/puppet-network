@@ -8,12 +8,15 @@
 #
 define network::bond::redhat(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $hotplug          = undef,
+  $options          = undef,
+  $slave_options    = undef,
 
   $mode             = undef,
   $miimon           = undef,
@@ -25,7 +28,10 @@ define network::bond::redhat(
   $xmit_hash_policy = undef,
 ) {
 
-  $bonding_opts = template("network/bond/opts-redhat.erb")
+  $opts = merge(
+    { 'BONDING_OPTS' => template('network/bond/opts-redhat.erb'), },
+    $options
+  )
 
   network_config { $name:
     ensure    => $ensure,
@@ -34,19 +40,23 @@ define network::bond::redhat(
     netmask   => $netmask,
     family    => $family,
     onboot    => $onboot,
-    options          => {
-      'BONDING_OPTS' => $bonding_opts,
-    }
+    hotplug   => $hotplug,
+    options   => $opts,
   }
 
+
+  $opts_slave = merge(
+    { 'MASTER' => $name,
+      'SLAVE'  =>'yes' },
+    $slave_options
+  )
+
   network_config { $slaves:
-    ensure => $ensure,
-    method => static,
-    onboot => true,
-    options    => {
-      'MASTER' => $name,
-      'SLAVE'  => 'yes',
-    }
+    ensure  => $ensure,
+    method  => static,
+    onboot  => true,
+    hotplug => false,
+    options => $opts_slave,
   }
 }
 
