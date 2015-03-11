@@ -5,11 +5,13 @@ describe 'network::bond', :type => :define do
 
   let(:params) do
     {
-      'ensure'    => 'present',
-      'method'    => 'static',
-      'ipaddress' => '172.18.1.2',
-      'netmask'   => '255.255.128.0',
-      'slaves'    => ['eth0', 'eth1'],
+      'ensure'           => 'present',
+      'method'           => 'static',
+      'ipaddress'        => '172.18.1.2',
+      'netmask'          => '255.255.128.0',
+      'slaves'           => ['eth0', 'eth1'],
+      'options'          => { 'NM_CONTROLLED' => 'yes' },
+      'slave_options'    => { 'NM_CONTROLLED' => 'no' },
 
       'mode'             => 'active-backup',
       'miimon'           => '100',

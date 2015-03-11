@@ -7,12 +7,15 @@
 # * Debian Network Bonding http://wiki.debian.org/Bonding
 define network::bond::debian(
   $slaves,
-  $ensure    = present,
-  $ipaddress = undef,
-  $netmask   = undef,
-  $method    = undef,
-  $family    = undef,
-  $onboot    = undef,
+  $ensure           = present,
+  $ipaddress        = undef,
+  $netmask          = undef,
+  $method           = undef,
+  $family           = undef,
+  $onboot           = undef,
+  $hotplug          = undef,
+  $options          = undef,
+  $slave_options    = undef,
 
   $mode             = undef,
   $miimon           = undef,
@@ -25,18 +28,18 @@ define network::bond::debian(
 ) {
 
   $raw = {
-    'bond-slaves'    => join($slaves, ' '),
-    'bond-mode'      => $mode,
-    'bond-miimon'    => $miimon,
-    'bond-downdelay' => $downdelay,
-    'bond-updelay'   => $updelay,
-    'bond-lacp-rate' => $lacp_rate,
-    'bond-primary'   => $primary,
+    'bond-slaves'           => join($slaves, ' '),
+    'bond-mode'             => $mode,
+    'bond-miimon'           => $miimon,
+    'bond-downdelay'        => $downdelay,
+    'bond-updelay'          => $updelay,
+    'bond-lacp-rate'        => $lacp_rate,
+    'bond-primary'          => $primary,
     'bond-primary-reselect' => $primary_reselect,
     'bond-xmit-hash-policy' => $xmit_hash_policy,
   }
 
-  $opts = compact_hash($raw)
+  $opts = compact_hash(merge($raw, $options))
 
   network_config { $name:
     ensure    => $ensure,
@@ -45,6 +48,7 @@ define network::bond::debian(
     family    => $family,
     method    => $method,
     onboot    => $onboot,
+    hotplug   => $hotplug,
     options   => $opts,
   }
 

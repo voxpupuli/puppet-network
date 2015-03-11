@@ -3,7 +3,7 @@ puppet-network
 
 Manage non-volatile network and route configuration.
 
-Travis Test status: [![Build Status](https://travis-ci.org/adrienthebo/puppet-network.png?branch=master)](https://travis-ci.org/adrienthebo/puppet-network)
+Travis Test status: [![Build Status](https://travis-ci.org/puppet-community/puppet-network.png?branch=master)](https://travis-ci.org/puppet-community/puppet-network)
 
 Examples
 --------
@@ -109,8 +109,5 @@ Or on puppet 2.7/3.x:
 Contact
 -------
 
-  * Source code: https://github.com/adrienthebo/puppet-network
-  * Issue tracker: https://github.com/adrienthebo/puppet-network/issues
-
-If you have questions or concerns about this module, contact finch on #puppet
-on Freenode, or email adrien@puppetlabs.com.
+  * Source code: https://github.com/puppet-community/puppet-network
+  * Issue tracker: https://github.com/puppet-community/puppet-network/issues

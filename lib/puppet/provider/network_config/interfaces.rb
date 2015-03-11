@@ -49,7 +49,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
     # These fields are going to get rearranged to resolve issue 16
     # https://github.com/adrienthebo/puppet-network/issues/16
-    attr_accessor :ipaddress, :netmask, :family, :method, :mtu
+    attr_accessor :ipaddress, :netmask, :family, :method, :mtu, :mode
 
     # Options hash
     attr_reader :options
@@ -70,6 +70,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         :family    => @family,
         :method    => @method,
         :mtu       => @mtu,
+        :mode      => @mode,
         :options   => squeeze_options
       }
 
@@ -189,6 +190,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           #Instance[name].name   = name
           Instance[name].family = family
           Instance[name].method = method
+          Instance[name].mode   = :raw
 
         else
           # If we match on a string with a leading iface, but it isn't in the
@@ -220,10 +222,11 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             name = current_interface
 
             case key
-            when 'address'; Instance[name].ipaddress    = val
-            when 'netmask'; Instance[name].netmask      = val
-            when 'mtu';     Instance[name].mtu          = val
-            else            Instance[name].options[key] << val
+            when 'address';         Instance[name].ipaddress    = val
+            when 'netmask';         Instance[name].netmask      = val
+            when 'mtu';             Instance[name].mtu          = val
+            when 'vlan-raw-device'; Instance[name].mode         = :vlan
+            else                    Instance[name].options[key] << val
             end
           else
             raise_malformed
@@ -245,19 +248,20 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     contents << header
 
     # Add onboot interfaces
-    if (auto_interfaces = providers.select {|provider| provider.onboot == true })
+    auto_interfaces = providers.select {|provider| provider.onboot == true }
+    unless (auto_interfaces.empty?)
       stanza = []
       stanza << "auto " + auto_interfaces.map(&:name).sort.join(" ")
       contents << stanza.join("\n")
     end
 
     # Add hotpluggable interfaces
-    if (hotplug_interfaces = providers.select {|provider| provider.hotplug == true })
+    hotplug_interfaces = providers.select {|provider| provider.hotplug == true }
+    unless (hotplug_interfaces.empty?)
       stanza = []
       stanza << "allow-hotplug " + hotplug_interfaces.map(&:name).sort.join(" ")
       contents << stanza.join("\n")
     end
-
 
     # Build iface stanzas
     providers.sort_by(&:name).each do |provider|
@@ -268,15 +272,27 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       stanza = []
       stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
 
+      if provider.mode == :vlan
+        # if this is a :vlan mode interface than the name of the
+        # `vlan-raw-device` is implied by the `iface` name in the format
+        # fooX.<vlan>
+
+        # The valid vlan ID range is 0-4095; 4096 is out of range
+        vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
+        raw_device = provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})?\Z])[1]
+
+        stanza << %{vlan-raw-device #{raw_device}} 
+      end
+
       [
         [:ipaddress, 'address'],
         [:netmask,   'netmask'],
         [:mtu,       'mtu'],
       ].each do |(property, section)|
-        stanza << "#{section} #{provider.send property}" if provider.send(property)
+        stanza << "#{section} #{provider.send property}" if provider.send(property) and provider.send(property) != :absent
       end
 
-      if provider.options
+      if provider.options and provider.options != :absent
         provider.options.each_pair do |key, val|
           if val.is_a? String
             stanza << "    #{key} #{val}"

@@ -130,6 +130,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
         its(:onboot) { should be_true }
         its(:mtu) { should == '1500' }
+        its(:mode) { should == :raw }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:1f',
             'SLAVE'  => 'yes',
@@ -142,6 +143,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
         its(:onboot) { should be_true }
         its(:mtu) { should == '1500' }
+        its(:mode) { should == :raw }
         its(:options) { should == {
             'HWADDR' => '00:12:79:91:28:20',
             'SLAVE'  => 'yes',
@@ -154,6 +156,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
         its(:onboot) { should be_true }
         its(:mtu) { should == '1500' }
+        its(:mode) { should == :raw }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c4',
             'SLAVE'  => 'yes',
@@ -166,6 +169,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
         its(:onboot) { should be_true }
         its(:mtu) { should == '1500' }
+        its(:mode) { should == :raw }
         its(:options) { should == {
             'HWADDR' => '00:26:55:e9:33:c5',
             'SLAVE'  => 'yes',
@@ -178,11 +182,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
         its(:ipaddress) { should == '172.24.61.11' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
+        its(:mode)      { should == :vlan }
         its(:options)   { should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'VLAN'           => 'yes',
             'PHYSDEV'        => 'bond0',
             'GATEWAY'        => '172.24.61.1',
           }
@@ -193,20 +197,20 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
         its(:ipaddress) { should == '172.24.61.12' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
-        its(:options)   { should be_nil }
+        its(:options)   { should == :absent }
       end
 
       describe 'vlan200' do
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
         its(:ipaddress) { should == '172.24.62.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
+        its(:mode)      { should == :vlan }
         its(:options)   { should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'VLAN'           => 'yes',
             'PHYSDEV'        => 'bond0',
           }
         }
@@ -216,11 +220,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
         its(:ipaddress) { should == '172.24.63.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
+        its(:mode)      { should == :vlan }
         its(:options)   { should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'VLAN'           => 'yes',
             'PHYSDEV'        => 'bond0',
           }
         }
@@ -230,11 +234,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
         its(:ipaddress) { should == '172.24.64.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
+        its(:mode)      { should == :vlan }
         its(:options)   { should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'VLAN'           => 'yes',
             'PHYSDEV'        => 'bond0',
           }
         }
@@ -244,12 +248,66 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
         its(:ipaddress) { should == '172.24.65.1' }
         its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should be_false }
+        its(:onboot)    { should == :absent }
         its(:method)    { should be_true }
+        its(:mode)      { should == :vlan }
         its(:options)   { should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'VLAN'           => 'yes',
             'PHYSDEV'        => 'bond0',
+          }
+        }
+      end
+    end
+
+    describe 'interface.vlan_id vlan configuration' do
+      let(:network_scripts_path) { fixture_file('network-scripts') }
+
+      before do
+        described_class.stubs(:target_files).returns Dir["#{network_scripts_path}/*"]
+        described_class.any_instance.expects(:select_file).never
+      end
+
+      describe 'eth0.0' do
+        subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
+        its(:onboot)  { should be_true }
+        its(:method)  { should == 'static' }
+        its(:mtu)     { should == '9000' }
+        its(:mode)    { should == :vlan }
+        its(:options) { should == {
+            'IPV6INIT'      => 'no',
+            'NM_CONTROLLED' => 'no',
+            'TYPE'          => 'Ethernet',
+            'BRIDGE'        => 'br1',
+          }
+        }
+      end
+
+      describe 'eth0.1' do
+        subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
+        its(:onboot)  { should be_true }
+        its(:method)  { should == 'static' }
+        its(:mtu)     { should == '9000' }
+        its(:mode)    { should == :vlan }
+        its(:options) { should == {
+            'IPV6INIT'      => 'no',
+            'NM_CONTROLLED' => 'no',
+            'TYPE'          => 'Ethernet',
+            'BRIDGE'        => 'br1',
+          }
+        }
+      end
+
+      describe 'eth0.4095' do
+        subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
+        its(:onboot)  { should be_true }
+        its(:method)  { should == 'static' }
+        its(:mtu)     { should == '9000' }
+        its(:mode)    { should == :vlan }
+        its(:options) { should == {
+            'IPV6INIT'      => 'no',
+            'NM_CONTROLLED' => 'no',
+            'TYPE'          => 'Ethernet',
+            'BRIDGE'        => 'br4095',
           }
         }
       end
@@ -259,6 +317,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it "with a mangled key/value should fail" do
         expect { described_class.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
       end
+    end
+
+    describe 'when DEVICE is not present' do
+      let(:data) { described_class.parse_file('ifcfg-eth1', fixture_data('eth1-dhcp'))[0] }
+      it { data[:name].should == 'eth1' }
     end
 
   end
@@ -275,6 +338,23 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.255.0",
         :mtu             => '1500',
+        :mode            => nil,
+        :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
+      )
+    end
+
+    let(:eth0_1_provider) do
+      stub('eth0_1_provider',
+        :name            => "eth0.1",
+        :ensure          => :present,
+        :onboot          => true,
+        :hotplug         => true,
+        :family          => "inet",
+        :method          => "none",
+        :ipaddress       => "169.254.0.1",
+        :netmask         => "255.255.255.0",
+        :mtu             => '1500',
+        :mode            => :vlan,
         :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
       )
     end
@@ -288,6 +368,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
+        :mode            => nil,
         :options         => {}
       )
     end
@@ -301,6 +382,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         :netmask   => '255.255.255.0',
         :method    => 'static',
         :mtu       => '1500',
+        :mode            => nil,
         :options   => {
           "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
         }
@@ -322,6 +404,22 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it { data.should match /NETMASK=255\.255\.255\.0/ }
       it { data.should match /NM_CONTROLLED=no/ }
       it { data.should match /USERCTL=no/ }
+      # XXX should be be always managing VLAN?
+      it { data.should_not match /VLAN=yes/ }
+      it { data.should_not match /VLAN=no/ }
+    end
+
+    describe 'with test interface eth0.1' do
+      let(:data) { described_class.format_file('filepath', [eth0_1_provider]) }
+
+      it { data.should match /DEVICE=eth0.1/ }
+      it { data.should match /ONBOOT=yes/ }
+      it { data.should match /BOOTPROTO=none/ }
+      it { data.should match /IPADDR=169\.254\.0\.1/ }
+      it { data.should match /NETMASK=255\.255\.255\.0/ }
+      it { data.should match /NM_CONTROLLED=no/ }
+      it { data.should match /USERCTL=no/ }
+      it { data.should match /VLAN=yes/ }
     end
 
     describe 'with test interface bond0' do
@@ -337,7 +435,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       File.expects(:unlink).never
       described_class.stubs(:perform_write)
       described_class.dirty_file!('/not/a/real/file')
-      described_class.flush_file('/not/a/real/file') 
+      described_class.flush_file('/not/a/real/file')
     }
   end
 end

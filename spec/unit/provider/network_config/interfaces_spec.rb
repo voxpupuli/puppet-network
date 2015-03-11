@@ -47,6 +47,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       data.find { |h| h[:name] == "eth0" }.should == {
         :family  => "inet",
         :method  => "dhcp",
+        :mode    => :raw,
         :name    => "eth0",
         :hotplug => true,
         :options => {},
@@ -59,6 +60,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       data.find { |h| h[:name] == "eth0" }.should == {
         :family  => "inet",
         :method  => "dhcp",
+        :mode    => :raw,
         :name    => "eth0",
         :hotplug => true,
         :options => {},
@@ -72,6 +74,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :name      => "eth0",
         :family    => "inet",
         :method    => "static",
+        :mode      => :raw,
         :ipaddress => "192.168.0.2",
         :netmask   => "255.255.255.0",
         :onboot    => true,
@@ -94,12 +97,46 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :name      => "eth0",
         :family    => "inet",
         :method    => "dhcp",
+        :mode      => :raw,
         :options   => {
           "pre-up" => "/bin/touch /tmp/eth0-up",
           "post-down" => [
             "/bin/touch /tmp/eth0-down1",
             "/bin/touch /tmp/eth0-down2",
           ],
+        }
+      }
+    end
+
+    it "should parse out vlan iface lines" do
+      fixture = fixture_data('two_interfaces_static_vlan')
+      data = described_class.parse_file('', fixture)
+      data.find { |h| h[:name] == "eth0" }.should == {
+        :name      => "eth0",
+        :family    => "inet",
+        :method    => "static",
+        :mode      => :raw,
+        :ipaddress => "192.168.0.2",
+        :netmask   => "255.255.255.0",
+        :onboot    => true,
+        :mtu       => "1500",
+        :options   => {
+          "broadcast" => "192.168.0.255",
+          "gateway"   => "192.168.0.1",
+        }
+      }
+      data.find { |h| h[:name] == "eth0.1" }.should == {
+        :name      => "eth0.1",
+        :family    => "inet",
+        :method    => "static",
+        :ipaddress => "172.16.0.2",
+        :netmask   => "255.255.255.0",
+        :onboot    => true,
+        :mtu       => "1500",
+        :mode      => :vlan,
+        :options   => {
+          "broadcast" => "172.16.0.255",
+          "gateway"   => "172.16.0.1",
         }
       }
     end
@@ -132,6 +169,23 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
         :mtu             => "1500",
+        :mode            => nil,
+        :options         => nil
+      )
+    end
+
+    let(:eth0_1_provider) do
+      stub('eth0_1_provider',
+        :name            => "eth0.1",
+        :ensure          => :present,
+        :onboot          => true,
+        :hotplug         => true,
+        :family          => "inet",
+        :method          => "static",
+        :ipaddress       => "169.254.0.1",
+        :netmask         => "255.255.0.0",
+        :mtu             => "1500",
+        :mode            => :vlan,
         :options         => nil
       )
     end
@@ -147,6 +201,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :ipaddress       => "169.254.0.1",
         :netmask         => "255.255.0.0",
         :mtu             => "576",
+        :mode            => nil,
         :options         => {
           'pre-up'    => '/bin/touch /tmp/eth1-up',
           'post-down' => [
@@ -161,12 +216,13 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       stub('lo_provider',
         :name            => "lo",
         :onboot          => true,
-        :hotplug         => true,
+        :hotplug         => false,
         :family          => "inet",
         :method          => "loopback",
         :ipaddress       => nil,
         :netmask         => nil,
         :mtu             => "65536",
+        :mode            => nil,
         :options         => nil
       )
     end
@@ -179,21 +235,37 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
     describe "writing the auto section" do
       it "should allow at most one section" do
-        content.scan(/^auto .*$/).length.should == 1
+        content.scan(/^auto .+$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^auto .*$/).first.should match("auto eth0 lo")
+        content.scan(/^auto .+$/).first.should match("auto eth0 lo")
+      end
+    end
+
+    describe "writing only the auto section" do
+      let(:content) { described_class.format_file('', [lo_provider]) }
+
+      it "should skip the allow-hotplug line" do
+        content.scan(/^allow-hotplug .*$/).length.should == 0
       end
     end
 
     describe "writing the allow-hotplug section" do
       it "should allow at most one section" do
-        content.scan(/^allow-hotplug .*$/).length.should == 1
+        content.scan(/^allow-hotplug .+$/).length.should == 1
       end
 
       it "should have the correct interfaces appended" do
-        content.scan(/^allow-hotplug .*$/).first.should match("allow-hotplug eth0 eth1 lo")
+        content.scan(/^allow-hotplug .+$/).first.should match("allow-hotplug eth0 eth1")
+      end
+    end
+
+    describe "writing only the allow-hotplug section" do
+      let(:content) { described_class.format_file('', [eth1_provider]) }
+
+      it "should skip the auto line" do
+        content.scan(/^auto .*$/).length.should == 0
       end
     end
 
@@ -224,6 +296,21 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         lo_provider.unstub(:method)
         lo_provider.stubs(:method).returns nil
         expect { content }.to raise_exception
+      end
+    end
+
+    describe "writing vlan iface blocks" do
+      let(:content) { described_class.format_file('', [eth0_1_provider]) }
+
+      it "should add all options following the iface block" do
+        block = [
+          "iface eth0.1 inet static",
+          "vlan-raw-device eth0",
+          "address 169.254.0.1",
+          "netmask 255.255.0.0",
+          "mtu 1500",
+        ].join("\n")
+        content.split('\n').find {|line| line.match(/iface eth0/)}.should match(block)
       end
     end
 

@@ -121,6 +121,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     #
     props.merge!({:family => :inet})
 
+    # If there is no DEVICE property in the interface configuration we retrieve
+    # the interface name from the file name itself
+    unless props.has_key?(:name)
+        props.merge!({:name => filename.split("ifcfg-")[1]})
+    end
+
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array
     [props]
@@ -146,6 +152,19 @@ Puppet::Type.type(:network_config).provide(:redhat) do
         pairs.delete(redhat_name)
         props[type_name] = val
       end
+    end
+
+    # if we encounter VLAN=yes set the interface mode to :vlan
+    pairs.each_pair do |key, val|
+      if (key == 'VLAN' and val == 'yes')
+        props[:mode] = :vlan
+      end
+    end
+    pairs.delete('VLAN')
+
+    # mode is a property so it should always have a value
+    unless (props.key?(:mode))
+      props[:mode] = :raw 
     end
 
     # For all of the remaining values, blindly toss them into the options hash.
@@ -181,6 +200,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       if (val = provider.send(type_name))
         props[type_name] = val
       end
+    end
+
+    # :mode does not exist in NAME_MAPPINGS so we have to fetch it manually
+    # note that the inverse operation is in .munge instead of parse_file
+    if (val = provider.send(:mode) and val == :vlan)
+      props['VLAN'] = 'yes'
     end
 
     pairs = self.unmunge props
