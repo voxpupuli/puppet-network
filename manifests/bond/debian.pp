@@ -14,6 +14,7 @@ define network::bond::debian(
   $family           = undef,
   $onboot           = undef,
   $hotplug          = undef,
+  $mtu              = undef,
   $options          = undef,
   $slave_options    = undef,
 
@@ -49,6 +50,7 @@ define network::bond::debian(
     method    => $method,
     onboot    => $onboot,
     hotplug   => $hotplug,
+    mtu       => $mtu,
     options   => $opts,
   }
 
