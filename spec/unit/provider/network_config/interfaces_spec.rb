@@ -221,7 +221,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
         :netmask         => nil,
         :mtu             => nil,
         :mode            => :vlan,
-        :options         => {},
+        :options         => {}
       )
     end
 
