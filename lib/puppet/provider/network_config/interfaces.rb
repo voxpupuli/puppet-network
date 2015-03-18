@@ -281,7 +281,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
         raw_device = provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})?\Z])[1]
 
-        stanza << %{vlan-raw-device #{raw_device}} 
+        stanza << %{vlan-raw-device #{raw_device}} if ! raw_device.match(/^vlan[0-9]{1,}/)
       end
 
       [
