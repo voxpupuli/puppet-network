@@ -187,7 +187,22 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           # Instance[name].name   = name
           Instance[name].family = family
           Instance[name].method = method
-          Instance[name].mode   = :raw
+          # for the vlan naming conventions (a mess), see
+          # man 5 vlan-interfaces
+          case name
+            # 'vlan22'
+            when /^vlan/
+              Instance[name].mode   = :vlan
+            # 'eth2.0003' or 'br1.2'
+            when /^[a-z]{1,}[0-9]{1,}\.[0-9]{1,4}/
+              Instance[name].mode   = :vlan
+            else
+              Instance[name].mode   = :raw
+          end
+        else
+          # If we match on a string with a leading iface, but it isn't in the
+          # expected format, malformed blar blar
+          raise_malformed
         end
 
       when /^mapping/
@@ -215,8 +230,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             case key # rubocop:disable Metrics/BlockNesting
             when 'address' then         Instance[name].ipaddress    = val
             when 'netmask' then         Instance[name].netmask      = val
-            when 'mtu' then             Instance[name].mtu          = val
-            when 'vlan-raw-device' then Instance[name].mode         = :vlan
+            when 'mtu' then             Instance[name].mtu          = val            
             else Instance[name].options[key] << val
             end
           end
@@ -260,16 +274,17 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       stanza = []
       stanza << %(iface #{provider.name} #{provider.family} #{provider.method})
 
+      # add the vlan-raw-device only when explicitely set in interfaces(5) stanza
+      # otherwise it's already assumed given the stanza name (ethX.NN)
       if provider.mode == :vlan
-        # if this is a :vlan mode interface than the name of the
-        # `vlan-raw-device` is implied by the `iface` name in the format
-        # fooX.<vlan>
-
-        # The valid vlan ID range is 0-4095; 4096 is out of range
-        vlan_range_regex = /[1-3]?\d{1,3}|40[0-8]\d|409[0-5]/
-        raw_device = provider.name.match(/\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})?\Z/)[1]
-
-        stanza << %(vlan-raw-device #{raw_device})
+          if provider.options["vlan-raw-device"]
+            stanza << "vlan-raw-device #{provider.options["vlan-raw-device"]}"
+          else
+            vlan_range_regex = /[1-3]?\d{1,3}|40[0-8]\d|409[0-5]/
+            if ! provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z])
+              raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
+            end
+          end
       end
 
       [
@@ -283,7 +298,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       if provider.options && provider.options != :absent
         provider.options.each_pair do |key, val|
           if val.is_a? String
-            stanza << "    #{key} #{val}"
+            # dont print property because we've already added it to the stanza
+            if key != "vlan-raw-device"
+              stanza << "    #{key} #{val}"
+            end
           elsif val.is_a? Array
             val.each { |entry| stanza << "    #{key} #{entry}" }
           else
