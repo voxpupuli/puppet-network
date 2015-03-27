@@ -193,6 +193,22 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       )
     end
 
+    let(:vlan10_provider) do
+      stub('vlan10_provider',
+        :name            => "vlan10",
+        :ensure          => :present,
+        :onboot          => true,
+        :hotplug         => true,
+        :family          => "inet",
+        :method          => "dhcp",
+        :ipaddress       => nil,
+        :netmask         => nil,
+        :mtu             => nil,
+        :mode            => :vlan,
+        :options         => {}        
+      )
+    end
+
     let(:eth1_4500_provider) do
       stub('eth1_4500_provider',
         :name            => "eth1.4500",
@@ -338,6 +354,13 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       let(:content) { described_class.format_file('', [eth1_4500_provider]) }
       it "should fail with wrong VLAN ID" do
         expect { content }.to raise_error(Puppet::Error, /Interface eth1.4500: missing vlan-raw-device or wrong VLAN ID in the iface name/)
+      end
+    end
+
+    describe "writing wrong vlanNN iface blocks" do
+      let(:content) { described_class.format_file('', [vlan10_provider]) }
+      it "should fail with missing vlan-raw-device" do
+        expect { content }.to raise_error(Puppet::Error, /Interface vlan10: missing vlan-raw-device or wrong VLAN ID in the iface name/)
       end
     end
 

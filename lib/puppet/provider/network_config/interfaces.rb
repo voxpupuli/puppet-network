@@ -294,8 +294,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             stanza << "vlan-raw-device #{provider.options["vlan-raw-device"]}"
           else
             vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
-            if ! provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z])
-              raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
+            if ! provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z])          
+              raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name"
             end
           end                 
       end      
