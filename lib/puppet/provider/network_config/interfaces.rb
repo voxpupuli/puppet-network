@@ -281,17 +281,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       stanza = []
       stanza << %{iface #{provider.name} #{provider.family} #{provider.method}}
 
-      if provider.mode == :vlan
-          if provider.options["vlan-raw-device"]
-            stanza << "  vlan-raw-device #{provider.options["vlan-raw-device"]}"
-          else
-            vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
-            if ! provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z])
-              raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
-            end
-          end                 
-      end
-
       [
         [:ipaddress, 'address'],
         [:netmask,   'netmask'],
@@ -299,6 +288,17 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       ].each do |(property, section)|
         stanza << "#{section} #{provider.send property}" if provider.send(property) and provider.send(property) != :absent
       end
+
+      if provider.mode == :vlan
+          if provider.options["vlan-raw-device"]
+            stanza << "vlan-raw-device #{provider.options["vlan-raw-device"]}"
+          else
+            vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
+            if ! provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z])
+              raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
+            end
+          end                 
+      end      
 
       if provider.options and provider.options != :absent
         provider.options.each_pair do |key, val|
