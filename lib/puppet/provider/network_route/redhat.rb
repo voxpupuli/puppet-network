@@ -16,7 +16,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   confine    :osfamily => :redhat
   defaultfor :osfamily => :redhat
 
-  has_feature :provider_option
+  has_feature :provider_options
 
   def select_file
     "/etc/sysconfig/network-scripts/route-#{@resource[:interface]}"
