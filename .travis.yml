@@ -1,7 +1,7 @@
 sudo: false
 language: ruby
 before_script: 'bundle exec rake fixture:prepare'
-script: 'SPEC_OPTS="--format documentation" bundle exec rake spec'
+script: 'SPEC_OPTS="--format documentation -I $(puppet module list | head -n1)/filemapper/lib" bundle exec rake spec'
 rvm:
   - 1.8.7
   - 1.9.3
