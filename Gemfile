@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'puppet', '>= 2.7.0'
+gem 'puppet', '>= 2.7.0, <= 3.4.3'
 gem 'facter', '>= 1.6.2'
 
 group :test, :development do
