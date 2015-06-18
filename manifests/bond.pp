@@ -163,7 +163,7 @@ define network::bond(
   }
 
   case $::osfamily {
-    Debian: {
+    'Debian': {
       network::bond::debian { $name:
         ensure           => $ensure,
         slaves           => $slaves,
@@ -188,7 +188,7 @@ define network::bond(
         require          => Kmod::Alias[$name],
       }
     }
-    RedHat: {
+    'RedHat': {
       network::bond::redhat { $name:
         ensure           => $ensure,
         slaves           => $slaves,
