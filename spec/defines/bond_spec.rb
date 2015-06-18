@@ -61,7 +61,7 @@ describe 'network::bond', :type => :define do
   describe 'configuring the kernel bonding device' do
     let(:facts) {{:osfamily => 'Debian'}}
 
-    it { should include_class('network::bond::setup') }
+    it { should contain_class('network::bond::setup') }
 
     it "should add a kernel module alias for the bonded device" do
       should contain_kmod__alias('bond0').with({
