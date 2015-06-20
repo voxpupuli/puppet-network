@@ -32,6 +32,10 @@
 #
 # Whether to allow hotplug for the interface.
 #
+# [*mtu*]
+#
+# Set the MTU size (in bytes) of the interface
+#
 # [*options*]
 #
 # Hash with custom interfaces options.
@@ -142,6 +146,7 @@ define network::bond(
   $family           = undef,
   $onboot           = undef,
   $hotplug          = undef,
+  $mtu              = '1500',
   $lacp_rate        = undef,
   $options          = undef,
   $slave_options    = undef,
@@ -152,7 +157,7 @@ define network::bond(
   $updelay          = "200",
   $primary          = $slaves[0],
   $primary_reselect = "always",
-  $xmit_hash_policy = "layer2",
+  $xmit_hash_policy = "layer2"
 ) {
 
   require network::bond::setup
@@ -173,6 +178,7 @@ define network::bond(
         family           => $family,
         onboot           => $onboot,
         hotplug          => $hotplug,
+        mtu              => $mtu,
         options          => $options,
         slave_options    => $slave_options,
 
