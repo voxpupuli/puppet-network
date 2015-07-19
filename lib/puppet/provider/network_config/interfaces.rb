@@ -278,7 +278,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # fooX.<vlan>
 
         # The valid vlan ID range is 0-4095; 4096 is out of range
-        vlan_range_regex = %r[\d{1,3}|40[0-9][0-5]]
+        vlan_range_regex = %r[[1-3]?\d{1,3}|40[0-8]\d|409[0-5]]
         raw_device = provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})?\Z])[1]
 
         stanza << %{vlan-raw-device #{raw_device}} 
