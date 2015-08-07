@@ -1,5 +1,12 @@
-sudo: false
+sudo: true
 language: ruby
+install:
+  # Use latest Augeas
+  - sudo add-apt-repository -y ppa:raphink/augeas
+  - sudo apt-get update
+  - sudo apt-get install libaugeas-dev libxml2-dev
+  # now, we can run
+  - bundle install
 before_script: 'bundle exec rake fixture:prepare'
 script: 'SPEC_OPTS="--format documentation" bundle exec rake spec'
 rvm:
