@@ -1,1 +1,4 @@
-<%= %w[mode miimon downdelay updelay lacp_rate primary primary_reselect xmit_hash_policy].reject { |thing| scope.lookupvar(thing) == :undef }.map {|thing| "#{thing}=#{scope.lookupvar(thing)}"}.join(' ') -%>
+<%= %w[mode miimon downdelay updelay lacp_rate primary primary_reselect xmit_hash_policy].reject {
+  |option| scope.lookupvar(option).nil? || scope.lookupvar(option) == :undef || scope.lookupvar(option) == :absent || scope.lookupvar(option).empty? }.map {
+    |key| "#{key}=#{scope.lookupvar(key)}"
+  }.join(' ') -%>

@@ -146,13 +146,13 @@ define network::bond(
   $options          = undef,
   $slave_options    = undef,
 
-  $mode             = "active-backup",
-  $miimon           = "100",
-  $downdelay        = "200",
-  $updelay          = "200",
+  $mode             = 'active-backup',
+  $miimon           = '100',
+  $downdelay        = '200',
+  $updelay          = '200',
   $primary          = $slaves[0],
-  $primary_reselect = "always",
-  $xmit_hash_policy = "layer2",
+  $primary_reselect = 'always',
+  $xmit_hash_policy = 'layer2',
 ) {
 
   require network::bond::setup

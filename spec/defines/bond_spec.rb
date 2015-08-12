@@ -26,7 +26,12 @@ describe 'network::bond', :type => :define do
 
   describe 'on platform' do
     describe 'RedHat' do
-      let(:facts) {{:osfamily => 'RedHat'}}
+      let(:facts) do
+        {
+          :osfamily      => 'RedHat',
+          :augeasversion => '1.4.0',
+        }
+      end
 
       it "should create 'network::bond::redhat'" do
         should contain_network__bond__redhat('bond0')
@@ -38,7 +43,12 @@ describe 'network::bond', :type => :define do
     end
 
     describe 'Debian' do
-      let(:facts) {{:osfamily => 'Debian'}}
+      let(:facts) do
+        {
+          :osfamily      => 'Debian',
+          :augeasversion => '1.4.0',
+        }
+      end
 
       it "should create 'network::bond::debian'" do
         should contain_network__bond__debian('bond0')
@@ -59,7 +69,12 @@ describe 'network::bond', :type => :define do
   end
 
   describe 'configuring the kernel bonding device' do
-    let(:facts) {{:osfamily => 'Debian'}}
+    let(:facts) do
+      {
+        :osfamily      => 'Debian',
+        :augeasversion => '1.4.0',
+      }
+    end
 
     it { should contain_class('network::bond::setup') }
 
