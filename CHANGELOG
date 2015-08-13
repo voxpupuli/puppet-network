@@ -4,6 +4,62 @@ CHANGELOG
 0.5.0
 -----
 
+  * add bonding support through network::bond
+  * add camptocamp/kmod as a dependency
+  * add puppetlabs/stdlib as a dependency
+  * reorganize modulefile deps
+  * correct Debian package name to ifenslave-2.6
+  * (#29) add of refactored network_namespaced facts
+  * (#34) Update ifenslave package in specs
+  * added comments to express what the facts should provide
+  * Network module responds poorly to ifcfg-NNN.bak files
+  * (#36) Better validation around ifcfg script names
+  * switch to patched version of rspec-puppet
+  * fix file expansion problem with PE
+  * allow the network_config redhat provider to parse ifcfg-ethX.X format files
+  * add mtu parameter to network_config type
+  * convert vlan_range_regex to constant
+  * ensure that network_config redhat provider flushed files have a consistent file mode
+  * add link to debian package ifupdown-extra
+  * improve error messages for debian routes provider
+  * (#54) Allow ip address netmasks for network_route
+  * prevent restarting the network every time puppet runs b/c of default netmask
+  * omit lacp_rate for non 802.3ad mode
+  * remove network_public_ip fact
+  * indent sub-entries to the in interfaces
+  * do not print properies if they are absent
+  * add mode property to network_config
+  * add vlan mode property support
+  * use ifcfg script name in case DEVICE parameter is not specified on redhat network_config provider
+  * set default iface mode to :raw on Debian
+  * generate Debian auto/allow-hotplug only if not empty
+  * (#104) fix a typo in the redhat provider for network_route
+  * (#116) fix a vlan matching bug
+
+Thanks for their contributions to this release go to:
+
+  * Adrien Thebo
+  * Ahmed Elsabbahy
+  * Drew Blessing
+  * Eric Sakowski
+  * Ewoud Kohl van Wijngaarden
+  * Felix Frank
+  * Felix Gilcher
+  * Igor Galić
+  * Jasper Lievisse Adriaanse
+  * Jon Skarpeteig
+  * Jordi Clariana
+  * Joshua Hoblitt
+  * Julian
+  * Nan Liu
+  * Robin H. Johnson
+  * Spencer Krum
+  * Stefano Zilli
+  * Vlastimil Holer
+  * Wolf Noble
+
+Special thanks to Adrien Thebo for donating this module to the Puppet Community.
+
 2013-05-21
 
 This is a backwards compatible feature and bugfix release
