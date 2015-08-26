@@ -28,6 +28,10 @@
 #
 # Whether to bring the interface up on boot.
 #
+# [*options*]
+#
+# Hash with custom interfaces options.
+#
 # === Bridges parameters
 #
 # [*ports*]
@@ -107,6 +111,7 @@ define network::bridge (
   $family    = undef,
   $onboot    = undef,
   $mtu       = undef,
+  $options   = undef,
 
   $ageing     = undef,
   $bridgeprio = undef,
@@ -136,6 +141,7 @@ define network::bridge (
         family    => $family,
         onboot    => $onboot,
         mtu       => $mtu,
+        options   => $options,
         
         fd        => $fd,
         stp       => $stp,
