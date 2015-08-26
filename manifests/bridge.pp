@@ -110,7 +110,7 @@ define network::bridge (
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
-  $mtu       = undef,
+  $mtu       = '1500',
   $options   = undef,
 
   $ageing     = undef,
