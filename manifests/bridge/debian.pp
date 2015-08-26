@@ -9,6 +9,7 @@ define network::bridge::debian(
   $family    = undef,
   $onboot    = undef,
   $mtu       = undef,
+  $options   = undef,
 
   $ageing     = undef,
   $bridgeprio = undef,
@@ -40,7 +41,7 @@ define network::bridge::debian(
       'bridge_waitport'   => $waitport,
   }
 
-  $opts = compact_hash($raw)
+  $opts = compact_hash(merge($raw, $options))
 
   network_config { $name:
     ensure    => $ensure,
