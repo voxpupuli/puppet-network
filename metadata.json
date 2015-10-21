@@ -42,6 +42,6 @@
     { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.3.0" },
     { "name": "adrien/filemapper", "version_requirement": ">= 1.0.0" },
     { "name": "adrien/boolean",    "version_requirement": ">= 1.0.0" },
-    { "name": "camptocamp/kmod",   "version_requirement": "0.0.x" }
+    { "name": "camptocamp/kmod",   "version_requirement": ">= 0.0.1" }
   ]
 }
