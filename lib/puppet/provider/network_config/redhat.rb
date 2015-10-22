@@ -168,7 +168,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     end
 
     # For all of the remaining values, blindly toss them into the options hash.
-    props[:options] = pairs unless pairs.empty?
+    props[:options] = pairs
 
     [:onboot, :hotplug].each do |bool_property|
       if props[bool_property]

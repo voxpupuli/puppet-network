@@ -1,0 +1,4 @@
+BOOTPROTO=dhcp
+ONBOOT=yes
+DEVICE=eth1
+HOTPLUG=yes

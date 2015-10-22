@@ -94,6 +94,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it { data[:options]["NM_CONTROLLED"].should == 'no' }
     end
 
+    describe 'with no extra options' do
+      let(:data) { described_class.parse_file('eth0', fixture_data('eth1-simple'))[0] }
+      it { data[:options].should == {} }
+    end
+
     describe 'complex configuration' do
       let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
 
@@ -199,7 +204,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
-        its(:options)   { should == :absent }
+        its(:options)   { should == {} }
       end
 
       describe 'vlan200' do
