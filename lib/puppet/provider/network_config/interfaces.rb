@@ -226,6 +226,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             when 'netmask';         Instance[name].netmask      = val
             when 'mtu';             Instance[name].mtu          = val
             when 'vlan-raw-device'; Instance[name].mode         = :vlan
+                                    Instance[name].options[key] << val
             else                    Instance[name].options[key] << val
             end
           else
@@ -281,7 +282,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         vlan_range_regex = %r[[1-3]?\d{1,3}|40[0-8]\d|409[0-5]]
         raw_device = provider.name.match(%r[\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})?\Z])[1]
 
-        stanza << %{vlan-raw-device #{raw_device}} 
+        if ! raw_device.match(/^vlan[0-9]{1,}/)
+          stanza << %{vlan-raw-device #{raw_device}} 
+          provider.options.delete("vlan-raw-device")
+        end
       end
 
       [

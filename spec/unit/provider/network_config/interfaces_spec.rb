@@ -141,6 +141,25 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       }
     end
 
+    it "should parse out vlanNN iface lines" do
+      fixture = fixture_data('two_interfaces_dhcp_vlan')
+      data = described_class.parse_file('', fixture)
+      
+      data.find { |h| h[:name] == "eth0" }[:hotplug].should be_true
+      data.find { |h| h[:name] == "vlan10" }.should == {
+        :name      => "vlan10",
+        :family    => "inet",
+        :method    => "dhcp",
+        :mode      => :vlan,
+        :onboot    => true,
+        :options   => {
+          "vlan-raw-device" => "eth0",
+        }
+      }
+    end
+
+
+
     describe "when reading an invalid interfaces" do
 
       it "with misplaced options should fail" do
