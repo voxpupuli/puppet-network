@@ -2,7 +2,7 @@
 
 rubylib = []
 
-modulepath = %x{bundle exec puppet config print modulepath}
+modulepath = `bundle exec puppet config print modulepath`
 
 modulepath.split(':').each { |path| rubylib += Dir.glob("#{path}/*/lib") }
 

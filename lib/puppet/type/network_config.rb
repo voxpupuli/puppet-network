@@ -1,7 +1,8 @@
 require 'puppet/property/boolean'
+require 'ipaddress'
 
 Puppet::Type.newtype(:network_config) do
-  @doc = "Manage non-volatile network configuration information"
+  @doc = 'Manage non-volatile network configuration information'
 
   feature :provider_options, <<-EOD
     The provider can accept a hash of arbitrary options. The semantics of
@@ -20,19 +21,27 @@ Puppet::Type.newtype(:network_config) do
 
   newparam(:name) do
     isnamevar
-    desc "The name of the physical or logical network device"
+    desc 'The name of the physical or logical network device'
   end
 
   newproperty(:ipaddress) do
-    desc "The IP address of the network interfaces"
+    desc 'The IP address of the network interfaces'
+    validate do |value|
+      fail ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property" unless IPAddress.valid? value
+      # provider.validate
+    end
   end
 
   newproperty(:netmask) do
-    desc "The subnet mask to apply to the interface"
+    desc 'The subnet mask to apply to the interface'
+    validate do |value|
+      fail ArgumentError, "#{self.class} requires a valid netmask for the netmask property" unless IPAddress.valid_ipv4_netmask? value
+      # provider.validate
+    end
   end
 
   newproperty(:method) do
-    desc "The method for determining an IP address for the interface"
+    desc 'The method for determining an IP address for the interface'
     newvalues(:static, :manual, :dhcp, :loopback)
 
     # Redhat systems frequently use 'none' in place of 'static', although
@@ -44,51 +53,52 @@ Puppet::Type.newtype(:network_config) do
   end
 
   newproperty(:family) do
-    desc "The address family to use for the interface"
+    desc 'The address family to use for the interface'
     newvalues(:inet, :inet6)
+    aliasvalue(:inet4, :inet)
     defaultto :inet
   end
 
   newproperty(:onboot, :parent => Puppet::Property::Boolean) do
-    desc "Whether to bring the interface up on boot"
+    desc 'Whether to bring the interface up on boot'
     defaultto :true
   end
 
   newproperty(:hotplug, :required_features => :hotpluggable, :parent => Puppet::Property::Boolean) do
-    desc "Allow/disallow hotplug support for this interface"
+    desc 'Allow/disallow hotplug support for this interface'
     defaultto :true
   end
 
   newparam(:reconfigure, :required_features => :reconfigurable, :parent => Puppet::Property::Boolean) do
-    desc "Reconfigure the interface after the configuration has been updated"
+    desc 'Reconfigure the interface after the configuration has been updated'
   end
 
   newproperty(:mtu) do
-    desc "The Maximum Transmission Unit size to use for the interface"
+    desc 'The Maximum Transmission Unit size to use for the interface'
     validate do |value|
       # reject floating point and negative integers
       # XXX this lets 1500.0 pass
-      unless (value =~ /^\d+$/)
-        raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
+      unless value =~ /^\d+$/
+        fail ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
       end
 
       # Intel 82598 & 82599 chips support MTUs up to 16110; is there any
-      # hardware in the wild that supports larger frames?  
+      # hardware in the wild that supports larger frames?
       #
       # It appears loopback devices routinely have large MTU values; Eg. 65536
       #
       # Frames small than 64bytes are discarded as runts.  Smallest valid MTU
       # is 42 with a 802.1q header and 46 without.
       min_mtu = 42
-      max_mtu = 65536
-      unless (min_mtu .. max_mtu).include?(value.to_i)
-        raise ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
+      max_mtu = 65_536
+      unless (min_mtu..max_mtu).include?(value.to_i)
+        fail ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
       end
     end
   end
 
   newproperty(:mode) do
-    desc "The exclusive mode the interface should operate in"
+    desc 'The exclusive mode the interface should operate in'
     # :bond and :bridge may be added in the future
     newvalues(:raw, :vlan)
 
@@ -99,21 +109,21 @@ Puppet::Type.newtype(:network_config) do
   # that provider specific behavior doesn't clutter up the main type but still
   # allows for more powerful actions to be taken.
   newproperty(:options, :required_features => :provider_options) do
-    desc "Provider specific options to be passed to the provider"
+    desc 'Provider specific options to be passed to the provider'
 
-    def is_to_s(hash = @is)
-      hash.keys.sort.map {|key| "#{key} => #{hash[key]}"}.join(", ")
+    def s?(hash = @is)
+      hash.keys.sort.map { |key| "#{key} => #{hash[key]}" }.join(', ')
     end
 
     def should_to_s(hash = @should)
-      hash.keys.sort.map {|key| "#{key} => #{hash[key]}"}.join(", ")
+      hash.keys.sort.map { |key| "#{key} => #{hash[key]}" }.join(', ')
     end
 
     defaultto {}
 
     validate do |value|
-      raise ArgumentError, "#{self.class} requires a hash for the options property" unless value.is_a? Hash
-      #provider.validate
+      fail ArgumentError, "#{self.class} requires a hash for the options property" unless value.is_a? Hash
+      # provider.validate
     end
   end
 end

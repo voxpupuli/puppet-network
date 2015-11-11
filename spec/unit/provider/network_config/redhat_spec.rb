@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby -S rspec
 
 require 'spec_helper'
+require 'rspec/its'
 
 describe Puppet::Type.type(:network_config).provider(:redhat) do
-
   subject { described_class }
 
   def fixture_path
@@ -20,83 +20,82 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
   describe 'provider features' do
     it 'should be hotpluggable' do
-      described_class.declared_feature?(:hotpluggable).should be_true
+      expect(described_class.declared_feature?(:hotpluggable)).to be true
     end
   end
 
-  describe "selecting files to parse" do
+  describe 'selecting files to parse' do
     let(:network_scripts_path) { fixture_file('network-scripts') }
 
-    subject { described_class.target_files(network_scripts_path).map {|file| File.basename(file) } }
+    subject { described_class.target_files(network_scripts_path).map { |file| File.basename(file) } }
 
-    valid_files = %w[ifcfg-bond0 ifcfg-bond1 ifcfg-eth0 ifcfg-eth1 ifcfg-eth2
+    valid_files = %w(ifcfg-bond0 ifcfg-bond1 ifcfg-eth0 ifcfg-eth1 ifcfg-eth2
                      ifcfg-eth3 ifcfg-vlan100 ifcfg-vlan100:0 ifcfg-vlan200
                      ifcfg-vlan300 ifcfg-vlan400 ifcfg-vlan500 ifcfg-eth0.0
-                     ifcfg-eth0.1 ifcfg-eth0.4095 ifcfg-eth0:10000000]
+                     ifcfg-eth0.1 ifcfg-eth0.4095 ifcfg-eth0:10000000)
 
-    invalid_files = %w[.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak
-                       ifcfg-eth0.4096]
+    invalid_files = %w(.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak
+                       ifcfg-eth0.4096)
 
     valid_files.each do |file|
-      it { should be_include file }
+      it { should include file }
     end
 
     invalid_files.each do |file|
-      it { should_not be_include file }
+      it { should_not include file }
     end
   end
 
-  describe "when parsing" do
-
+  describe 'when parsing' do
     describe 'the name' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
-      it { data[:name].should == 'eth0' }
+      it { expect(data[:name]).to eq('eth0') }
     end
 
     describe 'the onboot property' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
-      it { data[:name].should be_true }
+      it { expect(data[:onboot]).to be true }
     end
 
-    describe "the method property" do
+    describe 'the method property' do
       describe 'when dhcp' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
-        it { data[:method].should == 'dhcp' }
+        it { expect(data[:method]).to eq('dhcp') }
       end
 
       describe 'when static' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
-        it { data[:method].should == 'static' }
+        it { expect(data[:method]).to eq('static') }
       end
     end
 
     describe 'the hotplug property' do
       describe 'when true' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-hotplug'))[0] }
-        it { data[:hotplug].should == true }
+        it { expect(data[:hotplug]).to be true }
       end
 
       describe 'when false' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-nohotplug'))[0] }
-        it { data[:hotplug].should == false }
+        it { expect(data[:hotplug]).to be false }
       end
     end
 
     describe 'a static interface' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
-      it { data[:ipaddress].should == '10.0.1.27' }
-      it { data[:netmask].should   == '255.255.255.0' }
+      it { expect(data[:ipaddress]).to eq('10.0.1.27') }
+      it { expect(data[:netmask]).to eq('255.255.255.0') }
     end
 
     describe 'the options property' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
-      it { data[:options]["USERCTL"].should == 'no' }
-      it { data[:options]["NM_CONTROLLED"].should == 'no' }
+      it { expect(data[:options]['USERCTL']).to eq('no') }
+      it { expect(data[:options]['NM_CONTROLLED']).to eq('no') }
     end
 
     describe 'with no extra options' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth1-simple'))[0] }
-      it { data[:options].should == {} }
+      it { expect(data[:options]).to eq({}) }
     end
 
     describe 'complex configuration' do
@@ -111,76 +110,82 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
       describe 'bond0' do
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
-        its(:options) { should == {
-            "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
+        its(:options) do
+          should == {
+            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
           }
-        }
+        end
       end
 
       describe 'bond1' do
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:ipaddress) { should == '172.20.1.9' }
         its(:netmask) { should == '255.255.255.0' }
         its(:mtu) { should == '1500' }
-        its(:options) { should == {
-            "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
+        its(:options) do
+          should == {
+            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
           }
-        }
+        end
       end
 
       describe 'eth0' do
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
         its(:mode) { should == :raw }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'HWADDR' => '00:12:79:91:28:1f',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0',
           }
-        }
+        end
       end
 
       describe 'eth1' do
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
         its(:mode) { should == :raw }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'HWADDR' => '00:12:79:91:28:20',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0',
           }
-        }
+        end
       end
 
       describe 'eth2' do
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
         its(:mode) { should == :raw }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'HWADDR' => '00:26:55:e9:33:c4',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1',
           }
-        }
+        end
       end
 
       describe 'eth3' do
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
-        its(:onboot) { should be_true }
+        its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
         its(:mode) { should == :raw }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'HWADDR' => '00:26:55:e9:33:c5',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1',
           }
-        }
+        end
       end
 
       describe 'vlan100' do
@@ -190,12 +195,13 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
-        its(:options)   { should == {
+        its(:options)   do
+          should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
             'GATEWAY'        => '172.24.61.1',
           }
-        }
+        end
       end
 
       describe 'vlan100:0' do
@@ -214,11 +220,12 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:onboot)    { should == :absent }
         its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
-        its(:options)   { should == {
+        its(:options)   do
+          should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
           }
-        }
+        end
       end
 
       describe 'vlan300' do
@@ -226,13 +233,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:ipaddress) { should == '172.24.63.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should == :absent }
-        its(:method)    { should be_true }
+        its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
-        its(:options)   { should == {
+        its(:options)   do
+          should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
           }
-        }
+        end
       end
 
       describe 'vlan400' do
@@ -240,13 +248,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:ipaddress) { should == '172.24.64.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should == :absent }
-        its(:method)    { should be_true }
+        its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
-        its(:options)   { should == {
+        its(:options)   do
+          should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
           }
-        }
+        end
       end
 
       describe 'vlan500' do
@@ -254,13 +263,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:ipaddress) { should == '172.24.65.1' }
         its(:netmask)   { should == '255.255.255.0' }
         its(:onboot)    { should == :absent }
-        its(:method)    { should be_true }
+        its(:method)    { should == 'static' }
         its(:mode)      { should == :vlan }
-        its(:options)   { should == {
+        its(:options)   do
+          should == {
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
           }
-        }
+        end
       end
     end
 
@@ -274,123 +284,125 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
       describe 'eth0.0' do
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
-        its(:onboot)  { should be_true }
+        its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
         its(:mtu)     { should == '9000' }
         its(:mode)    { should == :vlan }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br1',
           }
-        }
+        end
       end
 
       describe 'eth0.1' do
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
-        its(:onboot)  { should be_true }
+        its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
         its(:mtu)     { should == '9000' }
         its(:mode)    { should == :vlan }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br1',
           }
-        }
+        end
       end
 
       describe 'eth0.4095' do
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
-        its(:onboot)  { should be_true }
+        its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
         its(:mtu)     { should == '9000' }
         its(:mode)    { should == :vlan }
-        its(:options) { should == {
+        its(:options) do
+          should == {
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br4095',
           }
-        }
+        end
       end
     end
 
-    describe "when reading an invalid interfaces" do
-      it "with a mangled key/value should fail" do
+    describe 'when reading an invalid interfaces' do
+      it 'with a mangled key/value should fail' do
         expect { described_class.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, /malformed/
       end
     end
 
     describe 'when DEVICE is not present' do
       let(:data) { described_class.parse_file('ifcfg-eth1', fixture_data('eth1-dhcp'))[0] }
-      it { data[:name].should == 'eth1' }
+      it { expect(data[:name]).to eq('eth1') }
     end
-
   end
 
-  describe "when formatting resources" do
+  describe 'when formatting resources' do
     let(:eth0_provider) do
       stub('eth0_provider',
-        :name            => "eth0",
-        :ensure          => :present,
-        :onboot          => true,
-        :hotplug         => true,
-        :family          => "inet",
-        :method          => "none",
-        :ipaddress       => "169.254.0.1",
-        :netmask         => "255.255.255.0",
-        :mtu             => '1500',
-        :mode            => nil,
-        :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
+           :name            => 'eth0',
+           :ensure          => :present,
+           :onboot          => true,
+           :hotplug         => true,
+           :family          => 'inet',
+           :method          => 'none',
+           :ipaddress       => '169.254.0.1',
+           :netmask         => '255.255.255.0',
+           :mtu             => '1500',
+           :mode            => nil,
+           :options         => { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
       )
     end
 
     let(:eth0_1_provider) do
       stub('eth0_1_provider',
-        :name            => "eth0.1",
-        :ensure          => :present,
-        :onboot          => true,
-        :hotplug         => true,
-        :family          => "inet",
-        :method          => "none",
-        :ipaddress       => "169.254.0.1",
-        :netmask         => "255.255.255.0",
-        :mtu             => '1500',
-        :mode            => :vlan,
-        :options         => { "NM_CONTROLLED" => "no", "USERCTL" => "no"}
+           :name            => 'eth0.1',
+           :ensure          => :present,
+           :onboot          => true,
+           :hotplug         => true,
+           :family          => 'inet',
+           :method          => 'none',
+           :ipaddress       => '169.254.0.1',
+           :netmask         => '255.255.255.0',
+           :mtu             => '1500',
+           :mode            => :vlan,
+           :options         => { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
       )
     end
 
     let(:lo_provider) do
       stub('lo_provider',
-        :name            => "lo",
-        :onboot          => true,
-        :hotplug         => true,
-        :family          => "inet",
-        :method          => "loopback",
-        :ipaddress       => nil,
-        :netmask         => nil,
-        :mode            => nil,
-        :options         => {}
+           :name            => 'lo',
+           :onboot          => true,
+           :hotplug         => true,
+           :family          => 'inet',
+           :method          => 'loopback',
+           :ipaddress       => nil,
+           :netmask         => nil,
+           :mode            => nil,
+           :options         => {}
       )
     end
 
     let(:bond0_provider) do
       stub('bond0_provider',
-        :name      => 'bond0',
-        :onboot    => true,
-        :hotplug   => true,
-        :ipaddress => '172.20.1.9',
-        :netmask   => '255.255.255.0',
-        :method    => 'static',
-        :mtu       => '1500',
-        :mode            => nil,
-        :options   => {
-          "BONDING_OPTS" => %{mode=4 miimon=100 xmit_hash_policy=layer3+4}
-        }
+           :name      => 'bond0',
+           :onboot    => true,
+           :hotplug   => true,
+           :ipaddress => '172.20.1.9',
+           :netmask   => '255.255.255.0',
+           :method    => 'static',
+           :mtu       => '1500',
+           :mode            => nil,
+           :options   => {
+             'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+           }
 
       )
     end
@@ -402,45 +414,45 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     describe 'with test interface eth0' do
       let(:data) { described_class.format_file('filepath', [eth0_provider]) }
 
-      it { data.should match /DEVICE=eth0/ }
-      it { data.should match /ONBOOT=yes/ }
-      it { data.should match /BOOTPROTO=none/ }
-      it { data.should match /IPADDR=169\.254\.0\.1/ }
-      it { data.should match /NETMASK=255\.255\.255\.0/ }
-      it { data.should match /NM_CONTROLLED=no/ }
-      it { data.should match /USERCTL=no/ }
+      it { expect(data).to match(/DEVICE=eth0/) }
+      it { expect(data).to match(/ONBOOT=yes/) }
+      it { expect(data).to match(/BOOTPROTO=none/) }
+      it { expect(data).to match(/IPADDR=169\.254\.0\.1/) }
+      it { expect(data).to match(/NETMASK=255\.255\.255\.0/) }
+      it { expect(data).to match(/NM_CONTROLLED=no/) }
+      it { expect(data).to match(/USERCTL=no/) }
       # XXX should be be always managing VLAN?
-      it { data.should_not match /VLAN=yes/ }
-      it { data.should_not match /VLAN=no/ }
+      it { expect(data).to_not match(/VLAN=yes/) }
+      it { expect(data).to_not match(/VLAN=no/) }
     end
 
     describe 'with test interface eth0.1' do
       let(:data) { described_class.format_file('filepath', [eth0_1_provider]) }
 
-      it { data.should match /DEVICE=eth0.1/ }
-      it { data.should match /ONBOOT=yes/ }
-      it { data.should match /BOOTPROTO=none/ }
-      it { data.should match /IPADDR=169\.254\.0\.1/ }
-      it { data.should match /NETMASK=255\.255\.255\.0/ }
-      it { data.should match /NM_CONTROLLED=no/ }
-      it { data.should match /USERCTL=no/ }
-      it { data.should match /VLAN=yes/ }
+      it { expect(data).to match(/DEVICE=eth0.1/) }
+      it { expect(data).to match(/ONBOOT=yes/) }
+      it { expect(data).to match(/BOOTPROTO=none/) }
+      it { expect(data).to match(/IPADDR=169\.254\.0\.1/) }
+      it { expect(data).to match(/NETMASK=255\.255\.255\.0/) }
+      it { expect(data).to match(/NM_CONTROLLED=no/) }
+      it { expect(data).to match(/USERCTL=no/) }
+      it { expect(data).to match(/VLAN=yes/) }
     end
 
     describe 'with test interface bond0' do
       let(:data) { described_class.format_file('filepath', [bond0_provider]) }
 
-      it { data.should match /BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/ }
+      it { expect(data).to match(/BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/) }
     end
   end
 
   describe 'when flushing a dirty file' do
-    it {
+    it do
       File.expects(:chmod).with(0644, '/not/a/real/file')
       File.expects(:unlink).never
       described_class.stubs(:perform_write)
       described_class.dirty_file!('/not/a/real/file')
       described_class.flush_file('/not/a/real/file')
-    }
+    end
   end
 end

@@ -10,22 +10,22 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
   include PuppetX::FileMapper
 
-  desc "Redhat network-scripts provider"
+  desc 'Redhat network-scripts provider'
 
-  confine    :osfamily => :redhat
+  confine :osfamily => :redhat
   defaultfor :osfamily => :redhat
 
   has_feature :hotpluggable
   has_feature :provider_options
 
   # @return [String] The path to network-script directory on redhat systems
-  SCRIPT_DIRECTORY = "/etc/sysconfig/network-scripts"
+  SCRIPT_DIRECTORY = '/etc/sysconfig/network-scripts'
 
   # The valid vlan ID range is 0-4095; 4096 is out of range
-  VLAN_RANGE_REGEX = %r[\d{1,3}|40[0-9][0-5]]
+  VLAN_RANGE_REGEX = /\d{1,3}|40[0-9][0-5]/
 
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX     = %r[\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z]
+  SCRIPT_REGEX     = /\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z/
 
   NAME_MAPPINGS = {
     :ipaddress  => 'IPADDR',
@@ -60,8 +60,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   #   RedhatProvider.target_files
   #   # => ['/etc/sysconfig/network-scripts/ifcfg-eth0', '/etc/sysconfig/network-scripts/ifcfg-eth1']
   def self.target_files(script_dir = SCRIPT_DIRECTORY)
-    entries = Dir.entries(script_dir).select {|entry| entry.match SCRIPT_REGEX}
-    entries.map {|entry| File.join(SCRIPT_DIRECTORY, entry)}
+    entries = Dir.entries(script_dir).select { |entry| entry.match SCRIPT_REGEX }
+    entries.map { |entry| File.join(SCRIPT_DIRECTORY, entry) }
   end
 
   # Convert a redhat network script into a hash
@@ -91,23 +91,21 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Remove all blank lines
     lines.reject! { |line| line.match(/^\s*$/) }
 
-    pair_regex = %r/^\s*(.+?)\s*=\s*(.*)\s*$/
+    pair_regex = /^\s*(.+?)\s*=\s*(.*)\s*$/
 
     # Convert the data into key/value pairs
-    pairs = lines.inject({}) do |hash, line|
-      if (m = line.match pair_regex)
+    pairs = lines.each_with_object({}) do |line, hash|
+      fail Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") unless line.match(pair_regex) do |m|
         key = m[1].strip
         val = m[2].strip
         hash[key] = val
-      else
-        raise Puppet::Error, %{#{filename} is malformed; "#{line}" did not match "#{pair_regex.to_s}"}
       end
       hash
     end
 
-    props = self.munge(pairs)
+    props = munge(pairs)
 
-    # TODO remove duct tape for #13
+    # TODO: remove duct tape for #13
     #
     # The :family property is making less and less sense because it seems that
     # ipv6 configuration should add new properties instead of trying to collide
@@ -119,13 +117,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # issue that caused this, and https://github.com/adrienthebo/puppet-network/issues/16
     # for the resolution.
     #
-    props.merge!({:family => :inet})
+    props.merge!(:family => :inet)
 
     # If there is no DEVICE property in the interface configuration we retrieve
     # the interface name from the file name itself
-    unless props.has_key?(:name)
-        props.merge!({:name => filename.split("ifcfg-")[1]})
-    end
+    props.merge!(:name => filename.split('ifcfg-')[1]) unless props.key?(:name)
 
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array
@@ -146,26 +142,19 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For each interface attribute that we recognize it, add the value to the
     # hash with our expected label
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|
-      if (val = pairs[redhat_name])
-        # We've recognized a value that maps to an actual type property, delete
-        # it from the pairs and copy it as an actual property
-        pairs.delete(redhat_name)
-        props[type_name] = val
-      end
+      next unless (val = pairs[redhat_name])
+      pairs.delete(redhat_name)
+      props[type_name] = val
     end
 
     # if we encounter VLAN=yes set the interface mode to :vlan
     pairs.each_pair do |key, val|
-      if (key == 'VLAN' and val == 'yes')
-        props[:mode] = :vlan
-      end
+      props[:mode] = :vlan if key == 'VLAN' && val == 'yes'
     end
     pairs.delete('VLAN')
 
     # mode is a property so it should always have a value
-    unless (props.key?(:mode))
-      props[:mode] = :raw 
-    end
+    props[:mode] ||= :raw
 
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs
@@ -176,18 +165,16 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       end
     end
 
-    unless ['bootp', 'dhcp'].include? props[:method]
-      props[:method] = 'static'
-    end
+    props[:method] = 'static' unless %w(bootp dhcp).include? props[:method]
 
     props
   end
 
   def self.format_file(filename, providers)
     if providers.length == 0
-      return ""
+      return ''
     elsif providers.length > 1
-      raise Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
+      fail Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
     end
 
     provider = providers[0]
@@ -204,21 +191,19 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     # :mode does not exist in NAME_MAPPINGS so we have to fetch it manually
     # note that the inverse operation is in .munge instead of parse_file
-    if (val = provider.send(:mode) and val == :vlan)
-      props['VLAN'] = 'yes'
-    end
+    val = provider.send(:mode)
+    props['VLAN'] = 'yes' if val == :vlan
 
-    pairs = self.unmunge props
+    pairs = unmunge props
 
-    content = pairs.inject('') do |str, (key, val)|
-      str << %{#{key}=#{val}\n}
+    content = pairs.each_with_object('') do |(key, value), str|
+      str << %(#{key}=#{value}\n)
     end
 
     content
   end
 
   def self.unmunge(props)
-
     pairs = {}
 
     [:onboot, :hotplug].each do |bool_property|
@@ -237,9 +222,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     pairs.merge! props
 
     pairs.each_pair do |key, val|
-      if val.is_a? String and val.match /\s+/
-        pairs[key] = %{"#{val}"}
-      end
+      pairs[key] = %("#{val}") if val.is_a?(String) && val.match(/\s+/)
     end
 
     pairs

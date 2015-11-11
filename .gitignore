@@ -1,2 +1,6 @@
-doc
-Gemfile.local
+.*.sw?
+pkg
+spec/fixtures
+.rspec_system
+.vagrant
+Gemfile.lock

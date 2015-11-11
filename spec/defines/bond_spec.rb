@@ -9,7 +9,7 @@ describe 'network::bond', :type => :define do
       'method'           => 'static',
       'ipaddress'        => '172.18.1.2',
       'netmask'          => '255.255.128.0',
-      'slaves'           => ['eth0', 'eth1'],
+      'slaves'           => %w(eth0 eth1),
       'options'          => { 'NM_CONTROLLED' => 'yes' },
       'slave_options'    => { 'NM_CONTROLLED' => 'no' },
 
@@ -60,9 +60,9 @@ describe 'network::bond', :type => :define do
     end
 
     describe 'on an unsupported osfamily' do
-      let(:facts) {{:osfamily => 'SparrowOS'}}
+      let(:facts) { { :osfamily => 'SparrowOS' } }
 
-      it "should fail to compile" do
+      it 'should fail to compile' do
         expect { should compile }.to raise_error(/network::bond does not support osfamily 'SparrowOS'/)
       end
     end
@@ -78,11 +78,9 @@ describe 'network::bond', :type => :define do
 
     it { should contain_class('network::bond::setup') }
 
-    it "should add a kernel module alias for the bonded device" do
-      should contain_kmod__alias('bond0').with({
-        :source => 'bonding',
-        :ensure => 'present',
-      })
+    it 'should add a kernel module alias for the bonded device' do
+      should contain_kmod__alias('bond0').with(:source => 'bonding',
+                                               :ensure => 'present',)
     end
   end
 end

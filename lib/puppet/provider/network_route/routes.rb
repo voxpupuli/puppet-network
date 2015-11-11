@@ -12,13 +12,13 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
   include PuppetX::FileMapper
 
-  desc "Debian routes style provider"
+  desc 'Debian routes style provider'
 
-  confine    :osfamily => :debian
+  confine :osfamily => :debian
 
   # $ dpkg -S /etc/network/if-up.d/20static-routes
   # ifupdown-extra: /etc/network/if-up.d/20static-routes
-  confine    :exists   => '/etc/network/if-up.d/20static-routes'
+  confine :exists   => '/etc/network/if-up.d/20static-routes'
 
   defaultfor :osfamily => :debian
 
@@ -41,10 +41,10 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
   def self.raise_malformed
     @failed = true
-    raise MalformedRoutesError
+    fail MalformedRoutesError
   end
 
-  def self.parse_file(filename, contents)
+  def self.parse_file(_filename, contents)
     # Build out an empty hash for new routes for storing their configs.
     route_hash = Hash.new do |hash, key|
       hash[key] = {}
@@ -64,9 +64,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
       route = line.split(' ', 5)
 
-      if route.length < 4
-        raise_malformed
-      end
+      raise_malformed if route.length < 4
 
       # use the CIDR version of the target as :name
       cidr_target = "#{route[0]}/#{IPAddr.new(route[1]).to_i.to_s(2).count('1')}"
@@ -82,16 +80,16 @@ Puppet::Type.type(:network_route).provide(:routes) do
   end
 
   # Generate an array of sections
-  def self.format_file(filename, providers)
+  def self.format_file(_filename, providers)
     contents = []
     contents << header
 
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      raise Puppet::Error, "#{provider.name} is missing the required parameter 'network'." if provider.network.nil?
-      raise Puppet::Error, "#{provider.name} is missing the required parameter 'netmask'." if provider.netmask.nil?
-      raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
-      raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
+      fail Puppet::Error, "#{provider.name} is missing the required parameter 'network'." if provider.network.nil?
+      fail Puppet::Error, "#{provider.name} is missing the required parameter 'netmask'." if provider.netmask.nil?
+      fail Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
+      fail Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
       contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface} #{provider.options}\n"
     end
