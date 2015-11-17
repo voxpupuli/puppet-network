@@ -48,7 +48,7 @@ define network::bond::redhat(
   $opts_slave = merge(
     {
       'MASTER' => $name,
-      'SLAVE'  => 'yes'
+      'SLAVE'  => 'yes',
     },
     $slave_options
   )

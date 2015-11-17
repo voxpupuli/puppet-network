@@ -23,5 +23,5 @@ Puppet::Parser::Functions.newfunction(:compact_hash,
 
   hash = args[0]
 
-  hash.reject { |_, val| val.nil? or val == :undef }
+  hash.reject { |_, val| val.nil? || val == :undef }
 end

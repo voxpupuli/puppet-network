@@ -11,9 +11,9 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
   include PuppetX::FileMapper
 
-  desc "RHEL style routes provider"
+  desc 'RHEL style routes provider'
 
-  confine    :osfamily => :redhat
+  confine :osfamily => :redhat
   defaultfor :osfamily => :redhat
 
   has_feature :provider_options
@@ -23,10 +23,10 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   end
 
   def self.target_files
-    Dir["/etc/sysconfig/network-scripts/route-*"]
+    Dir['/etc/sysconfig/network-scripts/route-*']
   end
 
-  def self.parse_file(filename, contents)
+  def self.parse_file(_filename, contents)
     routes = []
 
     lines = contents.split("\n")
@@ -41,23 +41,23 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
       route = line.split(' ', 6)
       if route.length < 4
-        raise Puppet::Error, "Malformed redhat route file, cannot instantiate network_route resources"
+        fail Puppet::Error, 'Malformed redhat route file, cannot instantiate network_route resources'
       end
 
       new_route = {}
 
-      if route[0] == "default"
-        cidr_target = "default"
+      if route[0] == 'default'
+        cidr_target = 'default'
 
         new_route[:name]    = cidr_target
-        new_route[:network] = "default"
+        new_route[:network] = 'default'
         new_route[:netmask] = '0.0.0.0'
         new_route[:gateway] = route[2]
         new_route[:interface] = route[4]
         new_route[:options] = route[5] if route[5]
       else
         # use the CIDR version of the target as :name
-        network, netmask = route[0].split("/")
+        network, netmask = route[0].split('/')
         cidr_target = "#{network}/#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
 
         new_route[:name]    = cidr_target
@@ -75,15 +75,15 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   end
 
   # Generate an array of sections
-  def self.format_file(filename, providers)
+  def self.format_file(_filename, providers)
     contents = []
     contents << header
     # Build routes
     providers.sort_by(&:name).each do |provider|
       [:network, :netmask, :gateway, :interface].each do |prop|
-        raise Puppet::Error, "#{provider.name} does not have a #{prop}." if provider.send(prop).nil?
+        fail Puppet::Error, "#{provider.name} does not have a #{prop}." if provider.send(prop).nil?
       end
-      if provider.network == "default"
+      if provider.network == 'default'
         contents << "#{provider.network} via #{provider.gateway} dev #{provider.interface} #{provider.options}\n"
       else
         contents << "#{provider.network}/#{provider.netmask} via #{provider.gateway} dev #{provider.interface} #{provider.options}\n"
