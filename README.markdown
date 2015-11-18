@@ -94,9 +94,13 @@ Dependencies
 The debian interfaces provider requires the FileMapper mixin, available at https://github.com/adrienthebo/puppet-filemapper
 The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra)
 
-The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean
+The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean It also requires the `ipaddress` gem which can be installed with:
 
-Note: you many also need to update your master's plugins (run on your puppet master):
+    sudo gem install ipaddress --no-ri --no-rdoc
+
+This gem needs to always be installed on the agent before a puppet agent run, otherwise a catalog error will occur.
+
+Note: you may also need to update your master's plugins (run on your puppet master):
 
     puppet agent -t --noop
 
