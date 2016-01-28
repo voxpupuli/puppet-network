@@ -19,7 +19,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   has_feature :provider_options
 
   # @return [String] The path to network-script directory on redhat systems
-  SCRIPT_DIRECTORY = '/etc/sysconfig/network-scripts'
+  SCRIPT_DIRECTORY = '/etc/sysconfig/network-scripts'.freeze
 
   # The valid vlan ID range is 0-4095; 4096 is out of range
   VLAN_RANGE_REGEX = /\d{1,3}|40[0-9][0-5]/
@@ -35,7 +35,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :name       => 'DEVICE',
     :hotplug    => 'HOTPLUG',
     :mtu        => 'MTU',
-  }
+  }.freeze
 
   # Map provider instances to files based on their name
   #
@@ -89,7 +89,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Strip out all comments
     lines.map! { |line| line.sub(/#.*$/, '') }
     # Remove all blank lines
-    lines.reject! { |line| line.match(/^\s*$/) }
+    lines.reject! { |line| line =~ /^\s*$/ }
 
     pair_regex = /^\s*(.+?)\s*=\s*(.*)\s*$/
 
@@ -117,11 +117,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # issue that caused this, and https://github.com/adrienthebo/puppet-network/issues/16
     # for the resolution.
     #
-    props.merge!(:family => :inet)
+    props[:family] = :inet
 
     # If there is no DEVICE property in the interface configuration we retrieve
     # the interface name from the file name itself
-    props.merge!(:name => filename.split('ifcfg-')[1]) unless props.key?(:name)
+    props[:name] = filename.split('ifcfg-')[1] unless props.key?(:name)
 
     # The FileMapper mixin expects an array of providers, so we return the
     # single interface wrapped in an array

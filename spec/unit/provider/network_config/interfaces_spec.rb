@@ -51,6 +51,17 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          :options => {},)
     end
 
+    it 'should ignore source and source-directory lines' do
+      fixture = fixture_data('jessie_source_stanza')
+      data = described_class.parse_file('', fixture)
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:family  => 'inet',
+                                                         :method  => 'dhcp',
+                                                         :mode    => :raw,
+                                                         :name    => 'eth0',
+                                                         :hotplug => true,
+                                                         :options => {},)
+    end
+
     it 'should ignore variable whitespace in iface lines (network-#26)' do
       fixture = fixture_data('iface_whitespace')
       data = described_class.parse_file('', fixture)
