@@ -399,8 +399,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            :netmask   => '255.255.255.0',
            :method    => 'static',
            :mtu       => '1500',
-           :mode            => nil,
-           :options   => {
+           :mode => nil,
+           :options => {
              'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
            }
 

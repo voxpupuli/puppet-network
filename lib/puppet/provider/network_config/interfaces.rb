@@ -79,11 +79,11 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
     def squeeze_options
       @options.each_with_object({}) do |(key, value), hash|
-        if value.size <= 1
-          hash[key] = value.pop
-        else
-          hash[key] = value
-        end
+        hash[key] = if value.size <= 1
+                      value.pop
+                    else
+                      value
+                    end
         hash
       end
     end
@@ -123,7 +123,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # parsed.
     status = :none
     current_interface = nil
-
     lines = contents.split("\n")
     # TODO: Join lines that end with a backslash
 
@@ -135,6 +134,11 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       case line
       when /^\s*#|^\s*$/
         # Ignore comments and blank lines
+        next
+
+      when /^source|^source-directory/
+        # ignore source|source-directory sections, it makes this provider basically useless
+        # with Debian Jessie. Please refer to man 5 interfaces
         next
 
       when /^auto|^allow-auto/
