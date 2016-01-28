@@ -19,7 +19,7 @@ describe 'network::bond::debian', :type => :define do
         'lacp_rate'        => 'slow',
         'primary'          => 'eth0',
         'primary_reselect' => 'always',
-        'xmit_hash_policy' => 'layer2',
+        'xmit_hash_policy' => 'layer2'
       }
     end
 
@@ -43,8 +43,8 @@ describe 'network::bond::debian', :type => :define do
                                                     'bond-lacp-rate'        => 'slow',
                                                     'bond-primary'          => 'eth0',
                                                     'bond-primary-reselect' => 'always',
-                                                    'bond-xmit-hash-policy' => 'layer2',
-                                                  },)
+                                                    'bond-xmit-hash-policy' => 'layer2'
+                                                  })
     end
   end
 
@@ -65,7 +65,7 @@ describe 'network::bond::debian', :type => :define do
         'downdelay'        => '100',
         'updelay'          => '100',
         'lacp_rate'        => 'fast',
-        'xmit_hash_policy' => 'layer3+4',
+        'xmit_hash_policy' => 'layer3+4'
       }
     end
     %w(eth0 eth1 eth2).each do |slave|
@@ -89,7 +89,7 @@ describe 'network::bond::debian', :type => :define do
                                                     'bond-lacp-rate'        => 'fast',
                                                     'bond-xmit-hash-policy' => 'layer3+4',
                                                     'bond-future-option'    => 'yes'
-                                                  },)
+                                                  })
     end
   end
 end

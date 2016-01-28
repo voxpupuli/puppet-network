@@ -4,3 +4,6 @@ spec/fixtures
 .rspec_system
 .vagrant
 Gemfile.lock
+log/
+spec/acceptance/nodesets/default.yml
+.ruby-version
