@@ -34,7 +34,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     :onboot     => 'ONBOOT',
     :name       => 'DEVICE',
     :hotplug    => 'HOTPLUG',
-    :mtu        => 'MTU',
+    :mtu        => 'MTU'
   }.freeze
 
   # Map provider instances to files based on their name
@@ -91,17 +91,25 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Remove all blank lines
     lines.reject! { |line| line =~ /^\s*$/ }
 
+    Puppet.debug "parse_file(): got #{lines.length} lines from file #{filename} to parse"
+
     pair_regex = /^\s*(.+?)\s*=\s*(.*)\s*$/
 
     # Convert the data into key/value pairs
-    pairs = lines.each_with_object({}) do |line, hash|
-      fail Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") unless line.match(pair_regex) do |m|
-        key = m[1].strip
-        val = m[2].strip
-        hash[key] = val
-      end
-      hash
+    # LB: replacing each_with_object() function with a more verbose version to preserve
+    # compatability with Ruby 1.8.7
+    # pairs = lines.each_with_object({}) do |line, hash|
+    pairs = {}
+    lines.each do |line|
+      m = line.match(pair_regex)
+      fail Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") if m.nil?
+      key = m[1].strip
+      val = m[2].strip
+      Puppet.debug "parse_file(): Key=#{key}, Value=#{val}"
+      pairs[key] = val
     end
+
+    Puppet.debug "parse_file(): parsed #{pairs.size} keys from #{filename}"
 
     props = munge(pairs)
 
@@ -144,6 +152,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|
       next unless (val = pairs[redhat_name])
       pairs.delete(redhat_name)
+      Puppet.debug "munge(): Converted key #{redhat_name} to #{type_name}"
       props[type_name] = val
     end
 
@@ -156,8 +165,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # mode is a property so it should always have a value
     props[:mode] ||= :raw
 
-    # For all of the remaining values, blindly toss them into the options hash.
-    props[:options] = pairs
+    # For all of the remaining values, blindly toss them into the options hash,
+    # but downcase the keys
+    props[:options] = {}
+    pairs.each_pair do |key, val|
+      props[:options][key.downcase] = val
+    end
 
     [:onboot, :hotplug].each do |bool_property|
       if props[bool_property]
@@ -196,8 +209,13 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pairs = unmunge props
 
-    content = pairs.each_with_object('') do |(key, value), str|
-      str << %(#{key}=#{value}\n)
+    # LB: replacing each_with_object() function to preserve compatability with Ruby 1.8.7
+    # content = pairs.each_with_object('') do |(key, value), str|
+    content = ''
+    pairs.each do |key, value|
+      # LB: do not write key-value pairs to disk that are 'absent' in Puppet
+      Puppet.debug "format_file(): Key=#{key}, Value=#{value}"
+      content << %(#{key}=#{value}\n)
     end
 
     content
@@ -213,16 +231,22 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     end
 
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|
-      if (val = props[type_name])
-        props.delete(type_name)
-        pairs[redhat_name] = val
-      end
+      next unless (val = props[type_name])
+      next if val == :absent
+      props.delete(type_name)
+      pairs[redhat_name] = val
+      Puppet.debug "unmunge(): Converted property #{type_name}=#{val} to pair #{redhat_name}=#{val}"
     end
 
-    pairs.merge! props
-
-    pairs.each_pair do |key, val|
-      pairs[key] = %("#{val}") if val.is_a?(String) && val.match(/\s+/)
+    props.each_pair do |key, val|
+      next if val == :absent
+      upkey = key.upcase
+      if val =~ /\s/
+        pairs[upkey] = %("#{val}")
+      else
+        pairs[upkey] = val.to_s
+      end
+      Puppet.debug "unmunge(): Adding property as pair #{upkey}=#{val}"
     end
 
     pairs
