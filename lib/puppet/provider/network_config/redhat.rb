@@ -180,9 +180,9 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     provider = providers[0]
     props    = {}
 
-    # Map everything to a flat hash
-    props = (provider.options || {})
+    props = provider.options if provider.options && provider.options != :absent
 
+    # Map everything to a flat hash
     NAME_MAPPINGS.keys.each do |type_name|
       if (val = provider.send(type_name))
         props[type_name] = val
