@@ -376,6 +376,22 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       )
     end
 
+    let(:eth1_provider) do
+      stub('eth1_provider',
+           :name            => 'eth1',
+           :ensure          => :present,
+           :onboot          => :absent,
+           :hotplug         => true,
+           :family          => 'inet',
+           :method          => 'none',
+           :ipaddress       => :absent,
+           :netmask         => :absent,
+           :mtu             => :absent,
+           :mode            => :vlan,
+           :options         => :absent,
+          )
+    end
+
     let(:lo_provider) do
       stub('lo_provider',
            :name            => 'lo',
@@ -437,6 +453,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       it { expect(data).to match(/NM_CONTROLLED=no/) }
       it { expect(data).to match(/USERCTL=no/) }
       it { expect(data).to match(/VLAN=yes/) }
+    end
+
+    describe 'with test interface eth1' do
+      let(:data) { described_class.format_file('filepath', [eth1_provider]) }
+
+      it { expect(data).to match(/DEVICE=eth1/) }
+      it { expect(data).to match(/VLAN=yes/) }
+      it { expect(data).to_not match(/absent/) }
     end
 
     describe 'with test interface bond0' do
