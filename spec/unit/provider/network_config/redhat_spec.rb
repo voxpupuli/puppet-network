@@ -89,8 +89,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
     describe 'the options property' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-static'))[0] }
-      it { expect(data[:options]['USERCTL']).to eq('no') }
-      it { expect(data[:options]['NM_CONTROLLED']).to eq('no') }
+      it { expect(data[:options]['userctl']).to eq('no') }
+      it { expect(data[:options]['nm_controlled']).to eq('no') }
     end
 
     describe 'with no extra options' do
@@ -114,7 +114,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mtu) { should == '1500' }
         its(:options) do
           should == {
-            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+            'bonding_opts' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
           }
         end
       end
@@ -127,7 +127,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mtu) { should == '1500' }
         its(:options) do
           should == {
-            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+            'bonding_opts' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
           }
         end
       end
@@ -139,9 +139,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode) { should == :raw }
         its(:options) do
           should == {
-            'HWADDR' => '00:12:79:91:28:1f',
-            'SLAVE'  => 'yes',
-            'MASTER' => 'bond0',
+            'hwaddr' => '00:12:79:91:28:1f',
+            'slave'  => 'yes',
+            'master' => 'bond0'
           }
         end
       end
@@ -153,9 +153,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode) { should == :raw }
         its(:options) do
           should == {
-            'HWADDR' => '00:12:79:91:28:20',
-            'SLAVE'  => 'yes',
-            'MASTER' => 'bond0',
+            'hwaddr' => '00:12:79:91:28:20',
+            'slave'  => 'yes',
+            'master' => 'bond0'
           }
         end
       end
@@ -167,9 +167,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode) { should == :raw }
         its(:options) do
           should == {
-            'HWADDR' => '00:26:55:e9:33:c4',
-            'SLAVE'  => 'yes',
-            'MASTER' => 'bond1',
+            'hwaddr' => '00:26:55:e9:33:c4',
+            'slave'  => 'yes',
+            'master' => 'bond1'
           }
         end
       end
@@ -181,9 +181,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode) { should == :raw }
         its(:options) do
           should == {
-            'HWADDR' => '00:26:55:e9:33:c5',
-            'SLAVE'  => 'yes',
-            'MASTER' => 'bond1',
+            'hwaddr' => '00:26:55:e9:33:c5',
+            'slave'  => 'yes',
+            'master' => 'bond1'
           }
         end
       end
@@ -197,9 +197,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)      { should == :vlan }
         its(:options)   do
           should == {
-            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV'        => 'bond0',
-            'GATEWAY'        => '172.24.61.1',
+            'vlan_name_type' => 'VLAN_PLUS_VID_NO_PAD',
+            'physdev'        => 'bond0',
+            'gateway'        => '172.24.61.1'
           }
         end
       end
@@ -222,8 +222,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)      { should == :vlan }
         its(:options)   do
           should == {
-            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV'        => 'bond0',
+            'vlan_name_type' => 'VLAN_PLUS_VID_NO_PAD',
+            'physdev'        => 'bond0'
           }
         end
       end
@@ -237,8 +237,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)      { should == :vlan }
         its(:options)   do
           should == {
-            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV'        => 'bond0',
+            'vlan_name_type' => 'VLAN_PLUS_VID_NO_PAD',
+            'physdev'        => 'bond0'
           }
         end
       end
@@ -252,8 +252,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)      { should == :vlan }
         its(:options)   do
           should == {
-            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV'        => 'bond0',
+            'vlan_name_type' => 'VLAN_PLUS_VID_NO_PAD',
+            'physdev'        => 'bond0'
           }
         end
       end
@@ -267,8 +267,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)      { should == :vlan }
         its(:options)   do
           should == {
-            'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV'        => 'bond0',
+            'vlan_name_type' => 'VLAN_PLUS_VID_NO_PAD',
+            'physdev'        => 'bond0'
           }
         end
       end
@@ -290,10 +290,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)    { should == :vlan }
         its(:options) do
           should == {
-            'IPV6INIT'      => 'no',
-            'NM_CONTROLLED' => 'no',
-            'TYPE'          => 'Ethernet',
-            'BRIDGE'        => 'br1',
+            'ipv6init'      => 'no',
+            'nm_controlled' => 'no',
+            'type'          => 'Ethernet',
+            'bridge'        => 'br1'
           }
         end
       end
@@ -306,10 +306,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)    { should == :vlan }
         its(:options) do
           should == {
-            'IPV6INIT'      => 'no',
-            'NM_CONTROLLED' => 'no',
-            'TYPE'          => 'Ethernet',
-            'BRIDGE'        => 'br1',
+            'ipv6init'      => 'no',
+            'nm_controlled' => 'no',
+            'type'          => 'Ethernet',
+            'bridge'        => 'br1'
           }
         end
       end
@@ -322,10 +322,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:mode)    { should == :vlan }
         its(:options) do
           should == {
-            'IPV6INIT'      => 'no',
-            'NM_CONTROLLED' => 'no',
-            'TYPE'          => 'Ethernet',
-            'BRIDGE'        => 'br4095',
+            'ipv6init'      => 'no',
+            'nm_controlled' => 'no',
+            'type'          => 'Ethernet',
+            'bridge'        => 'br4095'
           }
         end
       end
@@ -407,6 +407,20 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       )
     end
 
+    let(:eth2_provider) do
+      stub('eth2_provider',
+           :name      => 'eth2',
+           :ipaddress => nil,
+           :netmask   => nil,
+           :hotplug   => true,
+           :onboot    => true,
+           :mtu       => nil,
+           :method    => 'none',
+           :mode      => nil,
+           :options   => {}
+      )
+    end
+
     it 'should fail if multiple interfaces are flushed to one file' do
       expect { described_class.format_file('filepath', [eth0_provider, lo_provider]) }.to raise_error Puppet::DevError, /multiple interfaces/
     end
@@ -443,6 +457,15 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       let(:data) { described_class.format_file('filepath', [bond0_provider]) }
 
       it { expect(data).to match(/BONDING_OPTS="mode=4 miimon=100 xmit_hash_policy=layer3\+4"/) }
+    end
+
+    describe 'with test interface eth2' do
+      let(:data) { described_class.format_file('filepath', [eth2_provider]) }
+
+      it { expect(data).to match(/DEVICE=eth2/) }
+      it { expect(data).to_not match(/IPADDR=/) }
+      it { expect(data).to_not match(/MTU=/) }
+      it { expect(data).to_not match(/NETMASK=/) }
     end
   end
 

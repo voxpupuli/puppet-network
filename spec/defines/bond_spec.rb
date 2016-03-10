@@ -20,7 +20,7 @@ describe 'network::bond', :type => :define do
       'lacp_rate'        => 'slow',
       'primary'          => 'eth0',
       'primary_reselect' => 'always',
-      'xmit_hash_policy' => 'layer2',
+      'xmit_hash_policy' => 'layer2'
     }
   end
 
@@ -29,7 +29,7 @@ describe 'network::bond', :type => :define do
       let(:facts) do
         {
           :osfamily      => 'RedHat',
-          :augeasversion => '1.4.0',
+          :augeasversion => '1.4.0'
         }
       end
 
@@ -46,7 +46,7 @@ describe 'network::bond', :type => :define do
       let(:facts) do
         {
           :osfamily      => 'Debian',
-          :augeasversion => '1.4.0',
+          :augeasversion => '1.4.0'
         }
       end
 
@@ -72,7 +72,7 @@ describe 'network::bond', :type => :define do
     let(:facts) do
       {
         :osfamily      => 'Debian',
-        :augeasversion => '1.4.0',
+        :augeasversion => '1.4.0'
       }
     end
 
@@ -80,7 +80,7 @@ describe 'network::bond', :type => :define do
 
     it 'should add a kernel module alias for the bonded device' do
       should contain_kmod__alias('bond0').with(:source => 'bonding',
-                                               :ensure => 'present',)
+                                               :ensure => 'present')
     end
   end
 end

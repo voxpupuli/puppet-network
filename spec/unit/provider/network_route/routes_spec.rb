@@ -17,7 +17,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                                                                    :network    => '172.17.67.0',
                                                                    :netmask    => '255.255.255.0',
                                                                    :gateway    => '172.18.6.2',
-                                                                   :interface  => 'vlan200',)
+                                                                   :interface  => 'vlan200')
     end
 
     it 'should parse out advanced routes' do
@@ -29,7 +29,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                                                                    :netmask    => '255.255.255.0',
                                                                    :gateway    => '172.18.6.2',
                                                                    :interface  => 'vlan200',
-                                                                   :options    => 'table 200',)
+                                                                   :options    => 'table 200')
     end
 
     describe 'when reading an invalid routes file' do

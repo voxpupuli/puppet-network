@@ -91,7 +91,7 @@ Puppet::Type.newtype(:network_config) do
       # is 42 with a 802.1q header and 46 without.
       min_mtu = 42
       max_mtu = 65_536
-      unless (min_mtu..max_mtu).cover?(value.to_i)
+      unless value.to_i >= min_mtu && value.to_i <= max_mtu
         fail ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
       end
     end

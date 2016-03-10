@@ -275,7 +275,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       [
         [:ipaddress, 'address'],
         [:netmask,   'netmask'],
-        [:mtu,       'mtu'],
+        [:mtu,       'mtu']
       ].each do |(property, section)|
         stanza << "#{section} #{provider.send property}" if provider.send(property) && provider.send(property) != :absent
       end
