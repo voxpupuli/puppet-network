@@ -95,7 +95,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     # Convert the data into key/value pairs
     pairs = lines.each_with_object({}) do |line, hash|
-      fail Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") unless line.match(pair_regex) do |m|
+      raise Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") unless line.match(pair_regex) do |m|
         key = m[1].strip
         val = m[2].strip
         hash[key] = val
@@ -171,11 +171,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   end
 
   def self.format_file(filename, providers)
-    if providers.length == 0
-      return ''
-    elsif providers.length > 1
-      fail Puppet::DevError, "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
-    end
+    return '' if providers.empty?
+    raise Puppet::DevError,
+          "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"\
+          if providers.length > 1
 
     provider = providers[0]
     props    = {}
