@@ -27,7 +27,7 @@ Puppet::Type.newtype(:network_config) do
   newproperty(:ipaddress) do
     desc 'The IP address of the network interfaces'
     validate do |value|
-      fail ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property" unless IPAddress.valid? value
+      raise ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property" unless IPAddress.valid? value
       # provider.validate
     end
   end
@@ -35,7 +35,7 @@ Puppet::Type.newtype(:network_config) do
   newproperty(:netmask) do
     desc 'The subnet mask to apply to the interface'
     validate do |value|
-      fail ArgumentError, "#{self.class} requires a valid netmask for the netmask property" unless IPAddress.valid_ipv4_netmask? value
+      raise ArgumentError, "#{self.class} requires a valid netmask for the netmask property" unless IPAddress.valid_ipv4_netmask? value
       # provider.validate
     end
   end
@@ -79,7 +79,7 @@ Puppet::Type.newtype(:network_config) do
       # reject floating point and negative integers
       # XXX this lets 1500.0 pass
       unless value =~ /^\d+$/
-        fail ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
+        raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
       end
 
       # Intel 82598 & 82599 chips support MTUs up to 16110; is there any
@@ -92,7 +92,7 @@ Puppet::Type.newtype(:network_config) do
       min_mtu = 42
       max_mtu = 65_536
       unless (min_mtu..max_mtu).cover?(value.to_i)
-        fail ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
+        raise ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
       end
     end
   end
@@ -122,7 +122,7 @@ Puppet::Type.newtype(:network_config) do
     defaultto {}
 
     validate do |value|
-      fail ArgumentError, "#{self.class} requires a hash for the options property" unless value.is_a? Hash
+      raise ArgumentError, "#{self.class} requires a hash for the options property" unless value.is_a? Hash
       # provider.validate
     end
   end

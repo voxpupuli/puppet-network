@@ -30,7 +30,7 @@ Puppet::Type.newtype(:network_route) do
 
     validate do |value|
       unless value.length <= 2 || value =~ IPV4_ADDRESS_REGEX
-        fail("Invalid value for argument netmask: #{value}")
+        raise("Invalid value for argument netmask: #{value}")
       end
     end
 
@@ -69,7 +69,7 @@ Puppet::Type.newtype(:network_route) do
     desc 'Provider specific options to be passed to the provider'
 
     validate do |value|
-      fail ArgumentError, "#{self.class} requires a string for the options property" unless value.is_a?(String)
+      raise ArgumentError, "#{self.class} requires a string for the options property" unless value.is_a?(String)
     end
   end
 end

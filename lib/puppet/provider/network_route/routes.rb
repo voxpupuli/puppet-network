@@ -41,7 +41,7 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
   def self.raise_malformed
     @failed = true
-    fail MalformedRoutesError
+    raise MalformedRoutesError
   end
 
   def self.parse_file(_filename, contents)
@@ -86,10 +86,10 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      fail Puppet::Error, "#{provider.name} is missing the required parameter 'network'." if provider.network.nil?
-      fail Puppet::Error, "#{provider.name} is missing the required parameter 'netmask'." if provider.netmask.nil?
-      fail Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
-      fail Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'network'." if provider.network.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'netmask'." if provider.netmask.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
+      raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
       contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface} #{provider.options}\n"
     end

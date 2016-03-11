@@ -36,7 +36,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
   def self.raise_malformed
     @failed = true
-    fail MalformedInterfacesError
+    raise MalformedInterfacesError
   end
 
   class Instance
@@ -193,7 +193,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       when /^mapping/
         # XXX dox
         status = :mapping
-        fail Puppet::DevError, 'Debian interfaces mapping parsing not implemented.'
+        raise Puppet::DevError, 'Debian interfaces mapping parsing not implemented.'
 
       else
         # We're currently examining a line that is within a mapping or iface
@@ -221,7 +221,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             end
           end
         when :mapping
-          fail Puppet::DevError, 'Debian interfaces mapping parsing not implemented.'
+          raise Puppet::DevError, 'Debian interfaces mapping parsing not implemented.'
         when :none
           raise_malformed
         end
@@ -254,8 +254,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # Build iface stanzas
     providers.sort_by(&:name).each do |provider|
       # TODO: add validation method
-      fail Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
-      fail Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
+      raise Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
+      raise Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
 
       stanza = []
       stanza << %(iface #{provider.name} #{provider.family} #{provider.method})
@@ -287,7 +287,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           elsif val.is_a? Array
             val.each { |entry| stanza << "    #{key} #{entry}" }
           else
-            fail Puppet::Error, "#{self} options key #{key} expects a String or Array, got #{val.class}"
+            raise Puppet::Error, "#{self} options key #{key} expects a String or Array, got #{val.class}"
           end
         end
       end
