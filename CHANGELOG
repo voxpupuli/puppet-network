@@ -35,11 +35,20 @@ CHANGELOG
   * generate Debian auto/allow-hotplug only if not empty
   * (#104) fix a typo in the redhat provider for network_route
   * (#116) fix a vlan matching bug
+  * allow an empty hash for options
+  * ignore new Debian Jessie's features
+  * (#115) guard againt :absent provider.options in redhat
+  * (#143) make :absent attributes not get written to redhat files
+  * fix network facts on gentoo
 
 Thanks for their contributions to this release go to:
 
   * Adrien Thebo
   * Ahmed Elsabbahy
+  * Daniele Sluijters
+  * David Schmitt
+  * Davide Ferrari
+  * Derek Higgins
   * Drew Blessing
   * Eric Sakowski
   * Ewoud Kohl van Wijngaarden
@@ -49,12 +58,15 @@ Thanks for their contributions to this release go to:
   * Jasper Lievisse Adriaanse
   * Jon Skarpeteig
   * Jordi Clariana
+  * Joseph Yaworski
   * Joshua Hoblitt
   * Julian
   * Nan Liu
   * Robin H. Johnson
+  * Romanos Skiadas
   * Spencer Krum
   * Stefano Zilli
+  * Steffen Zieger
   * Vlastimil Holer
   * Wolf Noble
 
