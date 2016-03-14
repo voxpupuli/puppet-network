@@ -1,8 +1,7 @@
 CHANGELOG
 =========
 
-0.5.0
------
+# Releasing 0.5.0
 
   * add bonding support through network::bond
   * add camptocamp/kmod as a dependency
@@ -87,7 +86,7 @@ This is a backwards compatible feature and bugfix release
 Thanks to Eric Sakowski, Wolf Noble, Vlastimil Holer, and Dan Fruehauf for
 their contributions to this release.
 
-0.4.1
+v0.4.1
 -----
 
 2013-08-17
@@ -96,7 +95,7 @@ This is a backwards compatible bugfix release
 
   * Update Modulefile dependency for adrien/boolean to >= 1.0.0
 
-0.4.0
+v0.4.0
 -----
 
 2013-03-22
@@ -108,7 +107,7 @@ This is a backwards compatible feature release
 
 Thanks to Eric Sakowski for implementing the redhat network_route provider
 
-0.3.0
+v0.3.0
 -----
 
 2013-01-23
@@ -128,7 +127,7 @@ Thanks:
   * Robert Starmer for testing, debugging, and documentation
   * Wolf Noble for insight and encouragement all along the way
 
-0.2.0
+v0.2.0
 -----
 
 2012-12-30
@@ -141,7 +140,7 @@ This is a backwards compatible bugfix and maintenance release.
   * (network-#1) Add :reconfigurable parameter
   * (network-#2) Add :provider_options feature
 
-0.1.1
+v0.1.1
 -----
 
 2012-12-06
@@ -155,7 +154,7 @@ This is a backwards compatible metadata fix and maintenance update.
   and the puppet module tool will install prereleases so for the sake of
   safety I'm restricting the dependency here.
 
-0.1.0
+v0.1.0
 -----
 
 2012-12-04
@@ -167,7 +166,7 @@ work with un-updated code but no guarantees are made.
   * Implemented the `hotplug` feature for osfamily => Debian
   * Added an alias from none to static for redhat users
 
-0.0.4
+v0.0.4
 -----
 
 This is a backwards compatible maintenance release.
@@ -175,7 +174,7 @@ This is a backwards compatible maintenance release.
   * Munge onboot and method parameters for redhat provider.
   * Automatically quote and unquote redhat values as needed
 
-0.0.3
+v0.0.3
 -----
 
 This is a backwards compatible maintenance release.
@@ -184,14 +183,14 @@ This is a backwards compatible maintenance release.
   * Update redhat provider to respect current API implementation of filemapper
   * Add test coverage to redhat provider
 
-0.0.2
+v0.0.2
 -----
 
 This is a backwards compatible maintenance release.
 
   * Remove bugs from interfaces provider stemming from old isomorphism behavior.
 
-0.0.1
+v0.0.1
 -----
 
 Initial release.
