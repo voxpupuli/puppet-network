@@ -1,47 +1,58 @@
 {
-  "name":    "puppet-network",
+  "name": "puppet-network",
   "version": "0.5.0",
-  "author":  "puppetcommunity",
+  "author": "voxpupuli",
   "license": "Apache-2.0",
   "summary": "Manage non-volatile network configuration",
-
-  "source":       "https://github.com/puppet-community/puppet-network",
-  "project_page": "https://forge.puppetlabs.com/puppet/network",
-  "issues_url":   "https://github.com/puppet-community/puppet-network/issues",
-
-  "tags": [ "network" ],
-
+  "source": "https://github.com/voxpupuli/puppet-network",
+  "project_page": "https://github.com/voxpupuli/puppet-network",
+  "issues_url": "https://github.com/voxpupuli/puppet-network/issues",
+  "tags": [
+    "network",
+    "voxpupuli"
+  ],
   "operatingsystem_support": [
     {
-      "operatingsystem":"RedHat",
-      "operatingsystemrelease":[
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
         "5",
         "6",
         "7"
       ]
     },
     {
-      "operatingsystem":"CentOS",
-      "operatingsystemrelease":[
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
         "5",
         "6",
         "7"
       ]
     },
     {
-      "operatingsystem":"Debian",
-      "operatingsystemrelease":[
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
         "6",
         "7",
         "8"
       ]
     }
   ],
-
   "dependencies": [
-    { "name": "puppetlabs/stdlib", "version_requirement": ">= 2.3.0" },
-    { "name": "adrien/filemapper", "version_requirement": ">= 1.0.0" },
-    { "name": "adrien/boolean",    "version_requirement": ">= 1.0.0" },
-    { "name": "camptocamp/kmod",   "version_requirement": ">= 0.0.1" }
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 2.3.0"
+    },
+    {
+      "name": "adrien/filemapper",
+      "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "adrien/boolean",
+      "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "camptocamp/kmod",
+      "version_requirement": ">= 0.0.1"
+    }
   ]
 }
