@@ -26,14 +26,18 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Enabled: false
 
+# Module length is not necessarily an indicator of code quality
+Metrics/ModuleLength:
+  Enabled: false
+
 # Class length is not necessarily an indicator of code quality
 Metrics/ClassLength:
   Enabled: false
 
 # dealbreaker:
-Style/TrailingCommaInLiteral:
-  Enabled: false
 Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInLiteral:
   Enabled: false
 Style/ClosingParenthesisIndentation:
   Enabled: false
@@ -57,3 +61,10 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Description: 'Document classes and non-namespace modules.'
   Enabled: false
+
+# More comfortable block layouts
+Style/BlockDelimiters:
+  Enabled: False
+
+Style/MultilineBlockLayout:
+  Enabled: False
