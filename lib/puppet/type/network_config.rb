@@ -1,5 +1,10 @@
 require 'puppet/property/boolean'
-require 'ipaddress'
+
+begin
+  require 'ipaddress'
+rescue LoadError
+  Puppet.warning("#{__FILE__}:#{__LINE__}: ipaddress gem was not found")
+end
 
 Puppet::Type.newtype(:network_config) do
   @doc = 'Manage non-volatile network configuration information'
@@ -26,17 +31,21 @@ Puppet::Type.newtype(:network_config) do
 
   newproperty(:ipaddress) do
     desc 'The IP address of the network interfaces'
-    validate do |value|
-      raise ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property" unless IPAddress.valid? value
-      # provider.validate
+    if defined? IPAddress
+      validate do |value|
+        raise ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property" unless IPAddress.valid? value
+        # provider.validate
+      end
     end
   end
 
   newproperty(:netmask) do
     desc 'The subnet mask to apply to the interface'
-    validate do |value|
-      raise ArgumentError, "#{self.class} requires a valid netmask for the netmask property" unless IPAddress.valid_ipv4_netmask? value
-      # provider.validate
+    if defined? IPAddress
+      validate do |value|
+        raise ArgumentError, "#{self.class} requires a valid netmask for the netmask property" unless IPAddress.valid_ipv4_netmask? value
+        # provider.validate
+      end
     end
   end
 
