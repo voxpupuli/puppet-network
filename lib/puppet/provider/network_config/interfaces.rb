@@ -13,8 +13,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
   desc 'Debian interfaces style provider'
 
-  confine :osfamily => :debian
-  defaultfor :osfamily => :debian
+  confine osfamily: :debian
+  defaultfor osfamily: :debian
 
   has_feature :provider_options
   has_feature :hotpluggable
@@ -60,16 +60,16 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
     def to_hash
       h = {
-        :name      => @name,
-        :onboot    => @onboot,
-        :hotplug   => @hotplug,
-        :ipaddress => @ipaddress,
-        :netmask   => @netmask,
-        :family    => @family,
-        :method    => @method,
-        :mtu       => @mtu,
-        :mode      => @mode,
-        :options   => squeeze_options
+        name: @name,
+        onboot: @onboot,
+        hotplug: @hotplug,
+        ipaddress: @ipaddress,
+        netmask: @netmask,
+        family: @family,
+        method: @method,
+        mtu: @mtu,
+        mode: @mode,
+        options: squeeze_options
       }
 
       h.each_with_object({}) do |(key, val), hash|

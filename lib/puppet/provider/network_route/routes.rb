@@ -14,13 +14,13 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
   desc 'Debian routes style provider'
 
-  confine :osfamily => :debian
+  confine osfamily: :debian
 
   # $ dpkg -S /etc/network/if-up.d/20static-routes
   # ifupdown-extra: /etc/network/if-up.d/20static-routes
-  confine :exists   => '/etc/network/if-up.d/20static-routes'
+  confine exists: '/etc/network/if-up.d/20static-routes'
 
-  defaultfor :osfamily => :debian
+  defaultfor osfamily: :debian
 
   has_feature :provider_options
 

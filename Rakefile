@@ -5,13 +5,17 @@ require 'metadata-json-lint/rake_task'
 require 'puppet_blacksmith/rake_tasks'
 require 'voxpupuli/release/rake_tasks'
 require 'rubocop/rake_task'
+require 'puppet-strings/rake_tasks'
 
-RuboCop::RakeTask.new
+RuboCop::RakeTask.new(:rubocop) do |task|
+  # These make the rubocop experience maybe slightly less terrible
+  task.options = ['-D', '-S', '-E']
+end
 
 PuppetLint.configuration.log_format = '%{path}:%{linenumber}:%{check}:%{KIND}:%{message}'
 PuppetLint.configuration.fail_on_warnings = true
 PuppetLint.configuration.send('relative')
-PuppetLint.configuration.send('disable_80chars')
+PuppetLint.configuration.send('disable_140chars')
 PuppetLint.configuration.send('disable_class_inherits_from_params_class')
 PuppetLint.configuration.send('disable_documentation')
 PuppetLint.configuration.send('disable_single_quote_string_with_variables')
@@ -19,6 +23,7 @@ PuppetLint.configuration.send('disable_single_quote_string_with_variables')
 exclude_paths = %w(
   pkg/**/*
   vendor/**/*
+  .vendor/**/*
   spec/**/*
 )
 PuppetLint.configuration.ignore_paths = exclude_paths

@@ -346,77 +346,77 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
   describe 'when formatting resources' do
     let(:eth0_provider) do
       stub('eth0_provider',
-           :name            => 'eth0',
-           :ensure          => :present,
-           :onboot          => true,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'none',
-           :ipaddress       => '169.254.0.1',
-           :netmask         => '255.255.255.0',
-           :mtu             => '1500',
-           :mode            => nil,
-           :options         => { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
+           name: 'eth0',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'none',
+           ipaddress: '169.254.0.1',
+           netmask: '255.255.255.0',
+           mtu: '1500',
+           mode: nil,
+           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
       )
     end
 
     let(:eth0_1_provider) do
       stub('eth0_1_provider',
-           :name            => 'eth0.1',
-           :ensure          => :present,
-           :onboot          => true,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'none',
-           :ipaddress       => '169.254.0.1',
-           :netmask         => '255.255.255.0',
-           :mtu             => '1500',
-           :mode            => :vlan,
-           :options         => { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
+           name: 'eth0.1',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'none',
+           ipaddress: '169.254.0.1',
+           netmask: '255.255.255.0',
+           mtu: '1500',
+           mode: :vlan,
+           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
       )
     end
 
     let(:eth1_provider) do
       stub('eth1_provider',
-           :name            => 'eth1',
-           :ensure          => :present,
-           :onboot          => :absent,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'none',
-           :ipaddress       => :absent,
-           :netmask         => :absent,
-           :mtu             => :absent,
-           :mode            => :vlan,
-           :options         => :absent,
+           name: 'eth1',
+           ensure: :present,
+           onboot: :absent,
+           hotplug: true,
+           family: 'inet',
+           method: 'none',
+           ipaddress: :absent,
+           netmask: :absent,
+           mtu: :absent,
+           mode: :vlan,
+           options: :absent,
           )
     end
 
     let(:lo_provider) do
       stub('lo_provider',
-           :name            => 'lo',
-           :onboot          => true,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'loopback',
-           :ipaddress       => nil,
-           :netmask         => nil,
-           :mode            => nil,
-           :options         => {}
+           name: 'lo',
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'loopback',
+           ipaddress: nil,
+           netmask: nil,
+           mode: nil,
+           options: {}
       )
     end
 
     let(:bond0_provider) do
       stub('bond0_provider',
-           :name      => 'bond0',
-           :onboot    => true,
-           :hotplug   => true,
-           :ipaddress => '172.20.1.9',
-           :netmask   => '255.255.255.0',
-           :method    => 'static',
-           :mtu       => '1500',
-           :mode => nil,
-           :options => {
+           name: 'bond0',
+           onboot: true,
+           hotplug: true,
+           ipaddress: '172.20.1.9',
+           netmask: '255.255.255.0',
+           method: 'static',
+           mtu: '1500',
+           mode: nil,
+           options: {
              'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
            }
 

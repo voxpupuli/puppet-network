@@ -43,48 +43,48 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     it 'should parse out iface lines' do
       fixture = fixture_data('single_interface_dhcp')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:family  => 'inet',
-                                                         :method  => 'dhcp',
-                                                         :mode    => :raw,
-                                                         :name    => 'eth0',
-                                                         :hotplug => true,
-                                                         :options => {},)
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
+                                                         method: 'dhcp',
+                                                         mode: :raw,
+                                                         name: 'eth0',
+                                                         hotplug: true,
+                                                         options: {},)
     end
 
     it 'should ignore source and source-directory lines' do
       fixture = fixture_data('jessie_source_stanza')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:family  => 'inet',
-                                                         :method  => 'dhcp',
-                                                         :mode    => :raw,
-                                                         :name    => 'eth0',
-                                                         :hotplug => true,
-                                                         :options => {},)
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
+                                                         method: 'dhcp',
+                                                         mode: :raw,
+                                                         name: 'eth0',
+                                                         hotplug: true,
+                                                         options: {},)
     end
 
     it 'should ignore variable whitespace in iface lines (network-#26)' do
       fixture = fixture_data('iface_whitespace')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:family  => 'inet',
-                                                         :method  => 'dhcp',
-                                                         :mode    => :raw,
-                                                         :name    => 'eth0',
-                                                         :hotplug => true,
-                                                         :options => {},)
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
+                                                         method: 'dhcp',
+                                                         mode: :raw,
+                                                         name: 'eth0',
+                                                         hotplug: true,
+                                                         options: {},)
     end
 
     it 'should parse out lines following iface lines' do
       fixture = fixture_data('single_interface_static')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:name      => 'eth0',
-                                                         :family    => 'inet',
-                                                         :method    => 'static',
-                                                         :mode      => :raw,
-                                                         :ipaddress => '192.168.0.2',
-                                                         :netmask   => '255.255.255.0',
-                                                         :onboot    => true,
-                                                         :mtu       => '1500',
-                                                         :options   => {
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
+                                                         family: 'inet',
+                                                         method: 'static',
+                                                         mode: :raw,
+                                                         ipaddress: '192.168.0.2',
+                                                         netmask: '255.255.255.0',
+                                                         onboot: true,
+                                                         mtu: '1500',
+                                                         options: {
                                                            'broadcast' => '192.168.0.255',
                                                            'gateway'   => '192.168.0.1',
                                                          })
@@ -97,11 +97,11 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     it 'should allow for multiple options sections' do
       fixture = fixture_data('single_interface_options')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:name      => 'eth0',
-                                                         :family    => 'inet',
-                                                         :method    => 'dhcp',
-                                                         :mode      => :raw,
-                                                         :options   => {
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
+                                                         family: 'inet',
+                                                         method: 'dhcp',
+                                                         mode: :raw,
+                                                         options: {
                                                            'pre-up' => '/bin/touch /tmp/eth0-up',
                                                            'post-down' => [
                                                              '/bin/touch /tmp/eth0-down1',
@@ -113,27 +113,27 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     it 'should parse out vlan iface lines' do
       fixture = fixture_data('two_interfaces_static_vlan')
       data = described_class.parse_file('', fixture)
-      expect(data.find { |h| h[:name] == 'eth0' }).to eq(:name      => 'eth0',
-                                                         :family    => 'inet',
-                                                         :method    => 'static',
-                                                         :mode      => :raw,
-                                                         :ipaddress => '192.168.0.2',
-                                                         :netmask   => '255.255.255.0',
-                                                         :onboot    => true,
-                                                         :mtu       => '1500',
-                                                         :options   => {
+      expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
+                                                         family: 'inet',
+                                                         method: 'static',
+                                                         mode: :raw,
+                                                         ipaddress: '192.168.0.2',
+                                                         netmask: '255.255.255.0',
+                                                         onboot: true,
+                                                         mtu: '1500',
+                                                         options: {
                                                            'broadcast' => '192.168.0.255',
                                                            'gateway'   => '192.168.0.1',
                                                          })
-      expect(data.find { |h| h[:name] == 'eth0.1' }).to eq(:name      => 'eth0.1',
-                                                           :family    => 'inet',
-                                                           :method    => 'static',
-                                                           :ipaddress => '172.16.0.2',
-                                                           :netmask   => '255.255.255.0',
-                                                           :onboot    => true,
-                                                           :mtu       => '1500',
-                                                           :mode      => :vlan,
-                                                           :options   => {
+      expect(data.find { |h| h[:name] == 'eth0.1' }).to eq(name: 'eth0.1',
+                                                           family: 'inet',
+                                                           method: 'static',
+                                                           ipaddress: '172.16.0.2',
+                                                           netmask: '255.255.255.0',
+                                                           onboot: true,
+                                                           mtu: '1500',
+                                                           mode: :vlan,
+                                                           options: {
                                                              'broadcast' => '172.16.0.255',
                                                              'gateway'   => '172.16.0.1',
                                                            })
@@ -157,49 +157,49 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   describe 'when formatting' do
     let(:eth0_provider) do
       stub('eth0_provider',
-           :name            => 'eth0',
-           :ensure          => :present,
-           :onboot          => true,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'static',
-           :ipaddress       => '169.254.0.1',
-           :netmask         => '255.255.0.0',
-           :mtu             => '1500',
-           :mode            => nil,
-           :options         => nil
+           name: 'eth0',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'static',
+           ipaddress: '169.254.0.1',
+           netmask: '255.255.0.0',
+           mtu: '1500',
+           mode: nil,
+           options: nil
       )
     end
 
     let(:eth0_1_provider) do
       stub('eth0_1_provider',
-           :name            => 'eth0.1',
-           :ensure          => :present,
-           :onboot          => true,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'static',
-           :ipaddress       => '169.254.0.1',
-           :netmask         => '255.255.0.0',
-           :mtu             => '1500',
-           :mode            => :vlan,
-           :options         => nil
+           name: 'eth0.1',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'static',
+           ipaddress: '169.254.0.1',
+           netmask: '255.255.0.0',
+           mtu: '1500',
+           mode: :vlan,
+           options: nil
       )
     end
 
     let(:eth1_provider) do
       stub('eth1_provider',
-           :name            => 'eth1',
-           :ensure          => :present,
-           :onboot          => false,
-           :hotplug         => true,
-           :family          => 'inet',
-           :method          => 'static',
-           :ipaddress       => '169.254.0.1',
-           :netmask         => '255.255.0.0',
-           :mtu             => '576',
-           :mode            => nil,
-           :options         => {
+           name: 'eth1',
+           ensure: :present,
+           onboot: false,
+           hotplug: true,
+           family: 'inet',
+           method: 'static',
+           ipaddress: '169.254.0.1',
+           netmask: '255.255.0.0',
+           mtu: '576',
+           mode: nil,
+           options: {
              'pre-up'    => '/bin/touch /tmp/eth1-up',
              'post-down' => [
                '/bin/touch /tmp/eth1-down1',
@@ -211,16 +211,16 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
     let(:lo_provider) do
       stub('lo_provider',
-           :name            => 'lo',
-           :onboot          => true,
-           :hotplug         => false,
-           :family          => 'inet',
-           :method          => 'loopback',
-           :ipaddress       => nil,
-           :netmask         => nil,
-           :mtu             => '65536',
-           :mode            => nil,
-           :options         => nil
+           name: 'lo',
+           onboot: true,
+           hotplug: false,
+           family: 'inet',
+           method: 'loopback',
+           ipaddress: nil,
+           netmask: nil,
+           mtu: '65536',
+           mode: nil,
+           options: nil
       )
     end
 

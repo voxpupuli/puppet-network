@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'network::bond::redhat', :type => :define do
+describe 'network::bond::redhat', type: :define do
   let(:title) { 'bond0' }
 
   describe 'with default bonding params' do

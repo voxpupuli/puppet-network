@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'network::bond', :type => :define do
+describe 'network::bond', type: :define do
   let(:title) { 'bond0' }
 
   let(:params) do
@@ -28,8 +28,8 @@ describe 'network::bond', :type => :define do
     describe 'RedHat' do
       let(:facts) do
         {
-          :osfamily      => 'RedHat',
-          :augeasversion => '1.4.0',
+          osfamily: 'RedHat',
+          augeasversion: '1.4.0',
         }
       end
 
@@ -45,8 +45,8 @@ describe 'network::bond', :type => :define do
     describe 'Debian' do
       let(:facts) do
         {
-          :osfamily      => 'Debian',
-          :augeasversion => '1.4.0',
+          osfamily: 'Debian',
+          augeasversion: '1.4.0',
         }
       end
 
@@ -60,7 +60,7 @@ describe 'network::bond', :type => :define do
     end
 
     describe 'on an unsupported osfamily' do
-      let(:facts) { { :osfamily => 'SparrowOS' } }
+      let(:facts) { { osfamily: 'SparrowOS' } }
 
       it 'should fail to compile' do
         expect { should compile }.to raise_error(/network::bond does not support osfamily 'SparrowOS'/)
@@ -71,16 +71,16 @@ describe 'network::bond', :type => :define do
   describe 'configuring the kernel bonding device' do
     let(:facts) do
       {
-        :osfamily      => 'Debian',
-        :augeasversion => '1.4.0',
+        osfamily: 'Debian',
+        augeasversion: '1.4.0',
       }
     end
 
     it { should contain_class('network::bond::setup') }
 
     it 'should add a kernel module alias for the bonded device' do
-      should contain_kmod__alias('bond0').with(:source => 'bonding',
-                                               :ensure => 'present',)
+      should contain_kmod__alias('bond0').with(source: 'bonding',
+                                               ensure: 'present',)
     end
   end
 end

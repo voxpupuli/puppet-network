@@ -12,8 +12,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
   desc 'Redhat network-scripts provider'
 
-  confine :osfamily => :redhat
-  defaultfor :osfamily => :redhat
+  confine osfamily: :redhat
+  defaultfor osfamily: :redhat
 
   has_feature :hotpluggable
   has_feature :provider_options
@@ -28,13 +28,13 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   SCRIPT_REGEX     = /\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z/
 
   NAME_MAPPINGS = {
-    :ipaddress  => 'IPADDR',
-    :netmask    => 'NETMASK',
-    :method     => 'BOOTPROTO',
-    :onboot     => 'ONBOOT',
-    :name       => 'DEVICE',
-    :hotplug    => 'HOTPLUG',
-    :mtu        => 'MTU',
+    ipaddress: 'IPADDR',
+    netmask: 'NETMASK',
+    method: 'BOOTPROTO',
+    onboot: 'ONBOOT',
+    name: 'DEVICE',
+    hotplug: 'HOTPLUG',
+    mtu: 'MTU',
   }.freeze
 
   # Map provider instances to files based on their name
