@@ -68,17 +68,17 @@ Puppet::Type.newtype(:network_config) do
     defaultto :inet
   end
 
-  newproperty(:onboot, :parent => Puppet::Property::Boolean) do
+  newproperty(:onboot, parent: Puppet::Property::Boolean) do
     desc 'Whether to bring the interface up on boot'
     defaultto :true
   end
 
-  newproperty(:hotplug, :required_features => :hotpluggable, :parent => Puppet::Property::Boolean) do
+  newproperty(:hotplug, required_features: :hotpluggable, parent: Puppet::Property::Boolean) do
     desc 'Allow/disallow hotplug support for this interface'
     defaultto :true
   end
 
-  newparam(:reconfigure, :required_features => :reconfigurable, :parent => Puppet::Property::Boolean) do
+  newparam(:reconfigure, required_features: :reconfigurable, parent: Puppet::Property::Boolean) do
     desc 'Reconfigure the interface after the configuration has been updated'
   end
 
@@ -117,7 +117,7 @@ Puppet::Type.newtype(:network_config) do
   # `:options` provides an arbitrary passthrough for provider properties, so
   # that provider specific behavior doesn't clutter up the main type but still
   # allows for more powerful actions to be taken.
-  newproperty(:options, :required_features => :provider_options) do
+  newproperty(:options, required_features: :provider_options) do
     desc 'Provider specific options to be passed to the provider'
 
     def s?(hash = @is)

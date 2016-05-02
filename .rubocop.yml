@@ -1,8 +1,10 @@
 AllCops:
+  TargetRubyVersion: 1.9
   Include:
     - ./**/*.rb
   Exclude:
     - vendor/**/*
+    - .vendor/**/*
     - pkg/**/*
     - spec/fixtures/**/*
 
@@ -40,10 +42,6 @@ Style/TrailingCommaInArguments:
 Style/TrailingCommaInLiteral:
   Enabled: false
 Style/ClosingParenthesisIndentation:
-  Enabled: false
-
-# we still support ruby 1.8
-Style/HashSyntax:
   Enabled: false
 
 Lint/AmbiguousRegexpLiteral:

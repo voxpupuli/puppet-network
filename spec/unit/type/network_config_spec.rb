@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe Puppet::Type.type(:network_config) do
   before do
-    provider_class = stub 'provider class', :name => 'fake', :suitable? => true, :supports_parameter? => true
+    provider_class = stub 'provider class', name: 'fake', suitable?: true, supports_parameter?: true
     provider_class.stubs(:new)
 
     Puppet::Type.type(:network_config).stubs(:defaultprovider).returns provider_class
@@ -78,33 +78,33 @@ describe Puppet::Type.type(:network_config) do
 
       describe 'using the inet family' do
         it 'should require that a passed address is a valid IPv4 address' do
-          expect { Puppet::Type.type(:network_config).new(:name => 'yay', :family => :inet, :ipaddress => address4) }.to_not raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet, ipaddress: address4) }.to_not raise_error
         end
         it 'should fail when passed an IPv6 address' do
           pending('Not yet implemented')
-          expect { Puppet::Type.type(:network_config).new(:name => 'yay', :family => :inet, :ipaddress => address6) }.to raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet, ipaddress: address6) }.to raise_error
         end
       end
 
       describe 'using the inet6 family' do
         it 'should require that a passed address is a valid IPv6 address' do
-          expect { Puppet::Type.type(:network_config).new(:name => 'yay', :family => :inet6, :ipaddress => address6) }.to_not raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet6, ipaddress: address6) }.to_not raise_error
         end
         it 'should fail when passed an IPv4 address' do
           pending('Not yet implemented')
-          expect { Puppet::Type.type(:network_config).new(:name => 'yay', :family => :inet6, :ipaddress => address4) }.to raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet6, ipaddress: address4) }.to raise_error
         end
       end
 
       it 'should fail if a malformed address is used' do
-        expect { Puppet::Type.type(:network_config).new(:name => 'yay', :ipaddress => 'This is clearly not an IP address') }.to raise_error
+        expect { Puppet::Type.type(:network_config).new(name: 'yay', ipaddress: 'This is clearly not an IP address') }.to raise_error
       end
     end
 
     describe 'netmask' do
       it 'should fail if an invalid CIDR netmask is used' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :netmask => 'This is clearly not a netmask')
+          Puppet::Type.type(:network_config).new(name: 'yay', netmask: 'This is clearly not a netmask')
         end.to raise_error
       end
     end
@@ -112,7 +112,7 @@ describe Puppet::Type.type(:network_config) do
     describe 'method' do
       [:static, :manual, :dhcp].each do |mth|
         it "should consider '#{mth}' a valid configuration method" do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :method => mth)
+          Puppet::Type.type(:network_config).new(name: 'yay', method: mth)
         end
       end
     end
@@ -120,7 +120,7 @@ describe Puppet::Type.type(:network_config) do
     describe 'family' do
       [:inet, :inet6].each do |family|
         it "should consider '#{family}' a valid address family" do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :family => family)
+          Puppet::Type.type(:network_config).new(name: 'yay', family: family)
         end
       end
     end
@@ -128,7 +128,7 @@ describe Puppet::Type.type(:network_config) do
     describe 'onboot' do
       [true, false].each do |bool|
         it "should accept '#{bool}' for onboot" do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :onboot => bool)
+          Puppet::Type.type(:network_config).new(name: 'yay', onboot: bool)
         end
       end
     end
@@ -136,57 +136,57 @@ describe Puppet::Type.type(:network_config) do
     describe 'reconfigure' do
       [true, false].each do |bool|
         it "should accept '#{bool}' for reconfigure" do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :reconfigure => bool)
+          Puppet::Type.type(:network_config).new(name: 'yay', reconfigure: bool)
         end
       end
     end
 
     describe 'mtu' do
       it 'should validate a tiny mtu size' do
-        Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '42')
+        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '42')
       end
 
       it 'should validate a normal mtu size' do
-        Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '1500')
+        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500')
       end
 
       it 'should validate a large mtu size' do
-        Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '16384')
+        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '16384')
       end
 
       it 'should fail if an random string is passed' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => 'This is clearly not a mtu')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: 'This is clearly not a mtu')
         end.to raise_error
       end
 
       it 'should fail on values < 42' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '41')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '41')
         end.to raise_error
       end
 
       it 'should fail on zero' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '0')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '0')
         end.to raise_error
       end
 
       it 'should fail on values > 65536' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '65537')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '65537')
         end.to raise_error
       end
 
       it 'should fail on negative values' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '-1500')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '-1500')
         end.to raise_error
       end
 
       it 'should fail on non-integer values' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mtu => '1500.1')
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500.1')
         end.to raise_error
       end
     end
@@ -194,34 +194,34 @@ describe Puppet::Type.type(:network_config) do
     describe 'mode' do
       [:raw, :vlan].each do |value|
         it "should accept '#{value}' for interface mode" do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mode => value)
+          Puppet::Type.type(:network_config).new(name: 'yay', mode: value)
         end
       end
       it 'should fail on undefined values' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'yay', :mode => 'foo')
+          Puppet::Type.type(:network_config).new(name: 'yay', mode: 'foo')
         end.to raise_error
       end
       it 'should default to :raw' do
-        expect(Puppet::Type.type(:network_config).new(:name => 'yay')[:mode]).to eq(:raw)
+        expect(Puppet::Type.type(:network_config).new(name: 'yay')[:mode]).to eq(:raw)
       end
     end
 
     describe 'options' do
       it 'should accept an empty hash' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'valid', :options => {})
+          Puppet::Type.type(:network_config).new(name: 'valid', options: {})
         end.to_not raise_error
       end
 
       it 'should use an empty hash as the default' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'valid')
+          Puppet::Type.type(:network_config).new(name: 'valid')
         end.to_not raise_error
       end
       it 'should fail if a non-hash is passed' do
         expect do
-          Puppet::Type.type(:network_config).new(:name => 'valid', :options => 'geese')
+          Puppet::Type.type(:network_config).new(name: 'valid', options: 'geese')
         end.to raise_error
       end
     end

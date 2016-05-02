@@ -1,7 +1,7 @@
 Puppet::Parser::Functions.newfunction(:compact_hash,
-                                      :type  => :rvalue,
-                                      :arity => 1,
-                                      :doc   => <<-EOD) do |args|
+                                      type: :rvalue,
+                                      arity: 1,
+                                      doc: <<-EOD) do |args|
   compact_hash
   ============
 

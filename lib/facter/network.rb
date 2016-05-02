@@ -6,7 +6,7 @@ require 'timeout'
 # Expected output: The ip address of the nexthop/default router
 Facter.add('network_nexthop_ip') do
   my_gw = nil
-  confine :kernel => :linux
+  confine kernel: :linux
   setcode do
     Facter::Util::Resolution.with_env('PATH' => '/bin:/sbin:/usr/bin:/usr/sbin') do
       gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
@@ -23,7 +23,7 @@ end
 # Primary interface
 #  Expected output: The specific interface name that the node uses to communicate with the nexthop
 Facter.add('network_primary_interface') do
-  confine :kernel => :linux
+  confine kernel: :linux
   setcode do
     Facter::Util::Resolution.with_env('PATH' => '/bin:/sbin:/usr/bin:/usr/sbin') do
       gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
@@ -46,7 +46,7 @@ end
 # Primary IP
 #  Expected output: The ipaddress configred on the interface that communicates with the nexthop
 Facter.add('network_primary_ip') do
-  confine :kernel => :linux
+  confine kernel: :linux
   setcode do
     Facter::Util::Resolution.with_env('PATH' => '/bin:/sbin:/usr/bin:/usr/sbin') do
       gw_address = Facter::Util::Resolution.exec('ip route show 0/0')

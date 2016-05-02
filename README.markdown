@@ -4,8 +4,9 @@ puppet-network
 Manage non-volatile network and route configuration.
 
 [![Puppet Forge](http://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-
-Travis Test status: [![Build Status](https://travis-ci.org/voxpupuli/puppet-network.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-network)
+[![Puppet Forge downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge score](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png)](https://travis-ci.org/voxpupuli/puppet-network)
 
 Examples
 --------

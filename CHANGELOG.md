@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# Releasing 0.5.1 (unreleased)
+
+  * Drop support for Ruby 1.8.7
+  * voxpupuli namespace release
+
 # Releasing 0.5.0
 
   * add bonding support through network::bond
