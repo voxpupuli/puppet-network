@@ -85,7 +85,18 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
       )
     end
 
-    let(:content) { described_class.format_file('', [route1_provider, route2_provider, defaultroute_provider]) }
+    let(:nooptions_provider) do
+      stub('nooptions_provider',
+           name: 'default',
+           network: 'default',
+           netmask: '',
+           gateway: '10.0.0.1',
+           interface: 'eth2',
+           options: :absent
+      )
+    end
+
+    let(:content) { described_class.format_file('', [route1_provider, route2_provider, defaultroute_provider, nooptions_provider]) }
 
     describe 'writing the route line' do
       describe 'For standard (non-default) routes' do
@@ -115,6 +126,10 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'for default routes' do
       it 'should have the correct fields appended' do
         expect(content.scan(/^default .*$/).first).to include('default via 10.0.0.1 dev eth1')
+      end
+
+      it 'should not contain the word absent when no options are defined' do
+        expect(content).to_not match(/absent/)
       end
     end
   end
