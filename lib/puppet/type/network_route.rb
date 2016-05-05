@@ -5,8 +5,6 @@ Puppet::Type.newtype(:network_route) do
 
   ensurable
 
-  IPV4_ADDRESS_REGEX = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/
-
   newparam(:name) do
     isnamevar
     desc 'The name of the network route'
@@ -18,7 +16,7 @@ Puppet::Type.newtype(:network_route) do
     validate do |value|
       begin
         IPAddr.new(value) unless value == 'default'
-      rescue ArgumentError
+      rescue
         raise("Invalid value for network: #{value}")
       end
     end
@@ -29,17 +27,27 @@ Puppet::Type.newtype(:network_route) do
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
-      unless value.length <= 2 || value =~ IPV4_ADDRESS_REGEX
+      unless value.length <= 3 || (IPAddr.new(value) rescue false)
         raise("Invalid value for argument netmask: #{value}")
       end
     end
 
     munge do |value|
-      case value
-      when IPV4_ADDRESS_REGEX
-        value
-      when /^\d+$/
-        IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
+      # '255.255.255.255'.to_i  will return 255, so we try to convert it back:
+      if value.to_i.to_s == value
+        if value.to_i <= 32
+          IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
+        else
+          IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value.strip.to_i).to_s
+        end
+      else
+        if (IPAddr.new(value).ipv6? rescue false)
+          IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value).to_s
+        elsif (IPAddr.new(value).ipv4? rescue false)
+          IPAddr.new('255.255.255.255').mask(value).to_s
+        else
+          raise("Invalid value for argument netmask: #{value}")
+        end
       end
     end
   end

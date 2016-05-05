@@ -54,6 +54,11 @@ describe Puppet::Type.type(:network_route) do
         expect(r[:netmask]).to eq('255.255.255.0')
       end
 
+      it 'should convert IPv6 netmasks of the CIDR form' do
+        r = Puppet::Type.type(:network_route).new(name: 'lxd bridge', network: 'fd58:281b:6eef:eb3d::', netmask: '64', gateway: 'fd58:281b:6eef:eb3d::1', interface: 'lxdbr0')
+        expect(r[:netmask]).to eq('ffff:ffff:ffff:ffff::')
+      end
+
       it 'should convert netmasks of the expanded netmask form' do
         r = Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: '255.255.128.0', gateway: '23.23.23.42', interface: 'eth0')
         expect(r[:netmask]).to eq('255.255.128.0')
