@@ -1,7 +1,10 @@
 require 'ipaddr'
+require_relative '../../puppet_x/voxpupuli/utils.rb'
 
 Puppet::Type.newtype(:network_route) do
   @doc = 'Manage non-volatile route configuration information'
+
+  include PuppetX::Voxpupuli::Utils
 
   ensurable
 
@@ -14,10 +17,9 @@ Puppet::Type.newtype(:network_route) do
     isrequired
     desc 'The target network address'
     validate do |value|
-      begin
-        IPAddr.new(value) unless value == 'default'
-      rescue
-        raise("Invalid value for network: #{value}")
+      unless 'default' == value
+        a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
+        raise("Invalid value for network: #{value}") unless a
       end
     end
   end
@@ -27,7 +29,7 @@ Puppet::Type.newtype(:network_route) do
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
-      unless value.length <= 3 || (IPAddr.new(value) rescue false)
+      unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for argument netmask: #{value}")
       end
     end
@@ -35,19 +37,15 @@ Puppet::Type.newtype(:network_route) do
     munge do |value|
       # '255.255.255.255'.to_i  will return 255, so we try to convert it back:
       if value.to_i.to_s == value
-        if value.to_i <= 32
-          IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
-        else
-          IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value.strip.to_i).to_s
-        end
+        # what are the chances someone is using /16 for their IPv6 network?
+        addr = value.to_i <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        IPAddr.new(addr).mask(value.strip.to_i).to_s
+      elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv6? }
+        IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value).to_s
+      elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv4? }
+        IPAddr.new('255.255.255.255').mask(value).to_s
       else
-        if (IPAddr.new(value).ipv6? rescue false)
-          IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value).to_s
-        elsif (IPAddr.new(value).ipv4? rescue false)
-          IPAddr.new('255.255.255.255').mask(value).to_s
-        else
-          raise("Invalid value for argument netmask: #{value}")
-        end
+        raise("Invalid value for argument netmask: #{value}")
       end
     end
   end
