@@ -12,12 +12,21 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'a simple well formed file' do
       let(:data) { described_class.parse_file('', fixture_data('simple_routes')) }
 
-      it 'should parse out normal network routes' do
-        expect(data.find { |h| h[:name] == '172.17.67.0/30' }).to eq(name: '172.17.67.0/30',
-                                                                     network: '172.17.67.0',
-                                                                     netmask: '255.255.255.252',
-                                                                     gateway: '172.18.6.2',
-                                                                     interface: 'vlan200',)
+      it 'should parse out normal ipv4 network routes' do
+        expect(data.find { |h| h[:name] == '172.17.67.0/30' }).
+          to eq(name: '172.17.67.0/30',
+                network: '172.17.67.0',
+                netmask: '255.255.255.252',
+                gateway: '172.18.6.2',
+                interface: 'vlan200',)
+      end
+      it 'should parse out ipv6 network routes' do
+        expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' }).
+          to eq(name: '2a01:4f8:211:9d5:53::/96',
+                network: '2a01:4f8:211:9d5:53::',
+                netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
+                gateway: '2a01:4f8:211:9d5::2',
+                interface: 'vlan200')
       end
 
       it 'should parse out default routes' do
@@ -32,13 +41,24 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'an advanced, well formed file' do
       let(:data) { described_class.parse_file('', fixture_data('advanced_routes')) }
 
-      it 'should parse out normal network routes' do
-        expect(data.find { |h| h[:name] == '172.17.67.0/30' }).to eq(name: '172.17.67.0/30',
-                                                                     network: '172.17.67.0',
-                                                                     netmask: '255.255.255.252',
-                                                                     gateway: '172.18.6.2',
-                                                                     interface: 'vlan200',
-                                                                     options: 'table 200',)
+      it 'should parse out normal ipv4 network routes' do
+        expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' }).
+          to eq(name: '2a01:4f8:211:9d5:53::/96',
+                network: '2a01:4f8:211:9d5:53::',
+                netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
+                gateway: '2a01:4f8:211:9d5::2',
+                interface: 'vlan200',
+                options: 'table 200')
+      end
+
+      it 'should parse out normal ipv6 network routes' do
+        expect(data.find { |h| h[:name] == '172.17.67.0/30' }).
+          to eq(name: '172.17.67.0/30',
+                network: '172.17.67.0',
+                netmask: '255.255.255.252',
+                gateway: '172.18.6.2',
+                interface: 'vlan200',
+                options: 'table 200',)
       end
     end
 
