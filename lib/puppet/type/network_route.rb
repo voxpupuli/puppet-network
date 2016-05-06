@@ -1,11 +1,12 @@
 require 'ipaddr'
+require_relative '../../puppet_x/voxpupuli/utils.rb'
 
 Puppet::Type.newtype(:network_route) do
   @doc = 'Manage non-volatile route configuration information'
 
-  ensurable
+  include PuppetX::Voxpupuli::Utils
 
-  IPV4_ADDRESS_REGEX = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/
+  ensurable
 
   newparam(:name) do
     isnamevar
@@ -16,10 +17,9 @@ Puppet::Type.newtype(:network_route) do
     isrequired
     desc 'The target network address'
     validate do |value|
-      begin
-        IPAddr.new(value) unless value == 'default'
-      rescue ArgumentError
-        raise("Invalid value for network: #{value}")
+      unless 'default' == value
+        a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
+        raise("Invalid value for network: #{value}") unless a
       end
     end
   end
@@ -29,17 +29,23 @@ Puppet::Type.newtype(:network_route) do
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
-      unless value.length <= 2 || value =~ IPV4_ADDRESS_REGEX
+      unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for argument netmask: #{value}")
       end
     end
 
     munge do |value|
-      case value
-      when IPV4_ADDRESS_REGEX
-        value
-      when /^\d+$/
-        IPAddr.new('255.255.255.255').mask(value.strip.to_i).to_s
+      # '255.255.255.255'.to_i  will return 255, so we try to convert it back:
+      if value.to_i.to_s == value
+        # what are the chances someone is using /16 for their IPv6 network?
+        addr = value.to_i <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        IPAddr.new(addr).mask(value.strip.to_i).to_s
+      elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv6? }
+        IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value).to_s
+      elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv4? }
+        IPAddr.new('255.255.255.255').mask(value).to_s
+      else
+        raise("Invalid value for argument netmask: #{value}")
       end
     end
   end
