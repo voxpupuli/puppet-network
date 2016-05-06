@@ -86,11 +86,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
                   else
                     "#{provider.network}/#{provider.netmask} via #{provider.gateway} dev #{provider.interface}"
                   end
-      contents << if provider.options == :absent
-                    "\n"
-                  else
-                    " #{provider.options}\n"
-                  end
+      contents << (provider.options == :absent ? "\n" : " #{provider.options}\n")
     end
     contents.join
   end

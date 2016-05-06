@@ -114,4 +114,52 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       end
     end
   end
+  describe 'when formatting simple files' do
+    let(:route1_provider) do
+      stub('route1_provider',
+           name: '172.17.67.0',
+           network: '172.17.67.0',
+           netmask: '255.255.255.0',
+           gateway: '172.18.6.2',
+           interface: 'vlan200',
+           options: :absent,
+      )
+    end
+
+    let(:route2_provider) do
+      stub('lo_provider',
+           name: '172.28.45.0',
+           network: '172.28.45.0',
+           netmask: '255.255.255.0',
+           gateway: '172.18.6.2',
+           interface: 'eth0',
+           options: :absent,
+      )
+    end
+
+    let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
+
+    describe 'writing the route line' do
+      it 'should write only fields' do
+        expect(content.scan(/^172.17.67.0 .*$/).length).to eq(1)
+        expect(content.scan(/^172.17.67.0 .*$/).first.split(/\s/, 5).length).to eq(4)
+      end
+
+      it 'should have the correct fields appended' do
+        expect(content.scan(/^172.17.67.0 .*$/).first).to include('172.17.67.0 255.255.255.0 172.18.6.2 vlan200')
+      end
+
+      it 'should fail if the netmask property is not defined' do
+        route2_provider.unstub(:netmask)
+        route2_provider.stubs(:netmask).returns nil
+        expect { content }.to raise_exception
+      end
+
+      it 'should fail if the gateway property is not defined' do
+        route2_provider.unstub(:gateway)
+        route2_provider.stubs(:gateway).returns nil
+        expect { content }.to raise_exception
+      end
+    end
+  end
 end
