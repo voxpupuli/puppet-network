@@ -21,6 +21,7 @@ Puppet::Type.newtype(:network_route) do
         a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for network: #{value}") unless a
       end
+      raise("IPv6 routes are not supported on Debian") if a.ipv6? && Facter.value(:osfamily) == 'Debian'
     end
   end
 
@@ -29,9 +30,10 @@ Puppet::Type.newtype(:network_route) do
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
-      unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
+      unless value.length <= 3 || a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for argument netmask: #{value}")
       end
+      raise("IPv6 routes are not supported on Debian") if PuppetX::Voxpupuli::Utils.try { a.ipv6? } && Facter.value(:osfamily) == 'Debian'
     end
 
     munge do |value|
@@ -55,11 +57,13 @@ Puppet::Type.newtype(:network_route) do
     desc 'The gateway to use for the route'
 
     validate do |value|
+      a = nil
       begin
-        IPAddr.new(value)
+        a = IPAddr.new(value)
       rescue ArgumentError
         raise("Invalid value for gateway: #{value}")
       end
+      raise("IPv6 routes are not supported on Debian") if a.ipv6? && Facter.value(:osfamily) == 'Debian'
     end
   end
 
