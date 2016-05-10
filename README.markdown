@@ -42,10 +42,12 @@ network_config { 'eth1':
 
 Route configuration
 
+Route resources should be named in CIDR notation. If not, they will not be properly mapped to existing routes and puppet will apply them on every run. Default routes should be named 'default'.
+
   For Debian:
 
 ```puppet
-network_route { '172.17.67.0':
+network_route { '172.17.67.0/24':
   ensure    => 'present',
   gateway   => '172.18.6.2',
   interface => 'vlan200',
@@ -69,7 +71,7 @@ network_route { 'default':
   ensure    => 'present',
   gateway   => '10.0.2.2',
   interface => 'eth0',
-  netmask  	=> '0.0.0.0',
+  netmask   => '0.0.0.0',
   network   => 'default'
 }
 ```

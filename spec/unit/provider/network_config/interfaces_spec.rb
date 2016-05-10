@@ -167,8 +167,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            netmask: '255.255.0.0',
            mtu: '1500',
            mode: nil,
-           options: nil
-      )
+           options: nil)
     end
 
     let(:eth0_1_provider) do
@@ -183,8 +182,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            netmask: '255.255.0.0',
            mtu: '1500',
            mode: :vlan,
-           options: nil
-      )
+           options: nil)
     end
 
     let(:eth1_provider) do
@@ -205,8 +203,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                '/bin/touch /tmp/eth1-down1',
                '/bin/touch /tmp/eth1-down2',
              ],
-           }
-      )
+           })
     end
 
     let(:lo_provider) do
@@ -220,8 +217,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            netmask: nil,
            mtu: '65536',
            mode: nil,
-           options: nil
-      )
+           options: nil)
     end
 
     before do

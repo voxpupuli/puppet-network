@@ -356,8 +356,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            netmask: '255.255.255.0',
            mtu: '1500',
            mode: nil,
-           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
-      )
+           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
     end
 
     let(:eth0_1_provider) do
@@ -372,8 +371,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            netmask: '255.255.255.0',
            mtu: '1500',
            mode: :vlan,
-           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' }
-      )
+           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
     end
 
     let(:eth1_provider) do
@@ -388,8 +386,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            netmask: :absent,
            mtu: :absent,
            mode: :vlan,
-           options: :absent,
-          )
+           options: :absent)
     end
 
     let(:lo_provider) do
@@ -402,8 +399,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            ipaddress: nil,
            netmask: nil,
            mode: nil,
-           options: {}
-      )
+           options: {})
     end
 
     let(:bond0_provider) do
@@ -418,9 +414,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            mode: nil,
            options: {
              'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
-           }
-
-      )
+           })
     end
 
     it 'should fail if multiple interfaces are flushed to one file' do

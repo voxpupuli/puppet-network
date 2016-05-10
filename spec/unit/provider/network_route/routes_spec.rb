@@ -21,6 +21,18 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                interface: 'vlan200')
     end
 
+    it 'should name default routes "default" and have a 0.0.0.0 netmask' do
+      fixture = fixture_data('simple_routes')
+      data = described_class.parse_file('', fixture)
+
+      expect(data.find { |h| h[:name] == 'default' })
+        .to eq(name: 'default',
+               network: 'default',
+               netmask: '0.0.0.0',
+               gateway: '172.18.6.2',
+               interface: 'vlan200')
+    end
+
     it 'should parse out simple ipv6 iface lines' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
@@ -74,8 +86,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
            netmask: '255.255.255.0',
            gateway: '172.18.6.2',
            interface: 'vlan200',
-           options: 'table 200'
-      )
+           options: 'table 200')
     end
 
     let(:route2_provider) do
@@ -85,8 +96,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
            netmask: '255.255.255.0',
            gateway: '172.18.6.2',
            interface: 'eth0',
-           options: 'table 200'
-      )
+           options: 'table 200')
     end
 
     let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
@@ -122,8 +132,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
            netmask: '255.255.255.0',
            gateway: '172.18.6.2',
            interface: 'vlan200',
-           options: :absent,
-      )
+           options: :absent)
     end
 
     let(:route2_provider) do
@@ -133,8 +142,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
            netmask: '255.255.255.0',
            gateway: '172.18.6.2',
            interface: 'eth0',
-           options: :absent,
-      )
+           options: :absent)
     end
 
     let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }

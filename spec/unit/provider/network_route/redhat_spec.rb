@@ -79,8 +79,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
            netmask: '30',
            gateway: '172.18.6.2',
            interface: 'vlan200',
-           options: 'table 200'
-      )
+           options: 'table 200')
     end
 
     let(:route2_provider) do
@@ -90,8 +89,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
            netmask: '30',
            gateway: '172.18.6.2',
            interface: 'eth0',
-           options: 'table 200'
-      )
+           options: 'table 200')
     end
 
     let(:defaultroute_provider) do
@@ -101,8 +99,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
            netmask: '',
            gateway: '10.0.0.1',
            interface: 'eth1',
-           options: 'table 200'
-      )
+           options: 'table 200')
     end
 
     let(:nooptions_provider) do
@@ -112,8 +109,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
            netmask: '',
            gateway: '10.0.0.1',
            interface: 'eth2',
-           options: :absent
-      )
+           options: :absent)
     end
 
     let(:content) { described_class.format_file('', [route1_provider, route2_provider, defaultroute_provider, nooptions_provider]) }
