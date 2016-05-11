@@ -66,14 +66,19 @@ Puppet::Type.type(:network_route).provide(:routes) do
 
       raise_malformed if route.length < 4
 
-      # use the CIDR version of the target as :name
-      cidr_target = "#{route[0]}/#{IPAddr.new(route[1]).to_i.to_s(2).count('1')}"
-
-      route_hash[cidr_target][:network] = route[0]
-      route_hash[cidr_target][:netmask] = route[1]
-      route_hash[cidr_target][:gateway] = route[2]
-      route_hash[cidr_target][:interface] = route[3]
-      route_hash[cidr_target][:options] = route[4] if route[4]
+      if route[0] == 'default'
+        name = 'default'
+        route_hash[name][:network] = 'default'
+        route_hash[name][:netmask] = '0.0.0.0'
+      else
+        # use the CIDR version of the target as :name
+        name = "#{route[0]}/#{IPAddr.new(route[1]).to_i.to_s(2).count('1')}"
+        route_hash[name][:network] = route[0]
+        route_hash[name][:netmask] = route[1]
+      end
+      route_hash[name][:gateway] = route[2]
+      route_hash[name][:interface] = route[3]
+      route_hash[name][:options] = route[4] if route[4]
     end
 
     route_hash.values
@@ -91,7 +96,9 @@ Puppet::Type.type(:network_route).provide(:routes) do
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
-      contents << "#{provider.network} #{provider.netmask} #{provider.gateway} #{provider.interface}"
+      netmask = (provider.name == 'default' ? '0.0.0.0' : provider.netmask)
+
+      contents << "#{provider.network} #{netmask} #{provider.gateway} #{provider.interface}"
       contents << (provider.options == :absent ? "\n" : " #{provider.options}\n")
     end
 

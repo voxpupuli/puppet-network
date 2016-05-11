@@ -5,6 +5,7 @@ CHANGELOG
 
   * Drop support for Ruby 1.8.7
   * voxpupuli namespace release
+  * (#69) debian default route should now be named 'default', same as redhat
 
 # Releasing 0.5.0
 
