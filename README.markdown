@@ -102,14 +102,20 @@ Create resources on the fly with the `puppet resource` command:
 Dependencies
 ------------
 
-This module requires the FileMapper mixin, available at https://github.com/voxpupuli/puppet-filemapper
-The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra)
+This module requires the FileMapper mixin, available at https://github.com/voxpupuli/puppet-filemapper. The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean.
 
-The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean. It also requires the `ipaddress` gem which can be installed with:
+The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra). The `network_config` class requires the `ipaddress` gem, which needs to be installed on both the puppet master and the nodes.
+`ifupdown-extra` and `ipaddress` can be installed automatically using the `network` class. To use it, include it like so in your manifests:
+
+```puppet
+include '::network'
+```
+
+This class also provides fine-grained control over which packages to install and how to install them. The documentation for the parameters exposed can be found [here](https://github.com/voxpupuli/puppet-network/blob/master/manifests/init.pp).
+
+The `ipaddress` gem can also be installed manually with:
 
     sudo gem install ipaddress --no-ri --no-rdoc
-
-This gem needs to always be installed on the agent before a puppet agent run, otherwise a catalog error will occur.
 
 Note: you may also need to update your master's plugins (run on your puppet master):
 
