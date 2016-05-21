@@ -300,7 +300,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
   def self.header
     str = <<-HEADER
-# HEADER: This file is is being managed by puppet. Changes to
+# HEADER: This file is being managed by puppet. Changes to
 # HEADER: interfaces that are not being managed by puppet will persist;
 # HEADER: however changes to interfaces that are being managed by puppet will
 # HEADER: be overwritten. In addition, file order is NOT guaranteed.
