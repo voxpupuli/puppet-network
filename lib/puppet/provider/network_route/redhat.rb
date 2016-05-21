@@ -93,7 +93,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
   def self.header
     str = <<-HEADER
-# HEADER: This file is is being managed by puppet. Changes to
+# HEADER: This file is being managed by puppet. Changes to
 # HEADER: routes that are not being managed by puppet will persist;
 # HEADER: however changes to routes that are being managed by puppet will
 # HEADER: be overwritten. In addition, file order is NOT guaranteed.
