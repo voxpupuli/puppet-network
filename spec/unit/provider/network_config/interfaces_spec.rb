@@ -329,17 +329,16 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
     end
 
-    describe "writing vlan iface blocks" do
+    describe 'writing vlan iface blocks' do
       let(:content) { described_class.format_file('', [vlan20_provider]) }
 
       it 'should add all options following the iface block' do
         block = [
-          'iface eth0.1 inet static',
-          'vlan-raw-device eth0',
+          'iface vlan20 inet static',
+          'vlan-raw-device eth1',
           'address 169.254.0.1',
           'netmask 255.255.0.0',
           'mtu 1500',
-          'vlan-raw-device eth1',
         ].join("\n")
         expect(content.split('\n').find { |line| line.match(/iface vlan20/) }).to match(block)
       end

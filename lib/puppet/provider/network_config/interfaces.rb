@@ -199,10 +199,6 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             else
               Instance[name].mode   = :raw
           end
-        else
-          # If we match on a string with a leading iface, but it isn't in the
-          # expected format, malformed blar blar
-          raise_malformed
         end
 
       when /^mapping/
