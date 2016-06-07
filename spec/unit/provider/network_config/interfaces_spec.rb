@@ -134,8 +134,9 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                            mtu: '1500',
                                                            mode: :vlan,
                                                            options: {
-                                                             'broadcast' => '172.16.0.255',
-                                                             'gateway'   => '172.16.0.1',
+                                                             'broadcast'       => '172.16.0.255',
+                                                             'gateway'         => '172.16.0.1',
+                                                             'vlan-raw-device' => 'eth0',
                                                            })
     end
 
@@ -170,9 +171,9 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            options: nil)
     end
 
-    let(:eth0_1_provider) do
-      stub('eth0_1_provider',
-           name: 'eth0.1',
+    let(:vlan20_provider) do
+      stub('vlan20_provider',
+           name: 'vlan20',
            ensure: :present,
            onboot: true,
            hotplug: true,
@@ -182,7 +183,39 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            netmask: '255.255.0.0',
            mtu: '1500',
            mode: :vlan,
-           options: nil)
+           options: {
+             'vlan-raw-device' => 'eth1'
+           })
+    end
+
+    let(:vlan10_provider) do
+      stub('vlan10_provider',
+           name: 'vlan10',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'dhcp',
+           ipaddress: nil,
+           netmask: nil,
+           mtu: nil,
+           mode: :vlan,
+           options: {})
+    end
+
+    let(:eth1_4500_provider) do
+      stub('eth1_4500_provider',
+           name: 'eth1.4500',
+           ensure: :present,
+           onboot: true,
+           hotplug: true,
+           family: 'inet',
+           method: 'dhcp',
+           ipaddress: nil,
+           netmask: nil,
+           mtu: nil,
+           mode: :vlan,
+           options: {})
     end
 
     let(:eth1_provider) do
@@ -293,17 +326,31 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     end
 
     describe 'writing vlan iface blocks' do
-      let(:content) { described_class.format_file('', [eth0_1_provider]) }
+      let(:content) { described_class.format_file('', [vlan20_provider]) }
 
       it 'should add all options following the iface block' do
         block = [
-          'iface eth0.1 inet static',
-          'vlan-raw-device eth0',
+          'iface vlan20 inet static',
+          'vlan-raw-device eth1',
           'address 169.254.0.1',
           'netmask 255.255.0.0',
           'mtu 1500',
         ].join("\n")
-        expect(content.split('\n').find { |line| line.match(/iface eth0/) }).to match(block)
+        expect(content.split('\n').find { |line| line.match(/iface vlan20/) }).to match(block)
+      end
+    end
+
+    describe 'writing wrong vlan iface blocks' do
+      let(:content) { described_class.format_file('', [eth1_4500_provider]) }
+      it 'should fail with wrong VLAN ID' do
+        expect { content }.to raise_error(Puppet::Error, /Interface eth1.4500: missing vlan-raw-device or wrong VLAN ID in the iface name/)
+      end
+    end
+
+    describe 'writing wrong vlanNN iface blocks' do
+      let(:content) { described_class.format_file('', [vlan10_provider]) }
+      it 'should fail with missing vlan-raw-device' do
+        expect { content }.to raise_error(Puppet::Error, /Interface vlan10: missing vlan-raw-device or wrong VLAN ID in the iface name/)
       end
     end
 
