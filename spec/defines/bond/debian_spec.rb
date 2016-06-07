@@ -29,7 +29,7 @@ describe 'network::bond::debian', type: :define do
       end
     end
 
-    it 'should add a network_config resource for bond0' do
+    it 'adds a network_config resource for bond0' do
       should contain_network_config('bond0').with('ensure'         => 'present',
                                                   'method'         => 'static',
                                                   'ipaddress'      => '172.18.1.2',
@@ -74,7 +74,7 @@ describe 'network::bond::debian', type: :define do
       end
     end
 
-    it 'should add a network_config resource for bond0' do
+    it 'adds a network_config resource for bond0' do
       should contain_network_config('bond0').with('ensure'         => 'present',
                                                   'method'         => 'static',
                                                   'ipaddress'      => '10.20.2.1',

@@ -87,7 +87,7 @@ Puppet::Type.newtype(:network_config) do
     validate do |value|
       # reject floating point and negative integers
       # XXX this lets 1500.0 pass
-      unless value =~ /^\d+$/
+      unless value =~ %r{^\d+$}
         raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
       end
 

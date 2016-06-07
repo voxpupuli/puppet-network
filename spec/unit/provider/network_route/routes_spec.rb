@@ -9,7 +9,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
   end
 
   describe 'when parsing' do
-    it 'should parse out simple ipv4 iface lines' do
+    it 'parses out simple ipv4 iface lines' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
@@ -21,7 +21,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                interface: 'vlan200')
     end
 
-    it 'should name default routes "default" and have a 0.0.0.0 netmask' do
+    it 'names default routes "default" and have a 0.0.0.0 netmask' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
@@ -33,7 +33,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                interface: 'vlan200')
     end
 
-    it 'should parse out simple ipv6 iface lines' do
+    it 'parses out simple ipv6 iface lines' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
@@ -45,7 +45,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                interface: 'vlan200')
     end
 
-    it 'should parse out advanced routes' do
+    it 'parses out advanced routes' do
       fixture = fixture_data('advanced_routes')
       data = described_class.parse_file('', fixture)
 
@@ -56,7 +56,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
                                                                    interface: 'vlan200',
                                                                    options: 'table 200',)
     end
-    it 'should parse out advanced ipv6 iface lines' do
+    it 'parses out advanced ipv6 iface lines' do
       fixture = fixture_data('advanced_routes')
       data = described_class.parse_file('', fixture)
 
@@ -102,22 +102,22 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
 
     describe 'writing the route line' do
-      it 'should write all 5 fields' do
-        expect(content.scan(/^172.17.67.0 .*$/).length).to eq(1)
-        expect(content.scan(/^172.17.67.0 .*$/).first.split(/\s/, 5).length).to eq(5)
+      it 'writes all 5 fields' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).length).to eq(1)
+        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(%r{\s}, 5).length).to eq(5)
       end
 
-      it 'should have the correct fields appended' do
-        expect(content.scan(/^172.17.67.0 .*$/).first).to include('172.17.67.0 255.255.255.0 172.18.6.2 vlan200 table 200')
+      it 'has the correct fields appended' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).first).to include('172.17.67.0 255.255.255.0 172.18.6.2 vlan200 table 200')
       end
 
-      it 'should fail if the netmask property is not defined' do
+      it 'fails if the netmask property is not defined' do
         route2_provider.unstub(:netmask)
         route2_provider.stubs(:netmask).returns nil
         expect { content }.to raise_exception
       end
 
-      it 'should fail if the gateway property is not defined' do
+      it 'fails if the gateway property is not defined' do
         route2_provider.unstub(:gateway)
         route2_provider.stubs(:gateway).returns nil
         expect { content }.to raise_exception
@@ -148,22 +148,22 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
 
     describe 'writing the route line' do
-      it 'should write only fields' do
-        expect(content.scan(/^172.17.67.0 .*$/).length).to eq(1)
-        expect(content.scan(/^172.17.67.0 .*$/).first.split(/\s/, 5).length).to eq(4)
+      it 'writes only fields' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).length).to eq(1)
+        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(%r{\s}, 5).length).to eq(4)
       end
 
-      it 'should have the correct fields appended' do
-        expect(content.scan(/^172.17.67.0 .*$/).first).to include('172.17.67.0 255.255.255.0 172.18.6.2 vlan200')
+      it 'has the correct fields appended' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).first).to include('172.17.67.0 255.255.255.0 172.18.6.2 vlan200')
       end
 
-      it 'should fail if the netmask property is not defined' do
+      it 'fails if the netmask property is not defined' do
         route2_provider.unstub(:netmask)
         route2_provider.stubs(:netmask).returns nil
         expect { content }.to raise_exception
       end
 
-      it 'should fail if the gateway property is not defined' do
+      it 'fails if the gateway property is not defined' do
         route2_provider.unstub(:gateway)
         route2_provider.stubs(:gateway).returns nil
         expect { content }.to raise_exception

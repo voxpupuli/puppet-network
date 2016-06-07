@@ -22,10 +22,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   SCRIPT_DIRECTORY = '/etc/sysconfig/network-scripts'.freeze
 
   # The valid vlan ID range is 0-4095; 4096 is out of range
-  VLAN_RANGE_REGEX = /\d{1,3}|40[0-9][0-5]/
+  VLAN_RANGE_REGEX = %r{\d{1,3}|40[0-9][0-5]}
 
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX     = /\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z/
+  SCRIPT_REGEX     = %r{\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z}
 
   NAME_MAPPINGS = {
     ipaddress: 'IPADDR',
@@ -87,11 +87,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # Split up the file into lines
     lines = contents.split("\n")
     # Strip out all comments
-    lines.map! { |line| line.sub(/#.*$/, '') }
+    lines.map! { |line| line.sub(%r{#.*$}, '') }
     # Remove all blank lines
-    lines.reject! { |line| line =~ /^\s*$/ }
+    lines.reject! { |line| line =~ %r{^\s*$} }
 
-    pair_regex = /^\s*(.+?)\s*=\s*(.*)\s*$/
+    pair_regex = %r{^\s*(.+?)\s*=\s*(.*)\s*$}
 
     # Convert the data into key/value pairs
     pairs = lines.each_with_object({}) do |line, hash|
@@ -134,7 +134,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     # Unquote all values
     pairs.each_pair do |key, val|
-      if (munged = val.gsub(/['"]/, ''))
+      if (munged = val.gsub(%r{['"]}, ''))
         pairs[key] = munged
       end
     end
@@ -221,7 +221,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     pairs.merge! props
 
     pairs.each_pair do |key, val|
-      pairs[key] = %("#{val}") if val.is_a?(String) && val.match(/\s+/)
+      pairs[key] = %("#{val}") if val.is_a?(String) && val.match(%r{\s+})
     end
 
     pairs

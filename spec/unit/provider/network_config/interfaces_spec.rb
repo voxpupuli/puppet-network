@@ -16,31 +16,31 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   end
 
   describe 'provider features' do
-    it 'should be hotpluggable' do
+    it 'is hotpluggable' do
       expect(described_class.declared_feature?(:hotpluggable)).to be true
     end
   end
 
   describe 'when parsing' do
-    it 'should parse out auto interfaces' do
+    it 'parses out auto interfaces' do
       fixture = fixture_data('loopback')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'lo' }[:onboot]).to be true
     end
 
-    it "should parse out allow-hotplug interfaces as 'hotplug'" do
+    it "parses out allow-hotplug interfaces as 'hotplug'" do
       fixture = fixture_data('single_interface_dhcp')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }[:hotplug]).to be true
     end
 
-    it "should parse out allow-auto interfaces as 'onboot'" do
+    it "parses out allow-auto interfaces as 'onboot'" do
       fixture = fixture_data('two_interface_dhcp')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth1' }[:onboot]).to be true
     end
 
-    it 'should parse out iface lines' do
+    it 'parses out iface lines' do
       fixture = fixture_data('single_interface_dhcp')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
@@ -51,7 +51,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          options: {},)
     end
 
-    it 'should ignore source and source-directory lines' do
+    it 'ignores source and source-directory lines' do
       fixture = fixture_data('jessie_source_stanza')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
@@ -62,7 +62,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          options: {},)
     end
 
-    it 'should ignore variable whitespace in iface lines (network-#26)' do
+    it 'ignores variable whitespace in iface lines (network-#26)' do
       fixture = fixture_data('iface_whitespace')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(family: 'inet',
@@ -73,7 +73,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          options: {},)
     end
 
-    it 'should parse out lines following iface lines' do
+    it 'parses out lines following iface lines' do
       fixture = fixture_data('single_interface_static')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
@@ -94,7 +94,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     # it "should parse out mapping lines"
     # it "should parse out lines following mapping lines"
 
-    it 'should allow for multiple options sections' do
+    it 'allows for multiple options sections' do
       fixture = fixture_data('single_interface_options')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
@@ -110,7 +110,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          })
     end
 
-    it 'should parse out vlan iface lines' do
+    it 'parses out vlan iface lines' do
       fixture = fixture_data('two_interfaces_static_vlan')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
@@ -260,65 +260,65 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
 
     describe 'writing the auto section' do
-      it 'should allow at most one section' do
-        expect(content.scan(/^auto .+$/).length).to eq(1)
+      it 'allows at most one section' do
+        expect(content.scan(%r{^auto .+$}).length).to eq(1)
       end
 
-      it 'should have the correct interfaces appended' do
-        expect(content.scan(/^auto .+$/).first).to match('auto eth0 lo')
+      it 'has the correct interfaces appended' do
+        expect(content.scan(%r{^auto .+$}).first).to match('auto eth0 lo')
       end
     end
 
     describe 'writing only the auto section' do
       let(:content) { described_class.format_file('', [lo_provider]) }
 
-      it 'should skip the allow-hotplug line' do
-        expect(content.scan(/^allow-hotplug .*$/).length).to eq(0)
+      it 'skips the allow-hotplug line' do
+        expect(content.scan(%r{^allow-hotplug .*$}).length).to eq(0)
       end
     end
 
     describe 'writing the allow-hotplug section' do
-      it 'should allow at most one section' do
-        expect(content.scan(/^allow-hotplug .+$/).length).to eq(1)
+      it 'allows at most one section' do
+        expect(content.scan(%r{^allow-hotplug .+$}).length).to eq(1)
       end
 
-      it 'should have the correct interfaces appended' do
-        expect(content.scan(/^allow-hotplug .+$/).first).to match('allow-hotplug eth0 eth1')
+      it 'has the correct interfaces appended' do
+        expect(content.scan(%r{^allow-hotplug .+$}).first).to match('allow-hotplug eth0 eth1')
       end
     end
 
     describe 'writing only the allow-hotplug section' do
       let(:content) { described_class.format_file('', [eth1_provider]) }
 
-      it 'should skip the auto line' do
-        expect(content.scan(/^auto .*$/).length).to eq(0)
+      it 'skips the auto line' do
+        expect(content.scan(%r{^auto .*$}).length).to eq(0)
       end
     end
 
     describe 'writing iface blocks' do
       let(:content) { described_class.format_file('', [lo_provider, eth0_provider]) }
 
-      it 'should produce an iface block for each interface' do
-        expect(content.scan(/iface eth0 inet static/).length).to eq(1)
+      it 'produces an iface block for each interface' do
+        expect(content.scan(%r{iface eth0 inet static}).length).to eq(1)
       end
 
-      it 'should add all options following the iface block' do
+      it 'adds all options following the iface block' do
         block = [
           'iface eth0 inet static',
           'address 169.254.0.1',
           'netmask 255.255.0.0',
           'mtu 1500',
         ].join("\n")
-        expect(content.split('\n').find { |line| line.match(/iface eth0/) }).to match(block)
+        expect(content.split('\n').find { |line| line.match(%r{iface eth0}) }).to match(block)
       end
 
-      it 'should fail if the family property is not defined' do
+      it 'fails if the family property is not defined' do
         lo_provider.unstub(:family)
         lo_provider.stubs(:family).returns nil
         expect { content }.to raise_exception
       end
 
-      it 'should fail if the method property is not defined' do
+      it 'fails if the method property is not defined' do
         lo_provider.unstub(:method)
         lo_provider.stubs(:method).returns nil
         expect { content }.to raise_exception
@@ -328,7 +328,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     describe 'writing vlan iface blocks' do
       let(:content) { described_class.format_file('', [vlan20_provider]) }
 
-      it 'should add all options following the iface block' do
+      it 'adds all options following the iface block' do
         block = [
           'iface vlan20 inet static',
           'vlan-raw-device eth1',
@@ -336,21 +336,21 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           'netmask 255.255.0.0',
           'mtu 1500',
         ].join("\n")
-        expect(content.split('\n').find { |line| line.match(/iface vlan20/) }).to match(block)
+        expect(content.split('\n').find { |line| line.match(%r{iface vlan20}) }).to match(block)
       end
     end
 
     describe 'writing wrong vlan iface blocks' do
       let(:content) { described_class.format_file('', [eth1_4500_provider]) }
-      it 'should fail with wrong VLAN ID' do
-        expect { content }.to raise_error(Puppet::Error, /Interface eth1.4500: missing vlan-raw-device or wrong VLAN ID in the iface name/)
+      it 'fails with wrong VLAN ID' do
+        expect { content }.to raise_error(Puppet::Error, %r{Interface eth1.4500: missing vlan-raw-device or wrong VLAN ID in the iface name})
       end
     end
 
     describe 'writing wrong vlanNN iface blocks' do
       let(:content) { described_class.format_file('', [vlan10_provider]) }
-      it 'should fail with missing vlan-raw-device' do
-        expect { content }.to raise_error(Puppet::Error, /Interface vlan10: missing vlan-raw-device or wrong VLAN ID in the iface name/)
+      it 'fails with missing vlan-raw-device' do
+        expect { content }.to raise_error(Puppet::Error, %r{Interface vlan10: missing vlan-raw-device or wrong VLAN ID in the iface name})
       end
     end
 
@@ -358,23 +358,23 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       let(:content) { described_class.format_file('', [eth1_provider]) }
 
       describe 'with a string value' do
-        it 'should write a single entry' do
-          expect(content.scan(/pre-up .*$/).size).to eq(1)
+        it 'writes a single entry' do
+          expect(content.scan(%r{pre-up .*$}).size).to eq(1)
         end
 
-        it 'should write the value as an modified string' do
-          expect(content.scan(/^\s*pre-up .*$/).first).to eq('    pre-up /bin/touch /tmp/eth1-up')
+        it 'writes the value as an modified string' do
+          expect(content.scan(%r{^\s*pre-up .*$}).first).to eq('    pre-up /bin/touch /tmp/eth1-up')
         end
       end
 
       describe 'with an array value' do
-        it 'should write an entry per array value' do
-          expect(content.scan(/post-down .*$/).size).to eq(2)
+        it 'writes an entry per array value' do
+          expect(content.scan(%r{post-down .*$}).size).to eq(2)
         end
 
-        it 'should write the values in order' do
-          expect(content.scan(/^\s*post-down .*$/)[0]).to eq('    post-down /bin/touch /tmp/eth1-down1')
-          expect(content.scan(/^\s*post-down .*$/)[1]).to eq('    post-down /bin/touch /tmp/eth1-down2')
+        it 'writes the values in order' do
+          expect(content.scan(%r{^\s*post-down .*$})[0]).to eq('    post-down /bin/touch /tmp/eth1-down1')
+          expect(content.scan(%r{^\s*post-down .*$})[1]).to eq('    post-down /bin/touch /tmp/eth1-down2')
         end
       end
     end

@@ -1,3 +1,4 @@
+require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 1.9
   Include:
@@ -41,13 +42,21 @@ Style/TrailingCommaInArguments:
   Enabled: false
 Style/TrailingCommaInLiteral:
   Enabled: false
+
 Style/ClosingParenthesisIndentation:
-  Enabled: false
+  Enabled: true
+
+Style/BlockDelimiters:
+  Enabled: true
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: true
+
+# based on https://github.com/voxpupuli/modulesync_config/issues/168
 Style/RegexpLiteral:
+  EnforcedStyle: percent_r
   Enabled: true
+
 Style/WordArray:
   Enabled: true
 
@@ -65,4 +74,14 @@ Style/BlockDelimiters:
   Enabled: False
 
 Style/MultilineBlockLayout:
+  Enabled: False
+
+# Rspec
+
+# We don't use rspec in this way
+RSpec/DescribeClass:
+  Enabled: False
+
+# Example length is not necessarily an indicator of code quality
+RSpec/ExampleLength:
   Enabled: False
