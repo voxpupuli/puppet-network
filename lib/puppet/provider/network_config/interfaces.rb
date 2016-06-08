@@ -129,19 +129,19 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     # Iterate over all lines and determine what attributes they create
     lines.each do |line|
       # Strip off any trailing comments
-      line.sub!(/#.*$/, '')
+      line.sub!(%r{#.*$}, '')
 
       case line
-      when /^\s*#|^\s*$/
+      when %r{^\s*#|^\s*$}
         # Ignore comments and blank lines
         next
 
-      when /^source|^source-directory/
+      when %r{^source|^source-directory}
         # ignore source|source-directory sections, it makes this provider basically useless
         # with Debian Jessie. Please refer to man 5 interfaces
         next
 
-      when /^auto|^allow-auto/
+      when %r{^auto|^allow-auto}
         # Parse out any auto sections
         interfaces = line.split(' ')
         interfaces.delete_at(0)
@@ -153,7 +153,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # Reset the current parse state
         current_interface = nil
 
-      when /^allow-hotplug/
+      when %r{^allow-hotplug}
         # parse out allow-hotplug lines
 
         interfaces = line.split(' ')
@@ -164,14 +164,14 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         end
 
         # Don't reset Reset the current parse state
-      when /^iface/
+      when %r{^iface}
 
         # Format of the iface line:
         #
         # iface <iface> <family> <method>
         # zero or more options for <iface>
 
-        raise_malformed unless line.match(/^iface\s+(\S+)\s+(\S+)\s+(\S+)/) do |matched|
+        raise_malformed unless line.match(%r{^iface\s+(\S+)\s+(\S+)\s+(\S+)}) do |matched|
           name   = matched[1]
           family = matched[2]
           method = matched[3]
@@ -191,17 +191,17 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           # man 5 vlan-interfaces
           Instance[name].mode = case name
                                 # 'vlan22'
-                                when /^vlan/
+                                when %r{^vlan}
                                   :vlan
                                 # 'eth2.0003' or 'br1.2'
-                                when /^[a-z]{1,}[0-9]{1,}\.[0-9]{1,4}/
+                                when %r{^[a-z]{1,}[0-9]{1,}\.[0-9]{1,4}}
                                   :vlan
                                 else
                                   :raw
                                 end
         end
 
-      when /^mapping/
+      when %r{^mapping}
         # XXX dox
         status = :mapping
         raise Puppet::DevError, 'Debian interfaces mapping parsing not implemented.'
@@ -213,7 +213,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
         case status
         when :iface
-          raise_malformed unless line.match(/(\S+)\s+(\S.*)/) do |matched|
+          raise_malformed unless line.match(%r{(\S+)\s+(\S.*)}) do |matched|
             # If we're parsing an iface stanza, then we should receive a set of
             # lines that contain two or more space delimited strings. Append
             # them as options to the iface in an array.
@@ -276,8 +276,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         if provider.options['vlan-raw-device']
           stanza << "vlan-raw-device #{provider.options['vlan-raw-device']}"
         else
-          vlan_range_regex = /[1-3]?\d{1,3}|40[0-8]\d|409[0-5]/
-          unless provider.name =~ /\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z/
+          vlan_range_regex = %r{[1-3]?\d{1,3}|40[0-8]\d|409[0-5]}
+          unless provider.name =~ %r{\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z}
             raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
           end
         end

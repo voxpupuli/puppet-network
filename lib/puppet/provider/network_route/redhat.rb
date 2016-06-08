@@ -32,9 +32,9 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     lines = contents.split("\n")
     lines.each do |line|
       # Strip off any trailing comments
-      line.sub!(/#.*$/, '')
+      line.sub!(%r{#.*$}, '')
 
-      if line =~ /^\s*#|^\s*$/
+      if line =~ %r{^\s*#|^\s*$}
         # Ignore comments and blank lines
         next
       end

@@ -12,7 +12,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'a simple well formed file' do
       let(:data) { described_class.parse_file('', fixture_data('simple_routes')) }
 
-      it 'should parse out normal ipv4 network routes' do
+      it 'parses out normal ipv4 network routes' do
         expect(data.find { |h| h[:name] == '172.17.67.0/30' })
           .to eq(name: '172.17.67.0/30',
                  network: '172.17.67.0',
@@ -20,7 +20,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
                  gateway: '172.18.6.2',
                  interface: 'vlan200',)
       end
-      it 'should parse out ipv6 network routes' do
+      it 'parses out ipv6 network routes' do
         expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' })
           .to eq(name: '2a01:4f8:211:9d5:53::/96',
                  network: '2a01:4f8:211:9d5:53::',
@@ -29,7 +29,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
                  interface: 'vlan200')
       end
 
-      it 'should parse out default routes' do
+      it 'parses out default routes' do
         expect(data.find { |h| h[:name] == 'default' }).to eq(name: 'default',
                                                               network: 'default',
                                                               netmask: '0.0.0.0',
@@ -41,7 +41,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'an advanced, well formed file' do
       let(:data) { described_class.parse_file('', fixture_data('advanced_routes')) }
 
-      it 'should parse out normal ipv4 network routes' do
+      it 'parses out normal ipv4 network routes' do
         expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' })
           .to eq(name: '2a01:4f8:211:9d5:53::/96',
                  network: '2a01:4f8:211:9d5:53::',
@@ -51,7 +51,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
                  options: 'table 200')
       end
 
-      it 'should parse out normal ipv6 network routes' do
+      it 'parses out normal ipv6 network routes' do
         expect(data.find { |h| h[:name] == '172.17.67.0/30' })
           .to eq(name: '172.17.67.0/30',
                  network: '172.17.67.0',
@@ -63,7 +63,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     end
 
     describe 'an invalid file' do
-      it 'should fail' do
+      it 'fails' do
         expect do
           described_class.parse_file('', "192.168.1.1/30 via\n")
         end.to raise_error
@@ -116,22 +116,22 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
 
     describe 'writing the route line' do
       describe 'For standard (non-default) routes' do
-        it 'should write 5 fields' do
+        it 'writes 5 fields' do
           expect(content.scan(%r{^172.17.67.0\/30 .*$}).length).to eq(1)
           expect(content.scan(%r{^172.17.67.0\/30 .*$}).first.split(' ', 5).length).to eq(5)
         end
 
-        it 'should have the correct fields appended' do
+        it 'has the correct fields appended' do
           expect(content.scan(%r{^172.17.67.0\/30 .*$}).first).to include('172.17.67.0/30 via 172.18.6.2 dev vlan200 table 200')
         end
 
-        it 'should fail if the netmask property is not defined' do
+        it 'fails if the netmask property is not defined' do
           route2_provider.unstub(:netmask)
           route2_provider.stubs(:netmask).returns nil
           expect { content }.to raise_exception
         end
 
-        it 'should fail if the gateway property is not defined' do
+        it 'fails if the gateway property is not defined' do
           route2_provider.unstub(:gateway)
           route2_provider.stubs(:gateway).returns nil
           expect { content }.to raise_exception
@@ -140,12 +140,12 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     end
 
     describe 'for default routes' do
-      it 'should have the correct fields appended' do
-        expect(content.scan(/^default .*$/).first).to include('default via 10.0.0.1 dev eth1')
+      it 'has the correct fields appended' do
+        expect(content.scan(%r{^default .*$}).first).to include('default via 10.0.0.1 dev eth1')
       end
 
-      it 'should not contain the word absent when no options are defined' do
-        expect(content).to_not match(/absent/)
+      it 'does not contain the word absent when no options are defined' do
+        expect(content).not_to match(%r{absent})
       end
     end
   end
