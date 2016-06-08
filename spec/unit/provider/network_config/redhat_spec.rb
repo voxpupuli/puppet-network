@@ -103,12 +103,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
       before do
         described_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]
-        described_class.any_instance.expects(:select_file).never
       end
 
-      let(:interfaces) { described_class.instances }
-
       describe 'bond0' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
         its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
@@ -120,6 +119,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'bond1' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
         its(:onboot) { should be true }
         its(:ipaddress) { should == '172.20.1.9' }
@@ -133,6 +134,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
         its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
@@ -147,6 +150,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth1' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
         its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
@@ -161,6 +166,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth2' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
         its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
@@ -175,6 +182,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth3' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
         its(:onboot) { should be true }
         its(:mtu) { should == '1500' }
@@ -189,6 +198,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
         its(:ipaddress) { should == '172.24.61.11' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -205,6 +216,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100:0' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
         its(:ipaddress) { should == '172.24.61.12' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -214,6 +227,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan200' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
         its(:ipaddress) { should == '172.24.62.1' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -229,6 +244,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan300' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
         its(:ipaddress) { should == '172.24.63.1' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -244,6 +261,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan400' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
         its(:ipaddress) { should == '172.24.64.1' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -259,6 +278,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan500' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
         its(:ipaddress) { should == '172.24.65.1' }
         its(:netmask)   { should == '255.255.255.0' }
@@ -279,10 +300,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
       before do
         described_class.stubs(:target_files).returns Dir["#{network_scripts_path}/*"]
-        described_class.any_instance.expects(:select_file).never
       end
 
       describe 'eth0.0' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
         its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
@@ -299,6 +321,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.1' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
         its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
@@ -315,6 +339,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.4095' do
+        before { subject.expects(:select_file).never }
+
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
         its(:onboot)  { should be true }
         its(:method)  { should == 'static' }
