@@ -13,60 +13,66 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
-      expect(data.find { |h| h[:name] == '172.17.67.0/24' })
-        .to eq(name: '172.17.67.0/24',
-               network: '172.17.67.0',
-               netmask: '255.255.255.0',
-               gateway: '172.18.6.2',
-               interface: 'vlan200')
+      expect(data.find { |h| h[:name] == '172.17.67.0/24' }).to eq(
+        name: '172.17.67.0/24',
+        network: '172.17.67.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'vlan200'
+      )
     end
 
     it 'names default routes "default" and have a 0.0.0.0 netmask' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
-      expect(data.find { |h| h[:name] == 'default' })
-        .to eq(name: 'default',
-               network: 'default',
-               netmask: '0.0.0.0',
-               gateway: '172.18.6.2',
-               interface: 'vlan200')
+      expect(data.find { |h| h[:name] == 'default' }).to eq(
+        name: 'default',
+        network: 'default',
+        netmask: '0.0.0.0',
+        gateway: '172.18.6.2',
+        interface: 'vlan200'
+      )
     end
 
     it 'parses out simple ipv6 iface lines' do
       fixture = fixture_data('simple_routes')
       data = described_class.parse_file('', fixture)
 
-      expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' })
-        .to eq(name: '2a01:4f8:211:9d5:53::/96',
-               network: '2a01:4f8:211:9d5:53::',
-               netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
-               gateway: '2a01:4f8:211:9d5::2',
-               interface: 'vlan200')
+      expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' }).to eq(
+        name: '2a01:4f8:211:9d5:53::/96',
+        network: '2a01:4f8:211:9d5:53::',
+        netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
+        gateway: '2a01:4f8:211:9d5::2',
+        interface: 'vlan200'
+      )
     end
 
     it 'parses out advanced routes' do
       fixture = fixture_data('advanced_routes')
       data = described_class.parse_file('', fixture)
 
-      expect(data.find { |h| h[:name] == '172.17.67.0/24' }).to eq(name: '172.17.67.0/24',
-                                                                   network: '172.17.67.0',
-                                                                   netmask: '255.255.255.0',
-                                                                   gateway: '172.18.6.2',
-                                                                   interface: 'vlan200',
-                                                                   options: 'table 200',)
+      expect(data.find { |h| h[:name] == '172.17.67.0/24' }).to eq(
+        name: '172.17.67.0/24',
+        network: '172.17.67.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'vlan200',
+        options: 'table 200'
+      )
     end
     it 'parses out advanced ipv6 iface lines' do
       fixture = fixture_data('advanced_routes')
       data = described_class.parse_file('', fixture)
 
-      expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' })
-        .to eq(name: '2a01:4f8:211:9d5:53::/96',
-               network: '2a01:4f8:211:9d5:53::',
-               netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
-               gateway: '2a01:4f8:211:9d5::2',
-               interface: 'vlan200',
-               options: 'table 200')
+      expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' }).to eq(
+        name: '2a01:4f8:211:9d5:53::/96',
+        network: '2a01:4f8:211:9d5:53::',
+        netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
+        gateway: '2a01:4f8:211:9d5::2',
+        interface: 'vlan200',
+        options: 'table 200'
+      )
     end
 
     describe 'when reading an invalid routes file' do
@@ -79,27 +85,33 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
   end
 
   describe 'when formatting' do
-    let(:route1_provider) do
-      stub('route1_provider',
-           name: '172.17.67.0',
-           network: '172.17.67.0',
-           netmask: '255.255.255.0',
-           gateway: '172.18.6.2',
-           interface: 'vlan200',
-           options: 'table 200')
+    let :route1_provider do
+      stub(
+        'route1_provider',
+        name: '172.17.67.0',
+        network: '172.17.67.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'vlan200',
+        options: 'table 200'
+      )
     end
 
-    let(:route2_provider) do
-      stub('lo_provider',
-           name: '172.28.45.0',
-           network: '172.28.45.0',
-           netmask: '255.255.255.0',
-           gateway: '172.18.6.2',
-           interface: 'eth0',
-           options: 'table 200')
+    let :route2_provider do
+      stub(
+        'lo_provider',
+        name: '172.28.45.0',
+        network: '172.28.45.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'eth0',
+        options: 'table 200'
+      )
     end
 
-    let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
+    let :content do
+      described_class.format_file('', [route1_provider, route2_provider])
+    end
 
     describe 'writing the route line' do
       it 'writes all 5 fields' do
@@ -125,27 +137,33 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     end
   end
   describe 'when formatting simple files' do
-    let(:route1_provider) do
-      stub('route1_provider',
-           name: '172.17.67.0',
-           network: '172.17.67.0',
-           netmask: '255.255.255.0',
-           gateway: '172.18.6.2',
-           interface: 'vlan200',
-           options: :absent)
+    let :route1_provider do
+      stub(
+        'route1_provider',
+        name: '172.17.67.0',
+        network: '172.17.67.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'vlan200',
+        options: :absent
+      )
     end
 
-    let(:route2_provider) do
-      stub('lo_provider',
-           name: '172.28.45.0',
-           network: '172.28.45.0',
-           netmask: '255.255.255.0',
-           gateway: '172.18.6.2',
-           interface: 'eth0',
-           options: :absent)
+    let :route2_provider do
+      stub(
+        'lo_provider',
+        name: '172.28.45.0',
+        network: '172.28.45.0',
+        netmask: '255.255.255.0',
+        gateway: '172.18.6.2',
+        interface: 'eth0',
+        options: :absent
+      )
     end
 
-    let(:content) { described_class.format_file('', [route1_provider, route2_provider]) }
+    let :content do
+      described_class.format_file('', [route1_provider, route2_provider])
+    end
 
     describe 'writing the route line' do
       it 'writes only fields' do

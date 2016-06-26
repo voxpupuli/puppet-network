@@ -155,7 +155,7 @@ define network::bond(
   $xmit_hash_policy = 'layer2',
 ) {
 
-  require network::bond::setup
+  require ::network::bond::setup
 
   kmod::alias { $name:
     ensure => $ensure,
