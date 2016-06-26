@@ -492,7 +492,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
   describe 'when flushing a dirty file' do
     it do
-      File.expects(:chmod).with(0644, '/not/a/real/file')
+      File.expects(:chmod).with(0o644, '/not/a/real/file')
       File.expects(:unlink).never
       described_class.stubs(:perform_write)
       described_class.dirty_file!('/not/a/real/file')
