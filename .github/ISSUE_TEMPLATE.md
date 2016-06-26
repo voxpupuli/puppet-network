@@ -1,6 +1,6 @@
 Please check the following items before submitting an issue -- thank you!
 
-Nnote that this project is released with a Contributor Code of Conduct.
+Note that this project is released with a Contributor Code of Conduct.
 By participating in this project you agree to abide by its terms.
 [Contributor Code of Conduct](https://voxpupuli.org/coc/).
 
