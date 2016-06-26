@@ -86,7 +86,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mtu: '1500',
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
-                                                           'gateway'   => '192.168.0.1',
+                                                           'gateway'   => '192.168.0.1'
                                                          })
     end
 
@@ -105,8 +105,8 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                            'pre-up' => '/bin/touch /tmp/eth0-up',
                                                            'post-down' => [
                                                              '/bin/touch /tmp/eth0-down1',
-                                                             '/bin/touch /tmp/eth0-down2',
-                                                           ],
+                                                             '/bin/touch /tmp/eth0-down2'
+                                                           ]
                                                          })
     end
 
@@ -123,7 +123,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mtu: '1500',
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
-                                                           'gateway'   => '192.168.0.1',
+                                                           'gateway'   => '192.168.0.1'
                                                          })
       expect(data.find { |h| h[:name] == 'eth0.1' }).to eq(name: 'eth0.1',
                                                            family: 'inet',
@@ -136,7 +136,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                            options: {
                                                              'broadcast'       => '172.16.0.255',
                                                              'gateway'         => '172.16.0.1',
-                                                             'vlan-raw-device' => 'eth0',
+                                                             'vlan-raw-device' => 'eth0'
                                                            })
     end
 
@@ -234,8 +234,8 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
              'pre-up'    => '/bin/touch /tmp/eth1-up',
              'post-down' => [
                '/bin/touch /tmp/eth1-down1',
-               '/bin/touch /tmp/eth1-down2',
-             ],
+               '/bin/touch /tmp/eth1-down2'
+             ]
            })
     end
 
@@ -307,7 +307,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           'iface eth0 inet static',
           'address 169.254.0.1',
           'netmask 255.255.0.0',
-          'mtu 1500',
+          'mtu 1500'
         ].join("\n")
         expect(content.split('\n').find { |line| line.match(%r{iface eth0}) }).to match(block)
       end
@@ -334,7 +334,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           'vlan-raw-device eth1',
           'address 169.254.0.1',
           'netmask 255.255.0.0',
-          'mtu 1500',
+          'mtu 1500'
         ].join("\n")
         expect(content.split('\n').find { |line| line.match(%r{iface vlan20}) }).to match(block)
       end
