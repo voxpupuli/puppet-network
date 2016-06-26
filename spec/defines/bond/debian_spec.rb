@@ -44,7 +44,7 @@ describe 'network::bond::debian', type: :define do
                                                     'bond-primary'          => 'eth0',
                                                     'bond-primary-reselect' => 'always',
                                                     'bond-xmit-hash-policy' => 'layer2',
-                                                  },)
+                                                  })
     end
   end
 
@@ -89,7 +89,7 @@ describe 'network::bond::debian', type: :define do
                                                     'bond-lacp-rate'        => 'fast',
                                                     'bond-xmit-hash-policy' => 'layer3+4',
                                                     'bond-future-option'    => 'yes'
-                                                  },)
+                                                  })
     end
   end
 end

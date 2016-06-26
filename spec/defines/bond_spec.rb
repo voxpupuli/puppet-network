@@ -80,7 +80,7 @@ describe 'network::bond', type: :define do
 
     it 'adds a kernel module alias for the bonded device' do
       should contain_kmod__alias('bond0').with(source: 'bonding',
-                                               ensure: 'present',)
+                                               ensure: 'present')
     end
   end
 end

@@ -48,7 +48,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mode: :raw,
                                                          name: 'eth0',
                                                          hotplug: true,
-                                                         options: {},)
+                                                         options: {})
     end
 
     it 'ignores source and source-directory lines' do
@@ -59,7 +59,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mode: :raw,
                                                          name: 'eth0',
                                                          hotplug: true,
-                                                         options: {},)
+                                                         options: {})
     end
 
     it 'ignores variable whitespace in iface lines (network-#26)' do
@@ -70,7 +70,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mode: :raw,
                                                          name: 'eth0',
                                                          hotplug: true,
-                                                         options: {},)
+                                                         options: {})
     end
 
     it 'parses out lines following iface lines' do

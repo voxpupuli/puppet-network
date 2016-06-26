@@ -32,7 +32,7 @@ describe 'network::bond::redhat', type: :define do
                                                   'options'  => {
                                                     'MASTER' => 'bond0',
                                                     'SLAVE'  => 'yes',
-                                                  },)
+                                                  })
       end
     end
 
@@ -43,7 +43,7 @@ describe 'network::bond::redhat', type: :define do
                                                   'netmask'        => '255.255.128.0',
                                                   'options'        => {
                                                     'BONDING_OPTS' => 'mode=active-backup miimon=100 downdelay=200 updelay=200 lacp_rate=slow primary=eth0 primary_reselect=always xmit_hash_policy=layer2',
-                                                  },)
+                                                  })
     end
   end
 
@@ -77,7 +77,7 @@ describe 'network::bond::redhat', type: :define do
                                                     'MASTER'        => 'bond0',
                                                     'SLAVE'         => 'yes',
                                                     'NM_CONTROLLED' => 'no',
-                                                  },)
+                                                  })
       end
     end
 
@@ -90,7 +90,7 @@ describe 'network::bond::redhat', type: :define do
                                                   'options'   => {
                                                     'BONDING_OPTS'  => 'mode=balance-rr miimon=50 downdelay=100 updelay=100 lacp_rate=fast xmit_hash_policy=layer3+4',
                                                     'NM_CONTROLLED' => 'yes',
-                                                  },)
+                                                  })
     end
   end
 end
