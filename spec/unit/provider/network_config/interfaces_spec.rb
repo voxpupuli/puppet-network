@@ -8,7 +8,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     File.read(File.join(basedir, file))
   end
 
-  after :each do
+  after do
     v_level = $VERBOSE
     $VERBOSE = nil
     Puppet::Type::Network_config::ProviderInterfaces::Instance.reset!
