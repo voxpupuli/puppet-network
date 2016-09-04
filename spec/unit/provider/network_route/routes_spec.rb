@@ -114,9 +114,11 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     end
 
     describe 'writing the route line' do
-      it 'writes all 5 fields' do
+      it 'writes a single line for the route' do
         expect(content.scan(%r{^172.17.67.0 .*$}).length).to eq(1)
-        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(%r{\s}, 5).length).to eq(5)
+      end
+      it 'writes all 6 fields' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(' ').length).to eq(6)
       end
 
       it 'has the correct fields appended' do
@@ -166,9 +168,12 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     end
 
     describe 'writing the route line' do
-      it 'writes only fields' do
+      it 'writes a single line for the route' do
         expect(content.scan(%r{^172.17.67.0 .*$}).length).to eq(1)
-        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(%r{\s}, 5).length).to eq(4)
+      end
+
+      it 'writes only fields' do
+        expect(content.scan(%r{^172.17.67.0 .*$}).first.split(' ').length).to eq(4)
       end
 
       it 'has the correct fields appended' do

@@ -134,9 +134,12 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
 
     describe 'writing the route line' do
       describe 'For standard (non-default) routes' do
-        it 'writes 5 fields' do
+        it 'writes a single line for the route' do
           expect(content.scan(%r{^172.17.67.0\/30 .*$}).length).to eq(1)
-          expect(content.scan(%r{^172.17.67.0\/30 .*$}).first.split(' ', 5).length).to eq(5)
+        end
+
+        it 'writes 7 fields' do
+          expect(content.scan(%r{^172.17.67.0\/30 .*$}).first.split(' ').length).to eq(7)
         end
 
         it 'has the correct fields appended' do
