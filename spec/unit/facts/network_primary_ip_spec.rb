@@ -17,7 +17,7 @@ describe 'network_primary_ip' do
     end
   end
   context 'on an OpenVZ VM' do
-    before :each do
+    before do
       Facter.clear
       Facter.fact(:kernel).stubs(:value).returns('linux')
       Facter.fact(:virtual).stubs(:value).returns('openvz')

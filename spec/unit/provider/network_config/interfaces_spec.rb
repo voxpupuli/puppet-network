@@ -8,7 +8,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
     File.read(File.join(basedir, file))
   end
 
-  after :each do
+  after do
     v_level = $VERBOSE
     $VERBOSE = nil
     Puppet::Type::Network_config::ProviderInterfaces::Instance.reset!
@@ -110,7 +110,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          })
     end
 
-    it 'parses out vlan iface lines' do
+    it 'parses out vlan iface lines' do # rubocop:disable RSpec/MultipleExpectations
       fixture = fixture_data('two_interfaces_static_vlan')
       data = described_class.parse_file('', fixture)
       expect(data.find { |h| h[:name] == 'eth0' }).to eq(name: 'eth0',
@@ -372,7 +372,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
           expect(content.scan(%r{post-down .*$}).size).to eq(2)
         end
 
-        it 'writes the values in order' do
+        it 'writes the values in order' do # rubocop:disable RSpec/MultipleExpectations
           expect(content.scan(%r{^\s*post-down .*$})[0]).to eq('    post-down /bin/touch /tmp/eth1-down1')
           expect(content.scan(%r{^\s*post-down .*$})[1]).to eq('    post-down /bin/touch /tmp/eth1-down2')
         end

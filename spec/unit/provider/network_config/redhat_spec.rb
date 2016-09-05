@@ -25,9 +25,9 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
   end
 
   describe 'selecting files to parse' do
-    let(:network_scripts_path) { fixture_file('network-scripts') }
-
     subject { described_class.target_files(network_scripts_path).map { |file| File.basename(file) } }
+
+    let(:network_scripts_path) { fixture_file('network-scripts') }
 
     valid_files = %w(ifcfg-bond0 ifcfg-bond1 ifcfg-eth0 ifcfg-eth1 ifcfg-eth2
                      ifcfg-eth3 ifcfg-vlan100 ifcfg-vlan100:0 ifcfg-vlan200
