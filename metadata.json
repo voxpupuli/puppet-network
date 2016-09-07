@@ -40,7 +40,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 2.3.0"
+      "version_requirement": ">= 4.6.0"
     },
     {
       "name": "voxpupuli/filemapper",
