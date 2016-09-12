@@ -55,6 +55,7 @@ describe 'network::bond::redhat', type: :define do
         'ipaddress'        => '10.20.2.1',
         'netmask'          => '255.255.255.192',
         'slaves'           => %w(eth0 eth1 eth2),
+        'mtu'              => '1550',
         'options'          => { 'NM_CONTROLLED' => 'yes' },
         'slave_options'    => { 'NM_CONTROLLED' => 'no' },
         'hotplug'          => 'false',
@@ -87,6 +88,7 @@ describe 'network::bond::redhat', type: :define do
                                                   'ipaddress' => '10.20.2.1',
                                                   'netmask'   => '255.255.255.192',
                                                   'hotplug'   => false,
+                                                  'mtu'       => '1550',
                                                   'options'   => {
                                                     'BONDING_OPTS'  => 'mode=balance-rr miimon=50 downdelay=100 updelay=100 lacp_rate=fast xmit_hash_policy=layer3+4',
                                                     'NM_CONTROLLED' => 'yes'

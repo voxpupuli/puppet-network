@@ -56,6 +56,7 @@ describe 'network::bond::debian', type: :define do
         'ipaddress'        => '10.20.2.1',
         'netmask'          => '255.255.255.192',
         'slaves'           => %w(eth0 eth1 eth2),
+        'mtu'              => '1550',
         'options'          => { 'bond-future-option' => 'yes' },
         'slave_options'    => { 'slave-future-option' => 'no' },
         'hotplug'          => 'false',
@@ -88,7 +89,8 @@ describe 'network::bond::debian', type: :define do
                                                     'bond-updelay'          => '100',
                                                     'bond-lacp-rate'        => 'fast',
                                                     'bond-xmit-hash-policy' => 'layer3+4',
-                                                    'bond-future-option'    => 'yes'
+                                                    'bond-future-option'    => 'yes',
+                                                    'post-up'               => 'ip link set dev bond0 mtu 1550'
                                                   })
     end
   end

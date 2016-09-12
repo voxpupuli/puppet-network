@@ -15,6 +15,7 @@ define network::bond::redhat(
   $family           = undef,
   $onboot           = undef,
   $hotplug          = undef,
+  $mtu              = undef,
   $options          = undef,
   $slave_options    = undef,
 
@@ -41,6 +42,7 @@ define network::bond::redhat(
     family    => $family,
     onboot    => $onboot,
     hotplug   => $hotplug,
+    mtu       => $mtu,
     options   => $opts,
   }
 

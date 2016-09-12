@@ -32,6 +32,10 @@
 #
 # Whether to allow hotplug for the interface.
 #
+# [*mtu*]
+#
+# The Maximum Transmission Unit size to use for bond interface and all slaves.
+#
 # [*options*]
 #
 # Hash with custom interfaces options.
@@ -143,6 +147,7 @@ define network::bond(
   $onboot           = undef,
   $hotplug          = undef,
   $lacp_rate        = undef,
+  $mtu              = undef,
   $options          = undef,
   $slave_options    = undef,
 
@@ -173,6 +178,7 @@ define network::bond(
         family           => $family,
         onboot           => $onboot,
         hotplug          => $hotplug,
+        mtu              => $mtu,
         options          => $options,
         slave_options    => $slave_options,
 
@@ -198,6 +204,7 @@ define network::bond(
         method           => $method,
         onboot           => $onboot,
         hotplug          => $hotplug,
+        mtu              => $mtu,
         options          => $options,
         slave_options    => $slave_options,
 
