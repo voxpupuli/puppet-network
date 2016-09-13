@@ -492,7 +492,7 @@ Lint/UselessAssignment:
   Enabled: True
 
 Style/ClosingParenthesisIndentation:
-  Enabled: False
+  Enabled: True
 
 # RSpec
 
