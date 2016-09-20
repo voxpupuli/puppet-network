@@ -1,13 +1,22 @@
-CHANGELOG
-=========
-
-# Releasing 0.5.1 (unreleased)
+# 2016-09-15 Release 0.6.0
 
   * Drop support for Ruby 1.8.7
-  * voxpupuli namespace release
-  * (#69) debian default route should now be named 'default', same as redhat
+  * (#69) debian default route should now be named 'default', same as redhat (backwards incompatible change)
+  * Cleanup of README.md
+  * Soft fail on missing ipaddress gem
+  * Modulesync with latest Vox Pupuli defaults
+  * Don't write absent to redhat route files and test for this
+  * Routes: add ability to parse IPv6 addresses
+  * Add spec tests for redhat and debian ipv6 routes
+  * fix "absent" options
+  * Fix a typo in the HEADER of generated files
+  * Completely rewritten vlan logic
+  * Add a `network` class to install dependencies
+  * Remove with_env, and trust in PATH being correct
+  * Support for MTU on bonds
 
-# Releasing 0.5.0
+
+# 2016-03-14 Release 0.5.0
 
   * add bonding support through network::bond
   * add camptocamp/kmod as a dependency
