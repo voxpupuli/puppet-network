@@ -43,7 +43,7 @@
       "version_requirement": ">= 4.6.0"
     },
     {
-      "name": "voxpupuli/filemapper",
+      "name": "puppet/filemapper",
       "version_requirement": ">= 1.0.0"
     },
     {
