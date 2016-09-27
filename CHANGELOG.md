@@ -1,3 +1,10 @@
+# 2016-09-27 Release 0.6.1
+
+  * Modulesync with latest Vox Pupuli defaults
+  * Make fact confinement ruby 1.8 compatible
+  * Fix name of filemapper dependency
+
+
 # 2016-09-15 Release 0.6.0
 
   * Drop support for Ruby 1.8.7
@@ -12,7 +19,7 @@
   * Fix a typo in the HEADER of generated files
   * Completely rewritten vlan logic
   * Add a `network` class to install dependencies
-  * Remove with_env, and trust in PATH being correct
+  * Fix `with_env` support, and trust in PATH being correct
   * Support for MTU on bonds
 
 
