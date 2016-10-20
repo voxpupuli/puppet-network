@@ -3,6 +3,11 @@ require 'puppet'
 require 'rspec-puppet'
 require 'mocha'
 
+unless RUBY_VERSION =~ %r{^1.9}
+  require 'coveralls'
+  Coveralls.wear!
+end
+
 PROJECT_ROOT = File.expand_path('..', File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(PROJECT_ROOT, 'lib'))
 
