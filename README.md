@@ -1,9 +1,11 @@
 # Network module for Puppet
 
-[![Puppet Forge](http://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Puppet Forge downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Puppet Forge score](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png)](https://travis-ci.org/voxpupuli/puppet-network)
+[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png?branch=master)](https://travis-ci.org/voxpupuli/puppet-network)
+[![Code Coverage](https://coveralls.io/repos/github/voxpupuli/puppet-network/badge.svg?branch=master)](https://coveralls.io/github/voxpupuli/puppet-network)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
 
 ## Overview
 
