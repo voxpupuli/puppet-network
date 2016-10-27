@@ -1,15 +1,17 @@
-puppet-network
-==============
+# Network module for Puppet
+
+[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png?branch=master)](https://travis-ci.org/voxpupuli/puppet-network)
+[![Code Coverage](https://coveralls.io/repos/github/voxpupuli/puppet-network/badge.svg?branch=master)](https://coveralls.io/github/voxpupuli/puppet-network)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+
+## Overview
 
 Manage non-volatile network and route configuration.
 
-[![Puppet Forge](http://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Puppet Forge downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Puppet Forge score](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png)](https://travis-ci.org/voxpupuli/puppet-network)
-
-Examples
---------
+## Usage
 
 Interface configuration
 
@@ -42,7 +44,9 @@ network_config { 'eth1':
 
 Route configuration
 
-Route resources should be named in CIDR notation. If not, they will not be properly mapped to existing routes and puppet will apply them on every run. Default routes should be named 'default'.
+Route resources should be named in CIDR notation. If not, they will not be
+properly mapped to existing routes and puppet will apply them on every run.
+Default routes should be named 'default'.
 
   For Debian:
 
@@ -99,19 +103,24 @@ Create resources on the fly with the `puppet resource` command:
       options   => 'table 200',
     }
 
-Dependencies
-------------
+## Dependencies
 
-This module requires the FileMapper mixin, available at https://github.com/voxpupuli/puppet-filemapper. The network_config type requires the Boolean mixin, available at https://github.com/adrienthebo/puppet-boolean.
+This module requires the FileMapper mixin, available at <https://github.com/voxpupuli/puppet-filemapper>.
+The network_config type requires the Boolean mixin, available at <https://github.com/adrienthebo/puppet-boolean>.
 
-The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra). The `network_config` class requires the `ipaddress` gem, which needs to be installed on both the puppet master and the nodes.
-`ifupdown-extra` and `ipaddress` can be installed automatically using the `network` class. To use it, include it like so in your manifests:
+The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra).
+The `network_config` class requires the `ipaddress` gem, which needs to be
+installed on both the puppet master and the nodes. `ifupdown-extra` and
+`ipaddress` can be installed automatically using the `network` class. To use it,
+include it like so in your manifests:
 
 ```puppet
 include '::network'
 ```
 
-This class also provides fine-grained control over which packages to install and how to install them. The documentation for the parameters exposed can be found [here](https://github.com/voxpupuli/puppet-network/blob/master/manifests/init.pp).
+This class also provides fine-grained control over which packages to install and
+how to install them. The documentation for the parameters exposed can be found
+[here](https://github.com/voxpupuli/puppet-network/blob/master/manifests/init.pp).
 
 The `ipaddress` gem can also be installed manually with:
 
@@ -127,8 +136,7 @@ Or on puppet 2.7/3.x:
 
 - - -
 
-Contact
--------
+## Contact
 
-  * Source code: https://github.com/voxpupuli/puppet-network
-  * Issue tracker: https://github.com/voxpupuli/puppet-network/issues
+* Source code: <https://github.com/voxpupuli/puppet-network>
+* Issue tracker: <https://github.com/voxpupuli/puppet-network/issues>
