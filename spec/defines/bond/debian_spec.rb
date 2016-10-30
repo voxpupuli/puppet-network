@@ -25,26 +25,26 @@ describe 'network::bond::debian', type: :define do
 
     %w(eth0 eth1).each do |slave|
       it "should add a network_config resource for #{slave}" do
-        should contain_network_config(slave).with_ensure('absent')
+        is_expected.to contain_network_config(slave).with_ensure('absent')
       end
     end
 
     it 'adds a network_config resource for bond0' do
-      should contain_network_config('bond0').with('ensure'         => 'present',
-                                                  'method'         => 'static',
-                                                  'ipaddress'      => '172.18.1.2',
-                                                  'netmask'        => '255.255.128.0',
-                                                  'options'        => {
-                                                    'bond-slaves'           => 'eth0 eth1',
-                                                    'bond-mode'             => 'active-backup',
-                                                    'bond-miimon'           => '100',
-                                                    'bond-downdelay'        => '200',
-                                                    'bond-updelay'          => '200',
-                                                    'bond-lacp-rate'        => 'slow',
-                                                    'bond-primary'          => 'eth0',
-                                                    'bond-primary-reselect' => 'always',
-                                                    'bond-xmit-hash-policy' => 'layer2'
-                                                  })
+      is_expected.to contain_network_config('bond0').with('ensure'         => 'present',
+                                                          'method'         => 'static',
+                                                          'ipaddress'      => '172.18.1.2',
+                                                          'netmask'        => '255.255.128.0',
+                                                          'options'        => {
+                                                            'bond-slaves'           => 'eth0 eth1',
+                                                            'bond-mode'             => 'active-backup',
+                                                            'bond-miimon'           => '100',
+                                                            'bond-downdelay'        => '200',
+                                                            'bond-updelay'          => '200',
+                                                            'bond-lacp-rate'        => 'slow',
+                                                            'bond-primary'          => 'eth0',
+                                                            'bond-primary-reselect' => 'always',
+                                                            'bond-xmit-hash-policy' => 'layer2'
+                                                          })
     end
   end
 
@@ -71,27 +71,27 @@ describe 'network::bond::debian', type: :define do
     end
     %w(eth0 eth1 eth2).each do |slave|
       it "should add a network_config resource for #{slave}" do
-        should contain_network_config(slave).with_ensure('absent')
+        is_expected.to contain_network_config(slave).with_ensure('absent')
       end
     end
 
     it 'adds a network_config resource for bond0' do
-      should contain_network_config('bond0').with('ensure'         => 'present',
-                                                  'method'         => 'static',
-                                                  'ipaddress'      => '10.20.2.1',
-                                                  'netmask'        => '255.255.255.192',
-                                                  'hotplug'        => false,
-                                                  'options'        => {
-                                                    'bond-slaves'           => 'eth0 eth1 eth2',
-                                                    'bond-mode'             => 'balance-rr',
-                                                    'bond-miimon'           => '50',
-                                                    'bond-downdelay'        => '100',
-                                                    'bond-updelay'          => '100',
-                                                    'bond-lacp-rate'        => 'fast',
-                                                    'bond-xmit-hash-policy' => 'layer3+4',
-                                                    'bond-future-option'    => 'yes',
-                                                    'post-up'               => 'ip link set dev bond0 mtu 1550'
-                                                  })
+      is_expected.to contain_network_config('bond0').with('ensure'         => 'present',
+                                                          'method'         => 'static',
+                                                          'ipaddress'      => '10.20.2.1',
+                                                          'netmask'        => '255.255.255.192',
+                                                          'hotplug'        => false,
+                                                          'options'        => {
+                                                            'bond-slaves'           => 'eth0 eth1 eth2',
+                                                            'bond-mode'             => 'balance-rr',
+                                                            'bond-miimon'           => '50',
+                                                            'bond-downdelay'        => '100',
+                                                            'bond-updelay'          => '100',
+                                                            'bond-lacp-rate'        => 'fast',
+                                                            'bond-xmit-hash-policy' => 'layer3+4',
+                                                            'bond-future-option'    => 'yes',
+                                                            'post-up'               => 'ip link set dev bond0 mtu 1550'
+                                                          })
     end
   end
 end

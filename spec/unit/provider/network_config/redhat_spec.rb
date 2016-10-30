@@ -38,11 +38,11 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
                        ifcfg-eth0.4096)
 
     valid_files.each do |file|
-      it { should include file }
+      it { is_expected.to include file }
     end
 
     invalid_files.each do |file|
-      it { should_not include file }
+      it { is_expected.not_to include file }
     end
   end
 
@@ -109,12 +109,12 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
-        its(:onboot) { should be true }
-        its(:mtu) { should == '1500' }
+        its(:onboot) { is_expected.to be true }
+        its(:mtu)    { is_expected.to eq('1500') }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
-          }
+          )
         end
       end
 
@@ -122,14 +122,14 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
-        its(:onboot) { should be true }
-        its(:ipaddress) { should == '172.20.1.9' }
-        its(:netmask) { should == '255.255.255.0' }
-        its(:mtu) { should == '1500' }
+        its(:onboot)    { is_expected.to be true }
+        its(:ipaddress) { is_expected.to eq('172.20.1.9') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:mtu)       { is_expected.to eq('1500') }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
-          }
+          )
         end
       end
 
@@ -137,15 +137,15 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
-        its(:onboot) { should be true }
-        its(:mtu) { should == '1500' }
-        its(:mode) { should == :raw }
+        its(:onboot) { is_expected.to be true }
+        its(:mtu)    { is_expected.to eq('1500') }
+        its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'HWADDR' => '00:12:79:91:28:1f',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0'
-          }
+          )
         end
       end
 
@@ -153,15 +153,15 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
-        its(:onboot) { should be true }
-        its(:mtu) { should == '1500' }
-        its(:mode) { should == :raw }
+        its(:onboot) { is_expected.to be true }
+        its(:mtu)    { is_expected.to eq('1500') }
+        its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'HWADDR' => '00:12:79:91:28:20',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond0'
-          }
+          )
         end
       end
 
@@ -169,15 +169,15 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
-        its(:onboot) { should be true }
-        its(:mtu) { should == '1500' }
-        its(:mode) { should == :raw }
+        its(:onboot) { is_expected.to be true }
+        its(:mtu)    { is_expected.to eq('1500') }
+        its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'HWADDR' => '00:26:55:e9:33:c4',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1'
-          }
+          )
         end
       end
 
@@ -185,15 +185,15 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
-        its(:onboot) { should be true }
-        its(:mtu) { should == '1500' }
-        its(:mode) { should == :raw }
+        its(:onboot) { is_expected.to be true }
+        its(:mtu)    { is_expected.to eq('1500') }
+        its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'HWADDR' => '00:26:55:e9:33:c5',
             'SLAVE'  => 'yes',
             'MASTER' => 'bond1'
-          }
+          )
         end
       end
 
@@ -201,17 +201,17 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
-        its(:ipaddress) { should == '172.24.61.11' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:mode)      { should == :vlan }
-        its(:options)   do
-          should == {
+        its(:ipaddress) { is_expected.to eq('172.24.61.11') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:mode)      { is_expected.to eq(:vlan) }
+        its(:options) do
+          is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0',
             'GATEWAY'        => '172.24.61.1'
-          }
+          )
         end
       end
 
@@ -219,27 +219,27 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
-        its(:ipaddress) { should == '172.24.61.12' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:options)   { should == {} }
+        its(:ipaddress) { is_expected.to eq('172.24.61.12') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:options)   { is_expected.to eq({}) }
       end
 
       describe 'vlan200' do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
-        its(:ipaddress) { should == '172.24.62.1' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:mode)      { should == :vlan }
-        its(:options)   do
-          should == {
+        its(:ipaddress) { is_expected.to eq('172.24.62.1') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:mode)      { is_expected.to eq(:vlan) }
+        its(:options) do
+          is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0'
-          }
+          )
         end
       end
 
@@ -247,16 +247,16 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
-        its(:ipaddress) { should == '172.24.63.1' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:mode)      { should == :vlan }
-        its(:options)   do
-          should == {
+        its(:ipaddress) { is_expected.to eq('172.24.63.1') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:mode)      { is_expected.to eq(:vlan) }
+        its(:options) do
+          is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0'
-          }
+          )
         end
       end
 
@@ -264,16 +264,16 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
-        its(:ipaddress) { should == '172.24.64.1' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:mode)      { should == :vlan }
-        its(:options)   do
-          should == {
+        its(:ipaddress) { is_expected.to eq('172.24.64.1') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:mode)      { is_expected.to eq(:vlan) }
+        its(:options) do
+          is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0'
-          }
+          )
         end
       end
 
@@ -281,16 +281,16 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
-        its(:ipaddress) { should == '172.24.65.1' }
-        its(:netmask)   { should == '255.255.255.0' }
-        its(:onboot)    { should == :absent }
-        its(:method)    { should == 'static' }
-        its(:mode)      { should == :vlan }
-        its(:options)   do
-          should == {
+        its(:ipaddress) { is_expected.to eq('172.24.65.1') }
+        its(:netmask)   { is_expected.to eq('255.255.255.0') }
+        its(:onboot)    { is_expected.to eq(:absent) }
+        its(:method)    { is_expected.to eq('static') }
+        its(:mode)      { is_expected.to eq(:vlan) }
+        its(:options) do
+          is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV'        => 'bond0'
-          }
+          )
         end
       end
     end
@@ -306,17 +306,17 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
-        its(:onboot)  { should be true }
-        its(:method)  { should == 'static' }
-        its(:mtu)     { should == '9000' }
-        its(:mode)    { should == :vlan }
+        its(:onboot) { is_expected.to be true }
+        its(:method) { is_expected.to eq('static') }
+        its(:mtu)    { is_expected.to eq('9000') }
+        its(:mode)   { is_expected.to eq(:vlan) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br1'
-          }
+          )
         end
       end
 
@@ -324,17 +324,17 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
-        its(:onboot)  { should be true }
-        its(:method)  { should == 'static' }
-        its(:mtu)     { should == '9000' }
-        its(:mode)    { should == :vlan }
+        its(:onboot) { is_expected.to be true }
+        its(:method) { is_expected.to eq('static') }
+        its(:mtu)    { is_expected.to eq('9000') }
+        its(:mode)   { is_expected.to eq(:vlan) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br1'
-          }
+          )
         end
       end
 
@@ -342,17 +342,17 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
-        its(:onboot)  { should be true }
-        its(:method)  { should == 'static' }
-        its(:mtu)     { should == '9000' }
-        its(:mode)    { should == :vlan }
+        its(:onboot) { is_expected.to be true }
+        its(:method) { is_expected.to eq('static') }
+        its(:mtu)    { is_expected.to eq('9000') }
+        its(:mode)   { is_expected.to eq(:vlan) }
         its(:options) do
-          should == {
+          is_expected.to eq(
             'IPV6INIT'      => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE'          => 'Ethernet',
             'BRIDGE'        => 'br4095'
-          }
+          )
         end
       end
     end
