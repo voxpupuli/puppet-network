@@ -35,11 +35,11 @@ describe 'network::bond', type: :define do
       end
 
       it "creates 'network::bond::redhat'" do
-        should contain_network__bond__redhat('bond0')
+        is_expected.to contain_network__bond__redhat('bond0')
       end
 
       it "forwards all options to 'network::bond::redhat'" do
-        should contain_network__bond__redhat('bond0').with(params)
+        is_expected.to contain_network__bond__redhat('bond0').with(params)
       end
     end
 
@@ -52,11 +52,11 @@ describe 'network::bond', type: :define do
       end
 
       it "creates 'network::bond::debian'" do
-        should contain_network__bond__debian('bond0')
+        is_expected.to contain_network__bond__debian('bond0')
       end
 
       it "forwards all options to 'network::bond::debian'" do
-        should contain_network__bond__debian('bond0').with(params)
+        is_expected.to contain_network__bond__debian('bond0').with(params)
       end
     end
 
@@ -64,7 +64,7 @@ describe 'network::bond', type: :define do
       let(:facts) { { osfamily: 'SparrowOS' } }
 
       it 'fails to compile' do
-        expect { should compile }.to raise_error(%r{network::bond does not support osfamily 'SparrowOS'})
+        expect { is_expected.to compile }.to raise_error(%r{network::bond does not support osfamily 'SparrowOS'})
       end
     end
   end
@@ -77,11 +77,11 @@ describe 'network::bond', type: :define do
       }
     end
 
-    it { should contain_class('network::bond::setup') }
+    it { is_expected.to contain_class('network::bond::setup') }
 
     it 'adds a kernel module alias for the bonded device' do
-      should contain_kmod__alias('bond0').with(source: 'bonding',
-                                               ensure: 'present')
+      is_expected.to contain_kmod__alias('bond0').with(source: 'bonding',
+                                                       ensure: 'present')
     end
   end
 end
