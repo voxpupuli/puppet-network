@@ -172,9 +172,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
   def self.format_file(filename, providers)
     return '' if providers.empty?
-    raise Puppet::DevError,
-          "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"\
-          if providers.length > 1
+    if providers.length > 1
+      raise Puppet::DevError,
+            "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
+    end
 
     provider = providers[0]
     props    = {}
