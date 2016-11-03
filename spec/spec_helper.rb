@@ -1,30 +1,31 @@
-require 'rspec'
-require 'puppet'
-require 'rspec-puppet'
-require 'mocha'
+require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
+include RspecPuppetFacts
 
 unless RUBY_VERSION =~ %r{^1.9}
   require 'coveralls'
-  Coveralls.wear!
+  require 'simplecov'
+  require 'simplecov-console'
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console,
+    Coveralls::SimpleCov::Formatter
+  ]
+  SimpleCov.start do
+    add_filter '/spec'
+  end
 end
 
-PROJECT_ROOT = File.expand_path('..', File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(PROJECT_ROOT, 'lib'))
-
-fixture_path = File.expand_path(File.join('spec', 'fixtures'), PROJECT_ROOT)
-
-RSpec.configure do |config|
-  config.mock_with :mocha
-
-  # ---
-  # Configuration for puppet-rspec
-
-  config.module_path = File.join(fixture_path, 'modules')
-  config.manifest_dir = File.join(fixture_path, 'manifests')
-  config.environmentpath = File.expand_path(File.join(Dir.pwd, 'spec'))
+RSpec.configure do |c|
+  default_facts = {
+    puppetversion: Puppet.version,
+    facterversion: Facter.version
+  }
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_facts.yml', __FILE__))
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_module_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_module_facts.yml', __FILE__))
+  c.default_facts = default_facts
+  c.mock_with :mocha
 end
 
-# ---
-# Add the fixture module libdirs to the modulepath
-
-$LOAD_PATH.concat(Dir.glob(File.join(fixture_path, 'modules', '*', 'lib')))
+require 'spec_helper_methods'
+# vim: syntax=ruby
