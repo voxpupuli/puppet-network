@@ -55,7 +55,6 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
         new_route[:name]    = cidr_target
         new_route[:network] = 'default'
-        new_route[:netmask] = '0.0.0.0'
       else
         # use the CIDR version of the target as :name
         network, netmask = route[0].split('/')
