@@ -130,7 +130,7 @@ Note: you may also need to update your master's plugins (run on your puppet mast
 
     puppet agent -t --noop
 
-Or on puppet 2.7/3.x:
+Or on puppet 3.8.7/4.x:
 
     puppet plugin download
 
