@@ -1,11 +1,26 @@
-# 2016-09-27 Release 0.6.1
+# Changelog
+
+## 2017-01-12 - Release 0.7.0
+
+Last release with Puppet 3 support! The next release will be a breaking change!
+* Modulesync with latest Vox Pupuli defaults
+* Fix several markdown issues
+* Add missing badges
+* rubocop: fix RSpec/ImplicitExpect
+* rubocop: fix Style/MultilineIfModifier
+* Update fixtures links
+* manage spec_helper.rb with modulesync
+* Use Facter 3 if available for some facts
+* Fix `mock_with` in `.sync.yml`
+* Set min version_requirement for Puppet + bump deps
+
+## 2016-09-27 - Release 0.6.1
 
   * Modulesync with latest Vox Pupuli defaults
   * Make fact confinement ruby 1.8 compatible
   * Fix name of filemapper dependency
 
-
-# 2016-09-15 Release 0.6.0
+## 2016-09-15 - Release 0.6.0
 
   * Drop support for Ruby 1.8.7
   * (#69) debian default route should now be named 'default', same as redhat (backwards incompatible change)
@@ -22,8 +37,7 @@
   * Fix `with_env` support, and trust in PATH being correct
   * Support for MTU on bonds
 
-
-# 2016-03-14 Release 0.5.0
+## 2016-03-14 - Release 0.5.0
 
   * add bonding support through network::bond
   * add camptocamp/kmod as a dependency
