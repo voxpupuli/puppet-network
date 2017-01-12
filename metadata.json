@@ -1,6 +1,6 @@
 {
   "name": "puppet-network",
-  "version": "0.7.0",
+  "version": "0.7.1-rc0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage non-volatile network configuration",
