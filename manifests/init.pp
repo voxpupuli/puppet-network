@@ -59,7 +59,7 @@ class network(
   $manage_ifupdown_extra   = true,
   $ensure_ifupdown_extra   = present,
   $ipaddress               = 'ipaddress',
-  $ipaddress_provider      = 'gem',
+  $ipaddress_provider      = 'puppet_gem',
   $manage_ipaddress        = true,
   $ensure_ipaddress        = present,
 ) {
