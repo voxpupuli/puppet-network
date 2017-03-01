@@ -1,5 +1,5 @@
-172.28.45.0/255.255.255.252 via 172.18.6.2 dev eth0 table 200
-172.17.67.0/255.255.255.252 via 172.18.6.2 dev vlan200 table 200
-10.10.10.0/255.255.255.252 via 172.18.6.2 dev eth0 table 200
+172.28.45.0/30 via 172.18.6.2 dev eth0 table 200
+172.17.67.0/30 via 172.18.6.2 dev vlan200 table 200
+10.10.10.0/30 via 172.18.6.2 dev eth0 table 200
 default via 10.0.0.1 dev eth1 table 200
-2a01:4f8:211:9d5:53::/ffff:ffff:ffff:ffff:ffff:ffff:: via 2a01:4f8:211:9d5::2 dev vlan200 table 200
+2a01:4f8:211:9d5:53::/90 via 2a01:4f8:211:9d5::2 dev vlan200 table 200
