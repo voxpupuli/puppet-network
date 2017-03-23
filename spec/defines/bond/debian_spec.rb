@@ -56,7 +56,7 @@ describe 'network::bond::debian', type: :define do
         'ipaddress'        => '10.20.2.1',
         'netmask'          => '255.255.255.192',
         'slaves'           => %w(eth0 eth1 eth2),
-        'mtu'              => '1550',
+        'mtu'              => 1550,
         'options'          => { 'bond-future-option' => 'yes' },
         'slave_options'    => { 'slave-future-option' => 'no' },
         'hotplug'          => 'false',
