@@ -7,25 +7,24 @@
 # * Debian Network Bonding http://wiki.debian.org/Bonding
 define network::bond::debian(
   $slaves,
-  $ensure           = present,
-  $ipaddress        = undef,
-  $netmask          = undef,
-  $method           = undef,
-  $family           = undef,
-  $onboot           = undef,
-  $hotplug          = undef,
-  $mtu              = undef,
-  $options          = undef,
-  $slave_options    = undef,
-
-  $mode             = undef,
-  $miimon           = undef,
-  $downdelay        = undef,
-  $updelay          = undef,
-  $lacp_rate        = undef,
-  $primary          = undef,
-  $primary_reselect = undef,
-  $xmit_hash_policy = undef,
+  $ensure                                           = present,
+  $ipaddress                                        = undef,
+  $netmask                                          = undef,
+  $method                                           = undef,
+  $family                                           = undef,
+  $onboot                                           = undef,
+  $hotplug                                          = undef,
+  Optional[Variant[Integer[42, 65536],String]] $mtu = undef,
+  $options                                          = undef,
+  $slave_options                                    = undef,
+  $mode                                             = undef,
+  $miimon                                           = undef,
+  $downdelay                                        = undef,
+  $updelay                                          = undef,
+  $lacp_rate                                        = undef,
+  $primary                                          = undef,
+  $primary_reselect                                 = undef,
+  $xmit_hash_policy                                 = undef,
 ) {
 
   $raw = {
@@ -40,9 +39,11 @@ define network::bond::debian(
     'bond-xmit-hash-policy' => $xmit_hash_policy,
   }
 
+  if $mtu =~ String {
+    warning('$mtu should be an integer and will change in future releases')
+  }
   if $mtu {
     # https://bugs.launchpad.net/ubuntu/+source/ifupdown/+bug/1224007
-    validate_integer([$mtu], 65536, 42)
     $raw_post_up = { 'post-up' => "ip link set dev ${name} mtu ${mtu}", }
   } else {
     $raw_post_up = {}
