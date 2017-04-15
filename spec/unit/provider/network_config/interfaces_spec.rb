@@ -342,6 +342,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
     describe 'writing wrong vlan iface blocks' do
       let(:content) { described_class.format_file('', [eth1_4500_provider]) }
+
       it 'fails with wrong VLAN ID' do
         expect { content }.to raise_error(Puppet::Error, %r{Interface eth1.4500: missing vlan-raw-device or wrong VLAN ID in the iface name})
       end
@@ -349,6 +350,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
     describe 'writing wrong vlanNN iface blocks' do
       let(:content) { described_class.format_file('', [vlan10_provider]) }
+
       it 'fails with missing vlan-raw-device' do
         expect { content }.to raise_error(Puppet::Error, %r{Interface vlan10: missing vlan-raw-device or wrong VLAN ID in the iface name})
       end

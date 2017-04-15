@@ -165,7 +165,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
       end
     end
 
-    props[:method] = 'static' unless %w(bootp dhcp).include? props[:method]
+    props[:method] = 'static' unless %w[bootp dhcp].include? props[:method]
 
     props
   end
