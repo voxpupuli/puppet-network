@@ -84,6 +84,10 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   #   #   },
   #   # ]
   def self.parse_file(filename, contents)
+    # Remove/ignore functions when parsing
+    function_regex = /^(function )?[\w()]+\s*{.*}/m
+    contents.gsub!(function_regex, '')
+
     # Split up the file into lines
     lines = contents.split("\n")
     # Strip out all comments
