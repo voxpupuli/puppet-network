@@ -257,7 +257,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       described_class.stubs(:header).returns "# HEADER: stubbed header\n"
     end
 
-    let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) }
+    let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) } # rubocop:disable RSpec/ScatteredLet
 
     describe 'writing the auto section' do
       it 'allows at most one section' do
