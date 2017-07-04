@@ -1,232 +1,318 @@
-# Changelog
+# Change log
 
-## 2017-01-12 - Release 0.7.0
+All notable changes to this project will be documented in this file.
+Each new release typically also includes the latest modulesync defaults.
+These should not impact the functionality of the module.
 
-Last release with Puppet 3 support! The next release will be a breaking change!
-* Modulesync with latest Vox Pupuli defaults
-* Fix several markdown issues
-* Add missing badges
-* rubocop: fix RSpec/ImplicitExpect
-* rubocop: fix Style/MultilineIfModifier
-* Update fixtures links
-* manage spec_helper.rb with modulesync
-* Use Facter 3 if available for some facts
-* Fix `mock_with` in `.sync.yml`
-* Set min version_requirement for Puppet + bump deps
+## [v0.8.0](https://github.com/voxpupuli/puppet-network/tree/v0.8.0) (2017-07-04)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.7.0...v0.8.0)
 
-## 2016-09-27 - Release 0.6.1
+**Implemented enhancements:**
 
-  * Modulesync with latest Vox Pupuli defaults
-  * Make fact confinement ruby 1.8 compatible
-  * Fix name of filemapper dependency
+- BREAKING: replace validate\_integer with datatype & drop puppet3 support [\#220](https://github.com/voxpupuli/puppet-network/pull/220) ([bastelfreak](https://github.com/bastelfreak))
 
-## 2016-09-15 - Release 0.6.0
+**Fixed bugs:**
 
-  * Drop support for Ruby 1.8.7
-  * (#69) debian default route should now be named 'default', same as redhat (backwards incompatible change)
-  * Cleanup of README.md
-  * Soft fail on missing ipaddress gem
-  * Modulesync with latest Vox Pupuli defaults
-  * Don't write absent to redhat route files and test for this
-  * Routes: add ability to parse IPv6 addresses
-  * Add spec tests for redhat and debian ipv6 routes
-  * fix "absent" options
-  * Fix a typo in the HEADER of generated files
-  * Completely rewritten vlan logic
-  * Add a `network` class to install dependencies
-  * Fix `with_env` support, and trust in PATH being correct
-  * Support for MTU on bonds
+- Malformed debian interfaces file error when running puppet daemon [\#60](https://github.com/voxpupuli/puppet-network/issues/60)
 
-## 2016-03-14 - Release 0.5.0
+**Closed issues:**
 
-  * add bonding support through network::bond
-  * add camptocamp/kmod as a dependency
-  * add puppetlabs/stdlib as a dependency
-  * reorganize modulefile deps
-  * correct Debian package name to ifenslave-2.6
-  * (#29) add of refactored network_namespaced facts
-  * (#34) Update ifenslave package in specs
-  * added comments to express what the facts should provide
-  * Network module responds poorly to ifcfg-NNN.bak files
-  * (#36) Better validation around ifcfg script names
-  * switch to patched version of rspec-puppet
-  * fix file expansion problem with PE
-  * allow the network_config redhat provider to parse ifcfg-ethX.X format files
-  * add mtu parameter to network_config type
-  * convert vlan_range_regex to constant
-  * ensure that network_config redhat provider flushed files have a consistent file mode
-  * add link to debian package ifupdown-extra
-  * improve error messages for debian routes provider
-  * (#54) Allow ip address netmasks for network_route
-  * prevent restarting the network every time puppet runs b/c of default netmask
-  * omit lacp_rate for non 802.3ad mode
-  * remove network_public_ip fact
-  * indent sub-entries to the in interfaces
-  * do not print properies if they are absent
-  * add mode property to network_config
-  * add vlan mode property support
-  * use ifcfg script name in case DEVICE parameter is not specified on redhat network_config provider
-  * set default iface mode to :raw on Debian
-  * generate Debian auto/allow-hotplug only if not empty
-  * (#104) fix a typo in the redhat provider for network_route
-  * (#116) fix a vlan matching bug
-  * allow an empty hash for options
-  * ignore new Debian Jessie's features
-  * (#115) guard againt :absent provider.options in redhat
-  * (#143) make :absent attributes not get written to redhat files
-  * fix network facts on gentoo
+- Package\[ipaddress\]: Provider gem is not functional on this host [\#215](https://github.com/voxpupuli/puppet-network/issues/215)
+- puppet-boolean module not available anymore via puppetforge [\#213](https://github.com/voxpupuli/puppet-network/issues/213)
 
-Thanks for their contributions to this release go to:
+**Merged pull requests:**
 
-  * Adrien Thebo
-  * Ahmed Elsabbahy
-  * Daniele Sluijters
-  * David Schmitt
-  * Davide Ferrari
-  * Derek Higgins
-  * Drew Blessing
-  * Eric Sakowski
-  * Ewoud Kohl van Wijngaarden
-  * Felix Frank
-  * Felix Gilcher
-  * Igor Galić
-  * Jasper Lievisse Adriaanse
-  * Jon Skarpeteig
-  * Jordi Clariana
-  * Joseph Yaworski
-  * Joshua Hoblitt
-  * Julian
-  * Nan Liu
-  * Robin H. Johnson
-  * Romanos Skiadas
-  * Spencer Krum
-  * Stefano Zilli
-  * Steffen Zieger
-  * Vlastimil Holer
-  * Wolf Noble
+- Fix github license detection [\#226](https://github.com/voxpupuli/puppet-network/pull/226) ([alexjfisher](https://github.com/alexjfisher))
+- update gem provider for 4.x [\#216](https://github.com/voxpupuli/puppet-network/pull/216) ([igalic](https://github.com/igalic))
 
-Special thanks to Adrien Thebo for donating this module to the Puppet Community.
+## [v0.7.0](https://github.com/voxpupuli/puppet-network/tree/v0.7.0) (2017-01-12)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.6.1...v0.7.0)
 
-2013-05-21
+**Merged pull requests:**
 
-This is a backwards compatible feature and bugfix release
+- release 0.7.0 [\#211](https://github.com/voxpupuli/puppet-network/pull/211) ([bastelfreak](https://github.com/bastelfreak))
+- Set min version\_requirement for Puppet + bump deps [\#208](https://github.com/voxpupuli/puppet-network/pull/208) ([juniorsysadmin](https://github.com/juniorsysadmin))
+- Fix `mock\_with` in `.sync.yml` [\#202](https://github.com/voxpupuli/puppet-network/pull/202) ([alexjfisher](https://github.com/alexjfisher))
+- Use Facter 3 if available for some facts [\#200](https://github.com/voxpupuli/puppet-network/pull/200) ([rski](https://github.com/rski))
+- rubocop: fix RSpec/ImplicitExpect [\#196](https://github.com/voxpupuli/puppet-network/pull/196) ([alexjfisher](https://github.com/alexjfisher))
+- Add missing badges [\#195](https://github.com/voxpupuli/puppet-network/pull/195) ([dhoppe](https://github.com/dhoppe))
 
-  * New defined type: network::bond, with Debian and Redhat backends
-  * New facts for current network configuration:
-    * network_public_ip
-    * network_nexthop_ip
-    * network_primary_interface
-    * network_primary_ip
-  * (network-#36) More strict selection of redhat network interface scripts
+## [v0.6.1](https://github.com/voxpupuli/puppet-network/tree/v0.6.1) (2016-09-27)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.6.0...v0.6.1)
 
-Thanks to Eric Sakowski, Wolf Noble, Vlastimil Holer, and Dan Fruehauf for
-their contributions to this release.
+**Merged pull requests:**
 
-v0.4.1
------
+- Fix name of filemapper dependency. [\#188](https://github.com/voxpupuli/puppet-network/pull/188) ([johanek](https://github.com/johanek))
+- Make fact confinement ruby 1.8 compatible [\#187](https://github.com/voxpupuli/puppet-network/pull/187) ([alexjfisher](https://github.com/alexjfisher))
 
-2013-08-17
+## [v0.6.0](https://github.com/voxpupuli/puppet-network/tree/v0.6.0) (2016-09-16)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.5.0...v0.6.0)
 
-This is a backwards compatible bugfix release
+**Implemented enhancements:**
 
-  * Update Modulefile dependency for adrien/boolean to >= 1.0.0
+- ifupdown-extras required on Debian, but not installed [\#45](https://github.com/voxpupuli/puppet-network/issues/45)
+- Deprecate/Remove :family property, add :ip6address property, add :ipv6 and :ipv4 features [\#16](https://github.com/voxpupuli/puppet-network/issues/16)
+- Add a `network` class which installs the packages and gems required by [\#168](https://github.com/voxpupuli/puppet-network/pull/168) ([rski](https://github.com/rski))
 
-v0.4.0
------
+**Fixed bugs:**
 
-2013-03-22
+- Multiple interfaces with different families not supported [\#9](https://github.com/voxpupuli/puppet-network/issues/9)
+- The interfaces provider does not support mapping sections [\#3](https://github.com/voxpupuli/puppet-network/issues/3)
 
-This is a backwards compatible feature release
+**Closed issues:**
 
-  * New provider for network_route: redhat
-  * Module built with sane umask (0022); permissions should just work
+- Allow setting every possible option without using the options hash [\#166](https://github.com/voxpupuli/puppet-network/issues/166)
+- undefined method `with\_env' for Facter::Util::Resolution:Class [\#162](https://github.com/voxpupuli/puppet-network/issues/162)
+- innitial creation of debian routes sets options as `absent` [\#160](https://github.com/voxpupuli/puppet-network/issues/160)
+- support for IPv6 routes [\#158](https://github.com/voxpupuli/puppet-network/issues/158)
+- Clear-up documentation for then network plugin [\#154](https://github.com/voxpupuli/puppet-network/issues/154)
+- Not clear where the ipaddress gem should be installed [\#152](https://github.com/voxpupuli/puppet-network/issues/152)
+- RedHat routes provider puts 'absent' in the files [\#149](https://github.com/voxpupuli/puppet-network/issues/149)
+- Git information is included in tar.gz [\#124](https://github.com/voxpupuli/puppet-network/issues/124)
+- network \_route error on oralinux\(redhat\) [\#104](https://github.com/voxpupuli/puppet-network/issues/104)
+- make a fresh release of this module [\#102](https://github.com/voxpupuli/puppet-network/issues/102)
+- cannot add ipv6 address on debian [\#92](https://github.com/voxpupuli/puppet-network/issues/92)
+- /etc/network/routes updated on every run [\#69](https://github.com/voxpupuli/puppet-network/issues/69)
+- Reconfigure option does not work [\#68](https://github.com/voxpupuli/puppet-network/issues/68)
+- Readme.md: network\_route requires 'network' parameter [\#53](https://github.com/voxpupuli/puppet-network/issues/53)
+- Add validation for type values [\#7](https://github.com/voxpupuli/puppet-network/issues/7)
 
-Thanks to Eric Sakowski for implementing the redhat network_route provider
+**Merged pull requests:**
 
-v0.3.0
------
+- replace explicit symlinks with an autogenerated ones [\#183](https://github.com/voxpupuli/puppet-network/pull/183) ([igalic](https://github.com/igalic))
+- Support for MTU on bonds. [\#182](https://github.com/voxpupuli/puppet-network/pull/182) ([vholer](https://github.com/vholer))
+- Unfudge `writes 5 fields` test [\#178](https://github.com/voxpupuli/puppet-network/pull/178) ([alexjfisher](https://github.com/alexjfisher))
+- Remove with\_env, and trust in PATH being correct [\#177](https://github.com/voxpupuli/puppet-network/pull/177) ([igalic](https://github.com/igalic))
+- Fix a typo in the HEADER of generated files [\#170](https://github.com/voxpupuli/puppet-network/pull/170) ([roman-mueller](https://github.com/roman-mueller))
+- Fix issue 69, backwards incompatible change [\#165](https://github.com/voxpupuli/puppet-network/pull/165) ([rski](https://github.com/rski))
+- fix "absent" options [\#161](https://github.com/voxpupuli/puppet-network/pull/161) ([igalic](https://github.com/igalic))
+- routes: add ability to parse IPv6 addresses [\#159](https://github.com/voxpupuli/puppet-network/pull/159) ([igalic](https://github.com/igalic))
+- Don't write absent to redhat route files and test for this [\#157](https://github.com/voxpupuli/puppet-network/pull/157) ([rski](https://github.com/rski))
+- soft fail on missing ipaddress gem [\#155](https://github.com/voxpupuli/puppet-network/pull/155) ([fraenki](https://github.com/fraenki))
+- Update README to better reflect the current module state [\#150](https://github.com/voxpupuli/puppet-network/pull/150) ([rski](https://github.com/rski))
 
-2013-01-23
+## [v0.5.0](https://github.com/voxpupuli/puppet-network/tree/v0.5.0) (2016-03-14)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.2...v0.5.0)
 
-This is a backwards compatible bugfix and maintenance release.
+**Closed issues:**
 
-  * New type: network_route
-  * Debian provider for network_route
-  * Better behavior of boolean properties in network_config
-  * (network-#18) Support multiple options for debian network_config
+- Malformed redhat files are generated [\#142](https://github.com/voxpupuli/puppet-network/issues/142)
+- make module rubocop clean [\#141](https://github.com/voxpupuli/puppet-network/issues/141)
+- provider on CentOS 6 [\#135](https://github.com/voxpupuli/puppet-network/issues/135)
+- require 'ipaddress' breaks puppet runs [\#129](https://github.com/voxpupuli/puppet-network/issues/129)
+- ipaddress gem requirement missing from readme [\#128](https://github.com/voxpupuli/puppet-network/issues/128)
+- Travis CI lockup [\#127](https://github.com/voxpupuli/puppet-network/issues/127)
+- vlan regex misses MANY 1000-3000, and vlans ending in \[6-9\] above 4000. [\#116](https://github.com/voxpupuli/puppet-network/issues/116)
+- Failing to create dummy0 device on RHEL6 [\#115](https://github.com/voxpupuli/puppet-network/issues/115)
+- Interface config created but device is not up [\#86](https://github.com/voxpupuli/puppet-network/issues/86)
+- Interfaces are "created" every puppet run [\#42](https://github.com/voxpupuli/puppet-network/issues/42)
 
-Build status is now available at https://travis-ci.org/adrienthebo/puppet-network
+**Merged pull requests:**
 
-Thanks:
+- Update metadata.json, CHANGELOG for the 0.5.0 release [\#148](https://github.com/voxpupuli/puppet-network/pull/148) ([rski](https://github.com/rski))
+- rubocop fixes, split a really long line [\#144](https://github.com/voxpupuli/puppet-network/pull/144) ([rski](https://github.com/rski))
+- Make :absent attributes not get written to redhat files [\#143](https://github.com/voxpupuli/puppet-network/pull/143) ([rski](https://github.com/rski))
+- Guard against :absent provider.options in redhat \(issue 115\) [\#140](https://github.com/voxpupuli/puppet-network/pull/140) ([rski](https://github.com/rski))
+- Ignore new Debian Jessie's features [\#133](https://github.com/voxpupuli/puppet-network/pull/133) ([vide](https://github.com/vide))
+- Mention the ipaddress gem requirement in the docs [\#130](https://github.com/voxpupuli/puppet-network/pull/130) ([rski](https://github.com/rski))
+- Fix network facts on Gentoo [\#126](https://github.com/voxpupuli/puppet-network/pull/126) ([saz](https://github.com/saz))
+- Allow an empty hash for options [\#123](https://github.com/voxpupuli/puppet-network/pull/123) ([derekhiggins](https://github.com/derekhiggins))
+- updated version for module dependency camptocamp/kmod [\#122](https://github.com/voxpupuli/puppet-network/pull/122) ([dustyhorizon](https://github.com/dustyhorizon))
+- Setup extra files for travis releases [\#120](https://github.com/voxpupuli/puppet-network/pull/120) ([igalic](https://github.com/igalic))
+- travis fixes: introduce augeasversion fact [\#119](https://github.com/voxpupuli/puppet-network/pull/119) ([igalic](https://github.com/igalic))
+- "fix" travis tests by installing the latest version of augeas [\#118](https://github.com/voxpupuli/puppet-network/pull/118) ([igalic](https://github.com/igalic))
+- Fix vlan match bug per https://github.com/puppet-community/puppet-net… [\#117](https://github.com/voxpupuli/puppet-network/pull/117) ([robbat2](https://github.com/robbat2))
+- Release version 0.5.x in the puppet-community namespace [\#106](https://github.com/voxpupuli/puppet-network/pull/106) ([ffrank](https://github.com/ffrank))
 
-  * Patrick Otto for the network_route type and Debian provider
-  * Robert Starmer for testing, debugging, and documentation
-  * Wolf Noble for insight and encouragement all along the way
+## [0.4.2](https://github.com/voxpupuli/puppet-network/tree/0.4.2) (2015-06-18)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.1...0.4.2)
 
-v0.2.0
------
+**Closed issues:**
 
-2012-12-30
+- Push a new version to the forge [\#103](https://github.com/voxpupuli/puppet-network/issues/103)
+- Add support for `--tcp-mss` option [\#100](https://github.com/voxpupuli/puppet-network/issues/100)
+- network\_config redhat provider fails in case DEVICE parameter is not present in ifcfg-\* file [\#89](https://github.com/voxpupuli/puppet-network/issues/89)
+- Provider not working on Ubuntu 14.04 LTS ? [\#88](https://github.com/voxpupuli/puppet-network/issues/88)
+- no support for pointopoint and gateway [\#83](https://github.com/voxpupuli/puppet-network/issues/83)
+- Vagrant + Puppet [\#80](https://github.com/voxpupuli/puppet-network/issues/80)
+- It runs but doesn't do anything on the agent [\#79](https://github.com/voxpupuli/puppet-network/issues/79)
+- create option to overwrite /etc/network/interfaces explicitly  [\#78](https://github.com/voxpupuli/puppet-network/issues/78)
+- Remove dependencies [\#71](https://github.com/voxpupuli/puppet-network/issues/71)
+- Could not autoload network\_config [\#70](https://github.com/voxpupuli/puppet-network/issues/70)
+- setting the default route on Debian [\#61](https://github.com/voxpupuli/puppet-network/issues/61)
+- default network example does not work on RHEL [\#58](https://github.com/voxpupuli/puppet-network/issues/58)
+- network\_\* facts don't work on OpenVZ [\#43](https://github.com/voxpupuli/puppet-network/issues/43)
+- bond config in CentOS 6 work with this [\#32](https://github.com/voxpupuli/puppet-network/issues/32)
+- rspec failures on RHEL6 [\#30](https://github.com/voxpupuli/puppet-network/issues/30)
 
-This is a backwards compatible bugfix and maintenance release.
+**Merged pull requests:**
 
-  * (network-#15) Add hotpluggable feature for redhat
-  * (network-#13) normalize boolean values
-  * (network-#13) patch inet flapping behavior in redhat
-  * (network-#1) Add :reconfigurable parameter
-  * (network-#2) Add :provider_options feature
+- Contain instead of deprecated include [\#113](https://github.com/voxpupuli/puppet-network/pull/113) ([JimPanic](https://github.com/JimPanic))
+- Fix test runs by using strings as cases for $::osfamily [\#112](https://github.com/voxpupuli/puppet-network/pull/112) ([JimPanic](https://github.com/JimPanic))
+- Do not try to build Puppet 4 with Ruby 1.8.7 [\#110](https://github.com/voxpupuli/puppet-network/pull/110) ([JimPanic](https://github.com/JimPanic))
+- Actually use the env variable set in .travis.yml [\#109](https://github.com/voxpupuli/puppet-network/pull/109) ([JimPanic](https://github.com/JimPanic))
+- Let travis invoke tests with the proper LOAD\_PATH and Puppet version set. [\#107](https://github.com/voxpupuli/puppet-network/pull/107) ([JimPanic](https://github.com/JimPanic))
+- deprecate adrien-network [\#105](https://github.com/voxpupuli/puppet-network/pull/105) ([ffrank](https://github.com/ffrank))
+- Bond improvements [\#95](https://github.com/voxpupuli/puppet-network/pull/95) ([vholer](https://github.com/vholer))
+- Set mode "raw" to existing non-VLAN interfaces on Debian [\#94](https://github.com/voxpupuli/puppet-network/pull/94) ([vholer](https://github.com/vholer))
+- On Debian write only non-empty auto/allow-hotplug interface parameters [\#93](https://github.com/voxpupuli/puppet-network/pull/93) ([vholer](https://github.com/vholer))
+- Update links to travis [\#91](https://github.com/voxpupuli/puppet-network/pull/91) ([ekohl](https://github.com/ekohl))
+- Use ifcfg script name in case DEVICE parameter is not specified on redhat network\_config provider [\#90](https://github.com/voxpupuli/puppet-network/pull/90) ([stzilli](https://github.com/stzilli))
+- Fix: do not print properies if they are absent. [\#84](https://github.com/voxpupuli/puppet-network/pull/84) ([jordiclariana](https://github.com/jordiclariana))
+- indent sub-entries to the in interfaces [\#82](https://github.com/voxpupuli/puppet-network/pull/82) ([igalic](https://github.com/igalic))
+- remove network\_public\_ip fact [\#81](https://github.com/voxpupuli/puppet-network/pull/81) ([igalic](https://github.com/igalic))
+- RHEL7/ CentOS7: adapt ifcfg detection to new device naming scheme [\#76](https://github.com/voxpupuli/puppet-network/pull/76) ([Xylakant](https://github.com/Xylakant))
+- Add additional option support [\#74](https://github.com/voxpupuli/puppet-network/pull/74) ([dblessing](https://github.com/dblessing))
+- Fixed failing network::bond test [\#72](https://github.com/voxpupuli/puppet-network/pull/72) ([aelsabbahy](https://github.com/aelsabbahy))
+- Ommit lacp\_rate for non 802.3ad mode [\#67](https://github.com/voxpupuli/puppet-network/pull/67) ([Yuav](https://github.com/Yuav))
+- Two fixes for RedHat: [\#57](https://github.com/voxpupuli/puppet-network/pull/57) ([jasperla](https://github.com/jasperla))
+- Interface mode property [\#56](https://github.com/voxpupuli/puppet-network/pull/56) ([jhoblitt](https://github.com/jhoblitt))
+- Fix for issue \#43 [\#52](https://github.com/voxpupuli/puppet-network/pull/52) ([wolfspyre](https://github.com/wolfspyre))
 
-v0.1.1
------
+## [0.4.1](https://github.com/voxpupuli/puppet-network/tree/0.4.1) (2013-08-18)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.5.0-rc1...0.4.1)
 
-2012-12-06
+**Closed issues:**
 
-This is a backwards compatible metadata fix and maintenance update.
+- Skip munge in full netmask addresses [\#54](https://github.com/voxpupuli/puppet-network/issues/54)
+- Unable to find property, Puppet 3.2.3 [\#50](https://github.com/voxpupuli/puppet-network/issues/50)
+- Support ONPARENT option for aliases [\#41](https://github.com/voxpupuli/puppet-network/issues/41)
+- No longer finding interface config scripts in CentOS [\#39](https://github.com/voxpupuli/puppet-network/issues/39)
+- Bogus error - Could not evaluate: Unable to support multiple interfaces in a single file [\#38](https://github.com/voxpupuli/puppet-network/issues/38)
 
-  * (network-#14) Fix specs for Ruby 1.9.3
-  * Add Gemfile
-  * (maint) DRY up specs
-  * Restrict filemapper dependency to 1.0.x. 1.1.x will go into RC shortly
-  and the puppet module tool will install prereleases so for the sake of
-  safety I'm restricting the dependency here.
+**Merged pull requests:**
 
-v0.1.0
------
+- added link to debian package ifupdown-extra [\#51](https://github.com/voxpupuli/puppet-network/pull/51) ([c33s](https://github.com/c33s))
+- ensure that network\_config redhat provider flushed files have a consiste... [\#49](https://github.com/voxpupuli/puppet-network/pull/49) ([jhoblitt](https://github.com/jhoblitt))
+- Redhat provider tagged interfaces [\#47](https://github.com/voxpupuli/puppet-network/pull/47) ([jhoblitt](https://github.com/jhoblitt))
+- Interface mtu property [\#46](https://github.com/voxpupuli/puppet-network/pull/46) ([jhoblitt](https://github.com/jhoblitt))
+- Fix file expansion problem with PE. [\#40](https://github.com/voxpupuli/puppet-network/pull/40) ([nanliu](https://github.com/nanliu))
 
-2012-12-04
+## [0.5.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.5.0-rc1) (2013-05-22)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.0...0.5.0-rc1)
 
-This is a backwards incompatible bugfix and feature release. It might work
-work with un-updated code but no guarantees are made.
+**Fixed bugs:**
 
-  * Added a `hotplug` feature to the network_config type
-  * Implemented the `hotplug` feature for osfamily => Debian
-  * Added an alias from none to static for redhat users
+- umask for built module is broken [\#24](https://github.com/voxpupuli/puppet-network/issues/24)
 
-v0.0.4
------
+**Closed issues:**
 
-This is a backwards compatible maintenance release.
+- Network module responds poorly to ifcfg-NNN.bak files [\#36](https://github.com/voxpupuli/puppet-network/issues/36)
+- spec fixture files contain illegal path characters on Windows [\#33](https://github.com/voxpupuli/puppet-network/issues/33)
+- Facts for default interface [\#29](https://github.com/voxpupuli/puppet-network/issues/29)
+- Request for comments: static routing configuration [\#20](https://github.com/voxpupuli/puppet-network/issues/20)
+- No ipip tunnel support? Nor no IP alias support? [\#19](https://github.com/voxpupuli/puppet-network/issues/19)
 
-  * Munge onboot and method parameters for redhat provider.
-  * Automatically quote and unquote redhat values as needed
+**Merged pull requests:**
 
-v0.0.3
------
+- Facts for issue 29 [\#35](https://github.com/voxpupuli/puppet-network/pull/35) ([wolfspyre](https://github.com/wolfspyre))
 
-This is a backwards compatible maintenance release.
+## [0.4.0](https://github.com/voxpupuli/puppet-network/tree/0.4.0) (2013-03-23)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.3.0...0.4.0)
 
-  * Use non-greedy regex when matching redhat keys
-  * Update redhat provider to respect current API implementation of filemapper
-  * Add test coverage to redhat provider
+**Closed issues:**
 
-v0.0.2
------
+- debian interfaces parser fails if two spaces are between 'iface' and the device [\#26](https://github.com/voxpupuli/puppet-network/issues/26)
+- Spec failures on redhat [\#25](https://github.com/voxpupuli/puppet-network/issues/25)
 
-This is a backwards compatible maintenance release.
+## [0.3.0](https://github.com/voxpupuli/puppet-network/tree/0.3.0) (2013-01-30)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.3.0-rc1...0.3.0)
 
-  * Remove bugs from interfaces provider stemming from old isomorphism behavior.
+## [0.3.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.3.0-rc1) (2013-01-24)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.2.0...0.3.0-rc1)
 
-v0.0.1
------
+**Closed issues:**
 
-Initial release.
+- auto line is removed with reimplement\_debian\_parsing [\#22](https://github.com/voxpupuli/puppet-network/issues/22)
+- Multiple 'up' lines in options hash [\#18](https://github.com/voxpupuli/puppet-network/issues/18)
+
+**Merged pull requests:**
+
+- Add support for non-volatile network routes on Debian [\#23](https://github.com/voxpupuli/puppet-network/pull/23) ([codec](https://github.com/codec))
+- Add dependency reference in README to boolean mixin [\#21](https://github.com/voxpupuli/puppet-network/pull/21) ([robertstarmer](https://github.com/robertstarmer))
+
+## [0.2.0](https://github.com/voxpupuli/puppet-network/tree/0.2.0) (2013-01-06)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.2.0-rc1...0.2.0)
+
+**Implemented enhancements:**
+
+- The network\_config type should have a :provider\_options feature [\#2](https://github.com/voxpupuli/puppet-network/issues/2)
+- The network\_config type should have a :reconfigurable feature [\#1](https://github.com/voxpupuli/puppet-network/issues/1)
+
+**Closed issues:**
+
+- Redhat provider should be hotpluggable [\#15](https://github.com/voxpupuli/puppet-network/issues/15)
+
+## [0.2.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.2.0-rc1) (2012-12-30)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.1...0.2.0-rc1)
+
+**Fixed bugs:**
+
+- While configuration checked interface incorrectly marked as changed [\#13](https://github.com/voxpupuli/puppet-network/issues/13)
+
+**Closed issues:**
+
+- Invalid value for method =\> loopback [\#10](https://github.com/voxpupuli/puppet-network/issues/10)
+
+## [0.1.1](https://github.com/voxpupuli/puppet-network/tree/0.1.1) (2012-12-07)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.0...0.1.1)
+
+**Fixed bugs:**
+
+- Spec failures on ruby 1.9.3 [\#14](https://github.com/voxpupuli/puppet-network/issues/14)
+
+## [0.1.0](https://github.com/voxpupuli/puppet-network/tree/0.1.0) (2012-12-04)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.0-rc1...0.1.0)
+
+**Fixed bugs:**
+
+- allow-hotplug section mangles interfaces file [\#11](https://github.com/voxpupuli/puppet-network/issues/11)
+
+**Closed issues:**
+
+- Support hotplug configurations [\#12](https://github.com/voxpupuli/puppet-network/issues/12)
+
+## [0.1.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.1.0-rc1) (2012-11-27)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.4...0.1.0-rc1)
+
+## [0.0.4](https://github.com/voxpupuli/puppet-network/tree/0.0.4) (2012-11-01)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.4rc1...0.0.4)
+
+**Fixed bugs:**
+
+- The redhat provider has poor support for options with strings [\#5](https://github.com/voxpupuli/puppet-network/issues/5)
+
+**Closed issues:**
+
+- network\_config properties should be validated [\#8](https://github.com/voxpupuli/puppet-network/issues/8)
+- The redhat provider needs config \<-\> resource munging [\#6](https://github.com/voxpupuli/puppet-network/issues/6)
+
+## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
+
+## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
+
+## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
+
+## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.2...0.0.3rc1)
+
+## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
+
+**Fixed bugs:**
+
+- interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
+
+## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
+
+## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
+
+## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
+
+
+\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
