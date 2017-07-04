@@ -9,7 +9,7 @@ describe 'network::bond', type: :define do
       'method'           => 'static',
       'ipaddress'        => '172.18.1.2',
       'netmask'          => '255.255.128.0',
-      'slaves'           => %w(eth0 eth1),
+      'slaves'           => %w[eth0 eth1],
       'mtu'              => 1550,
       'options'          => { 'NM_CONTROLLED' => 'yes' },
       'slave_options'    => { 'NM_CONTROLLED' => 'no' },

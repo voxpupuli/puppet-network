@@ -26,11 +26,11 @@ describe Puppet::Type.type(:network_config) do
   end
 
   describe 'when validating the attribute' do
-    describe :name do
+    describe :name do # rubocop:disable RSpec/DescribeSymbol
       it { expect(Puppet::Type.type(:network_config).attrtype(:name)).to eq(:param) }
     end
 
-    describe :reconfigure do
+    describe :reconfigure do # rubocop:disable RSpec/DescribeSymbol
       it { expect(Puppet::Type.type(:network_config).attrtype(:reconfigure)).to eq(:param) }
 
       it 'requires the :reconfigurable parameter' do

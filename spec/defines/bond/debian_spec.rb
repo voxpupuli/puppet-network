@@ -10,7 +10,7 @@ describe 'network::bond::debian', type: :define do
         'method'    => 'static',
         'ipaddress' => '172.18.1.2',
         'netmask'   => '255.255.128.0',
-        'slaves'    => %w(eth0 eth1),
+        'slaves'    => %w[eth0 eth1],
 
         'mode'             => 'active-backup',
         'miimon'           => '100',
@@ -23,7 +23,7 @@ describe 'network::bond::debian', type: :define do
       }
     end
 
-    %w(eth0 eth1).each do |slave|
+    %w[eth0 eth1].each do |slave|
       it "should add a network_config resource for #{slave}" do
         is_expected.to contain_network_config(slave).with_ensure('absent')
       end
@@ -55,7 +55,7 @@ describe 'network::bond::debian', type: :define do
         'method'           => 'static',
         'ipaddress'        => '10.20.2.1',
         'netmask'          => '255.255.255.192',
-        'slaves'           => %w(eth0 eth1 eth2),
+        'slaves'           => %w[eth0 eth1 eth2],
         'mtu'              => 1550,
         'options'          => { 'bond-future-option' => 'yes' },
         'slave_options'    => { 'slave-future-option' => 'no' },
@@ -69,7 +69,8 @@ describe 'network::bond::debian', type: :define do
         'xmit_hash_policy' => 'layer3+4'
       }
     end
-    %w(eth0 eth1 eth2).each do |slave|
+
+    %w[eth0 eth1 eth2].each do |slave|
       it "should add a network_config resource for #{slave}" do
         is_expected.to contain_network_config(slave).with_ensure('absent')
       end

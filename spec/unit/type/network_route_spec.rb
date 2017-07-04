@@ -12,7 +12,7 @@ describe Puppet::Type.type(:network_route) do
   end
 
   describe 'when validating the attribute' do
-    describe :name do
+    describe :name do # rubocop:disable RSpec/DescribeSymbol
       it { expect(Puppet::Type.type(:network_route).attrtype(:name)).to eq(:param) }
     end
 
