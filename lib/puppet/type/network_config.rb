@@ -87,8 +87,14 @@ Puppet::Type.newtype(:network_config) do
     validate do |value|
       # reject floating point and negative integers
       # XXX this lets 1500.0 pass
-      unless value =~ %r{^\d+$}
-        raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
+      if value.is_a? Numeric
+        unless value.integer?
+          raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
+        end
+      else
+        unless value =~ %r{^\d+$}
+          raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
+        end
       end
 
       # Intel 82598 & 82599 chips support MTUs up to 16110; is there any
