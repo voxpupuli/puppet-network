@@ -17,7 +17,7 @@ Puppet::Type.newtype(:network_route) do
     isrequired
     desc 'The target network address'
     validate do |value|
-      unless 'default' == value
+      unless value == 'default'
         a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for network: #{value}") unless a
       end
