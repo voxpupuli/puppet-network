@@ -1,5 +1,3 @@
-#!/usr/bin/env rspec
-
 require 'spec_helper'
 
 describe 'network_primary_interface' do
