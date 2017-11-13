@@ -1,10 +1,20 @@
-# Change log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
-These should not impact the functionality of the module.
+These should not affect the functionality of the module.
+
+## [v0.9.0](https://github.com/voxpupuli/puppet-network/tree/v0.9.0) (2017-11-13)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.8.0...v0.9.0)
+
+**Merged pull requests:**
+
+- Allow Type network\_config to take a Numeric value for the MTU parameter [\#229](https://github.com/voxpupuli/puppet-network/pull/229) ([lukebigum](https://github.com/lukebigum))
+- prepare release: 0.8.0 [\#228](https://github.com/voxpupuli/puppet-network/pull/228) ([igalic](https://github.com/igalic))
 
 ## [v0.8.0](https://github.com/voxpupuli/puppet-network/tree/v0.8.0) (2017-07-04)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.7.0...v0.8.0)
 
 **Implemented enhancements:**
@@ -24,13 +34,14 @@ These should not impact the functionality of the module.
 
 - Fix github license detection [\#226](https://github.com/voxpupuli/puppet-network/pull/226) ([alexjfisher](https://github.com/alexjfisher))
 - update gem provider for 4.x [\#216](https://github.com/voxpupuli/puppet-network/pull/216) ([igalic](https://github.com/igalic))
+- release 0.7.0 [\#211](https://github.com/voxpupuli/puppet-network/pull/211) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v0.7.0](https://github.com/voxpupuli/puppet-network/tree/v0.7.0) (2017-01-12)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.6.1...v0.7.0)
 
 **Merged pull requests:**
 
-- release 0.7.0 [\#211](https://github.com/voxpupuli/puppet-network/pull/211) ([bastelfreak](https://github.com/bastelfreak))
 - Set min version\_requirement for Puppet + bump deps [\#208](https://github.com/voxpupuli/puppet-network/pull/208) ([juniorsysadmin](https://github.com/juniorsysadmin))
 - Fix `mock\_with` in `.sync.yml` [\#202](https://github.com/voxpupuli/puppet-network/pull/202) ([alexjfisher](https://github.com/alexjfisher))
 - Use Facter 3 if available for some facts [\#200](https://github.com/voxpupuli/puppet-network/pull/200) ([rski](https://github.com/rski))
@@ -38,6 +49,7 @@ These should not impact the functionality of the module.
 - Add missing badges [\#195](https://github.com/voxpupuli/puppet-network/pull/195) ([dhoppe](https://github.com/dhoppe))
 
 ## [v0.6.1](https://github.com/voxpupuli/puppet-network/tree/v0.6.1) (2016-09-27)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.6.0...v0.6.1)
 
 **Merged pull requests:**
@@ -46,6 +58,7 @@ These should not impact the functionality of the module.
 - Make fact confinement ruby 1.8 compatible [\#187](https://github.com/voxpupuli/puppet-network/pull/187) ([alexjfisher](https://github.com/alexjfisher))
 
 ## [v0.6.0](https://github.com/voxpupuli/puppet-network/tree/v0.6.0) (2016-09-16)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.5.0...v0.6.0)
 
 **Implemented enhancements:**
@@ -92,6 +105,7 @@ These should not impact the functionality of the module.
 - Update README to better reflect the current module state [\#150](https://github.com/voxpupuli/puppet-network/pull/150) ([rski](https://github.com/rski))
 
 ## [v0.5.0](https://github.com/voxpupuli/puppet-network/tree/v0.5.0) (2016-03-14)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.2...v0.5.0)
 
 **Closed issues:**
@@ -125,6 +139,7 @@ These should not impact the functionality of the module.
 - Release version 0.5.x in the puppet-community namespace [\#106](https://github.com/voxpupuli/puppet-network/pull/106) ([ffrank](https://github.com/ffrank))
 
 ## [0.4.2](https://github.com/voxpupuli/puppet-network/tree/0.4.2) (2015-06-18)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.1...0.4.2)
 
 **Closed issues:**
@@ -170,6 +185,7 @@ These should not impact the functionality of the module.
 - Fix for issue \#43 [\#52](https://github.com/voxpupuli/puppet-network/pull/52) ([wolfspyre](https://github.com/wolfspyre))
 
 ## [0.4.1](https://github.com/voxpupuli/puppet-network/tree/0.4.1) (2013-08-18)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.5.0-rc1...0.4.1)
 
 **Closed issues:**
@@ -189,6 +205,7 @@ These should not impact the functionality of the module.
 - Fix file expansion problem with PE. [\#40](https://github.com/voxpupuli/puppet-network/pull/40) ([nanliu](https://github.com/nanliu))
 
 ## [0.5.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.5.0-rc1) (2013-05-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.4.0...0.5.0-rc1)
 
 **Fixed bugs:**
@@ -208,6 +225,7 @@ These should not impact the functionality of the module.
 - Facts for issue 29 [\#35](https://github.com/voxpupuli/puppet-network/pull/35) ([wolfspyre](https://github.com/wolfspyre))
 
 ## [0.4.0](https://github.com/voxpupuli/puppet-network/tree/0.4.0) (2013-03-23)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.3.0...0.4.0)
 
 **Closed issues:**
@@ -216,9 +234,11 @@ These should not impact the functionality of the module.
 - Spec failures on redhat [\#25](https://github.com/voxpupuli/puppet-network/issues/25)
 
 ## [0.3.0](https://github.com/voxpupuli/puppet-network/tree/0.3.0) (2013-01-30)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.3.0-rc1...0.3.0)
 
 ## [0.3.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.3.0-rc1) (2013-01-24)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.2.0...0.3.0-rc1)
 
 **Closed issues:**
@@ -232,6 +252,7 @@ These should not impact the functionality of the module.
 - Add dependency reference in README to boolean mixin [\#21](https://github.com/voxpupuli/puppet-network/pull/21) ([robertstarmer](https://github.com/robertstarmer))
 
 ## [0.2.0](https://github.com/voxpupuli/puppet-network/tree/0.2.0) (2013-01-06)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.2.0-rc1...0.2.0)
 
 **Implemented enhancements:**
@@ -244,6 +265,7 @@ These should not impact the functionality of the module.
 - Redhat provider should be hotpluggable [\#15](https://github.com/voxpupuli/puppet-network/issues/15)
 
 ## [0.2.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.2.0-rc1) (2012-12-30)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.1...0.2.0-rc1)
 
 **Fixed bugs:**
@@ -255,6 +277,7 @@ These should not impact the functionality of the module.
 - Invalid value for method =\> loopback [\#10](https://github.com/voxpupuli/puppet-network/issues/10)
 
 ## [0.1.1](https://github.com/voxpupuli/puppet-network/tree/0.1.1) (2012-12-07)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.0...0.1.1)
 
 **Fixed bugs:**
@@ -262,6 +285,7 @@ These should not impact the functionality of the module.
 - Spec failures on ruby 1.9.3 [\#14](https://github.com/voxpupuli/puppet-network/issues/14)
 
 ## [0.1.0](https://github.com/voxpupuli/puppet-network/tree/0.1.0) (2012-12-04)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.1.0-rc1...0.1.0)
 
 **Fixed bugs:**
@@ -273,9 +297,11 @@ These should not impact the functionality of the module.
 - Support hotplug configurations [\#12](https://github.com/voxpupuli/puppet-network/issues/12)
 
 ## [0.1.0-rc1](https://github.com/voxpupuli/puppet-network/tree/0.1.0-rc1) (2012-11-27)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.4...0.1.0-rc1)
 
 ## [0.0.4](https://github.com/voxpupuli/puppet-network/tree/0.0.4) (2012-11-01)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.4rc1...0.0.4)
 
 **Fixed bugs:**
@@ -288,18 +314,23 @@ These should not impact the functionality of the module.
 - The redhat provider needs config \<-\> resource munging [\#6](https://github.com/voxpupuli/puppet-network/issues/6)
 
 ## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
 
 ## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
 
 ## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
 
 ## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.2...0.0.3rc1)
 
 ## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
 
 **Fixed bugs:**
@@ -307,12 +338,17 @@ These should not impact the functionality of the module.
 - interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
 
 ## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
 
 ## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
+
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
 
 ## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/8084b78c50d8efe1667ca7f907ef878f068e96d8...0.0.1rc1)
+
 
 
 \* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
