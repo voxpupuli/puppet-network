@@ -6,6 +6,8 @@ spec/spec_helper.rb:
   spec_overrides: "require 'spec_helper_methods'"
 Gemfile:
   optional:
+    ':development':
+      - gem: 'puppet-resource_api'
     ':test':
       - gem: 'ipaddress'
       - gem: 'rspec-its'
