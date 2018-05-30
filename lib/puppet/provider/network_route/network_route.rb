@@ -3,7 +3,7 @@ require 'net/ip'
 require 'puppet/resource_api/simple_provider'
 
 # Implementation for the network_route type using the Resource API.
-class Puppet::Provider::NetworkRoute::NetworkRoute < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::NetworkRoute::NetworkRoute
   # include PuppetX::FileMapper
 
   def routes_list
