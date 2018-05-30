@@ -9,7 +9,7 @@ class Puppet::Provider::NetworkRoute::NetworkRoute
   def routes_list
     routes = []
     Net::IP.routes.each do |route|
-      routes.push(route.instance_variables.each_with_object({}) { |var, hash| hash[var.to_s.delete("@")] = route.instance_variable_get(var) })
+      routes.push(route.to_h)
     end
     routes
   end
@@ -43,18 +43,54 @@ class Puppet::Provider::NetworkRoute::NetworkRoute
     if should[:default_route]
       should[:prefix] = 'default'
       should.delete(:default_route)
-      should.delete(:prefix)
     else
       should[:prefix] = should.delete(:prefix)
     end
     should[:via] = should.delete(:gateway) if should[:gateway]
     should[:dev] = should.delete(:interface) if should[:interface]
     should[:metric] = should.delete(:metric)
-    should[:table] = should.delete(:table)
+    should[:table] = should.delete(:table) if should[:table]
     should[:src] = should.delete(:source) if should[:source]
-    should[:scope] = should.delete(:scope)
+    should[:scope] = should.delete(:scope) if should[:scope]
     should[:proto] = should.delete(:protocol)
     should[:mtu] = should.delete(:mtu) if should[:mtu]
     should
+  end
+
+  def set(context, changes)
+    changes.each do |name, change|
+      is = change.key?(:is) ? change[:is] : get_single(name)
+      should = change[:should]
+
+      is = { prefix: name, ensure: 'absent' } if is.nil?
+      should = { prefix: name, ensure: 'absent' } if should.nil?
+
+      if is[:ensure].to_s == 'absent' && should[:ensure].to_s == 'present'
+        create(context, name, should)
+      elsif is[:ensure] == should[:ensure] && is != should
+        update(context, name, should)
+      elsif is[:ensure].to_s == 'present' && should[:ensure].to_s == 'absent'
+        delete(context, name, should)
+      end
+    end
+  end
+
+  def create(context, name, should)
+    puppet_munge(should)
+    route = Net::IP::Route.new(should)
+    Net::IP.routes.add(route)
+  end
+
+  def update(context, name, should)
+    puppet_munge(should)
+    route = Net::IP::Route.new(should)
+    Net::IP.routes.flush(route.prefix)
+    Net::IP.routes.add(route)
+  end
+
+  def delete(context, name, should)
+    puppet_munge(should)
+    route = Net::IP::Route.new(should)
+    Net::IP.routes.flush(route.prefix)
   end
 end

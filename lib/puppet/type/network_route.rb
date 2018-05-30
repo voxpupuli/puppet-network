@@ -34,23 +34,21 @@ Puppet::ResourceApi.register_type(
       default:   '100',
     },
     table: {
-      type:      'String',
+      type:      'Optional[String]',
       desc:      'table to add this route.',
-      default:   'local',
     },
     source: {
       type:      'Optional[String]',
       desc:      'the source address to prefer using when sending to the destinations covered by route prefix.',
     },
     scope: {
-      type:      'Enum["global", "nowhere", "host", "link", "site"]',
+      type:      'Optional[Enum["global", "nowhere", "host", "link", "site"]]',
       desc:      'scope of the destinations covered by the route prefix.',
-      default:   'global',
     },
     protocol: {
       type:      'String',
       desc:      'routing protocol identifier of this route.',
-      default:   'boot',
+      default:   'static',
     },
     mtu: {
       type:      'Optional[String]',
