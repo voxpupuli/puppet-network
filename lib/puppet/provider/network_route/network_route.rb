@@ -16,7 +16,7 @@ class Puppet::Provider::NetworkRoute::NetworkRoute
 
   def get(_context)
     routes_list.map do |route|
-      default = if route['prefix'] == 'default'
+      default = if route[:prefix] == 'default'
                   true
                 else
                   false
@@ -24,16 +24,16 @@ class Puppet::Provider::NetworkRoute::NetworkRoute
 
       {
         ensure: 'present',
-        prefix: route['prefix'],
+        prefix: route[:prefix],
         default_route: default,
-        gateway: route['via'],
-        interface: route['dev'],
-        metric: route['metric'],
-        table: route['table'],
-        source: route['src'],
-        scope: route['scope'],
-        protocol: route['proto'],
-        mtu: route['mtu']
+        gateway: route[:via],
+        interface: route[:dev],
+        metric: route[:metric],
+        table: route[:table],
+        source: route[:src],
+        scope: route[:scope],
+        protocol: route[:proto],
+        mtu: route[:mtu]
       }.compact!
     end
   end
