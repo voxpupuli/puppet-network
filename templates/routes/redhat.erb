@@ -1,0 +1,23 @@
+<% require 'net/ip' 
+   route = {
+     prefix: @prefix,
+     proto: @protocol,
+     metric: @metric,
+     dev: @interface,
+     via: @gateway,
+     src: @source,
+     scope: @scope,
+     mtu: @mtu,
+     table: @table,
+   }
+
+   route.each do |k, v|
+     if v.nil?
+       route.delete(k)
+     end
+   end
+
+   new_route = Net::IP::Route.new(new_route)
+%>
+
+<%= new_route.prefix %> <%= new_route.to_params %>
