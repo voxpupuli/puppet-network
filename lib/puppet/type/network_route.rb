@@ -46,7 +46,7 @@ Puppet::ResourceApi.register_type(
       desc:      'scope of the destinations covered by the route prefix.',
     },
     protocol: {
-      type:      'String',
+      type:      'Enum["static", "redirect", "kernel", "boot", "ra"]',
       desc:      'routing protocol identifier of this route.',
       default:   'static',
     },
