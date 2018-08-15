@@ -23,14 +23,30 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
     [
       {
         default_route: true,
-        ensure: "present",
-        gateway: "10.0.2.2",
-        interface: "enp0s3",
-        metric: "100",
-        prefix: "default",
-        protocol: "dhcp"
+        ensure: 'present',
+        gateway: '10.0.2.2',
+        interface: 'enp0s3',
+        metric: '100',
+        prefix: 'default',
+        protocol: 'dhcp'
       }
     ]
+  end
+
+  describe '#puppet_munge(should)' do
+    let(:should) { network_route[0] }
+
+    it 'should parse network_route into iproute2 keys' do
+      expect(provider.puppet_munge(should)).to eq(
+        {
+          dev: 'enp0s3',
+          metric: '100',
+          prefix: 'default',
+          proto: 'dhcp',
+          via: '10.0.2.2',
+        }
+      )
+    end
   end
 
   describe '#get' do
@@ -40,18 +56,15 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
 
     it 'processes resources' do
       expect(provider.get(context)).to eq(
-      [{:default_route=>true,
-        :ensure=>"present",
-        :gateway=>"10.0.2.2",
-        :interface=>"enp0s3",
-        :metric=>"100",
-        :prefix=>"default",
-        :protocol=>"dhcp"}]
+      [{default_route: true,
+        ensure: 'present',
+        gateway: '10.0.2.2',
+        interface: 'enp0s3',
+        metric: '100',
+        prefix: 'default',
+        protocol: 'dhcp'}]
       )
     end
-  end
-
-  describe '#puppet_munge(should)' do
   end
 
   # describe 'create(context, name, should)' do
