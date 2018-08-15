@@ -8,54 +8,50 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   subject(:provider) { described_class.new }
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
+  let(:route) do
+    [
+      {
+        prefix: 'default',
+        via: '10.0.2.2',
+        dev: 'enp0s3',
+        proto: 'dhcp',
+        metric: '100'
+      }
+    ]
+  end
+  let(:network_route) do
+    [
+      {
+        default_route: true,
+        ensure: "present",
+        gateway: "10.0.2.2",
+        interface: "enp0s3",
+        metric: "100",
+        prefix: "default",
+        protocol: "dhcp"
+      }
+    ]
+  end
 
   describe '#get' do
-    it 'processes resources' do
-      expect(provider.get(context)).to eq [
-        {:ensure=>"present",
-            :prefix=>"default",
-            :default_route=>true,
-            :gateway=>"10.155.255.1",
-            :interface=>"wlp3s0",
-            :metric=>"600",
-            :protocol=>"dhcp"},
-           {:ensure=>"present",
-            :prefix=>"10.155.255.0/24",
-            :default_route=>false,
-            :interface=>"wlp3s0",
-            :metric=>"600",
-            :source=>"10.155.255.110",
-            :scope=>"link",
-            :protocol=>"kernel"},
-           {:ensure=>"present",
-            :prefix=>"169.254.0.0/16",
-            :default_route=>false,
-            :interface=>"virbr0",
-            :metric=>"1000",
-            :scope=>"link"},
-           {:ensure=>"present",
-            :prefix=>"172.17.0.0/16",
-            :default_route=>false,
-            :interface=>"docker0",
-            :source=>"172.17.0.1",
-            :scope=>"link",
-            :protocol=>"kernel"},
-           {:ensure=>"present",
-            :prefix=>"172.18.0.0/16",
-            :default_route=>false,
-            :interface=>"br-39a722eeac35",
-            :source=>"172.18.0.1",
-            :scope=>"link",
-            :protocol=>"kernel"},
-           {:ensure=>"present",
-            :prefix=>"192.168.122.0/24",
-            :default_route=>false,
-            :interface=>"virbr0",
-            :source=>"192.168.122.1",
-            :scope=>"link",
-            :protocol=>"kernel"}
-      ]
+    before(:each) do
+      allow(provider).to receive(:routes_list).and_return(route) # rubocop:disable RSpec/SubjectStub
     end
+
+    it 'processes resources' do
+      expect(provider.get(context)).to eq(
+      [{:default_route=>true,
+        :ensure=>"present",
+        :gateway=>"10.0.2.2",
+        :interface=>"enp0s3",
+        :metric=>"100",
+        :prefix=>"default",
+        :protocol=>"dhcp"}]
+      )
+    end
+  end
+
+  describe '#puppet_munge(should)' do
   end
 
   # describe 'create(context, name, should)' do
