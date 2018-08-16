@@ -1,5 +1,4 @@
 require 'net/ip'
-# require_relative '../../../puppet_x/voxpupuli/utils'
 require 'puppet/resource_api/simple_provider'
 
 # Implementation for the network_route type using the Resource API.

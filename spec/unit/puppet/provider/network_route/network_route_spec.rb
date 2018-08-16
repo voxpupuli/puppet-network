@@ -8,6 +8,14 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   subject(:provider) { described_class.new }
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
+  let(:routes) { instance_double('Net::IP::Route::Collection', 'routes') }
+  let(:netiproute) { instance_double('Net::IP::Route', prefix: 'route') }
+
+  before(:each) do
+    allow(Net::IP::Route).to receive(:new).with('should').and_return(netiproute)
+    allow(Net::IP::Route::Collection).to receive(:new).with('main').and_return(routes)
+  end
+
   let(:route) do
     [
       {
@@ -67,38 +75,37 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
     end
   end
 
-  describe 'create(context, name, should)' do
-    let(:should) { route[0] }
-
+  describe '#create(context, name, should)' do
     before(:each) do
-      #allow(Net::IP::Route).to receive(:new).with(should).and_return(:new_route)
-      #allow(Net::IP).to receive_message_chain("routes.new").with(new_route).and_return(nil)
-      allow(provider).to receive(:puppet_munge).with(network_route[0]).and_return(should)
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
     end
-    
+
     it 'creates the resource' do
-      # expect(context).to receive(:notice).with(%r{\ACreating 'a'})
-
-      # provider.create(context, 'a', name: 'a', ensure: 'present')
-      expect(Net::IP::Route).to receive(:new).with(should).and_return('')
-
-      provider.create(context, 'default', network_route[0])
+      expect(routes).to receive(:add).with(netiproute)
+      provider.create(context, 'default', 'should')
     end
   end
 
-  # describe 'update(context, name, should)' do
-  #   it 'updates the resource' do
-  #     expect(context).to receive(:notice).with(%r{\AUpdating 'foo'})
+  describe '#update(context, name, should)' do
+    before(:each) do
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
+    end
 
-  #     provider.update(context, 'foo', name: 'foo', ensure: 'present')
-  #   end
-  # end
+    it 'updates the resource' do
+      expect(routes).to receive(:flush).with(netiproute.prefix)
+      expect(routes).to receive(:add).with(netiproute)
+      provider.update(context, 'default', 'should')
+    end
+  end
 
-  # describe 'delete(context, name, should)' do
-  #   it 'deletes the resource' do
-  #     expect(context).to receive(:notice).with(%r{\ADeleting 'foo'})
+  describe 'delete(context, name, should)' do
+    before(:each) do
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
+    end
 
-  #     provider.delete(context, 'foo')
-  #   end
-  # end
+    it 'deletes the resource' do
+      expect(routes).to receive(:flush).with(netiproute.prefix)
+      provider.delete(context, 'default', 'should')
+    end
+  end
 end
