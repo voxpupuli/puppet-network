@@ -31,9 +31,9 @@ define network::route(
       }
     }
     /RedHat|CentOS/: {
-      "/etc/sysconfig/network-scripts/route-${interface}" 
+      "/etc/sysconfig/network-scripts/route-${interface}"
     }
-    default: { 
+    default: {
       fail("Network::Route is not compatible with ${facts['os']['family']}!")
     }
   }
