@@ -172,10 +172,19 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # zero or more options for <iface>
 
         raise_malformed unless line.match(%r{^iface\s+(\S+)\s+(\S+)\s+(\S+)}) do |matched|
-          name   = matched[1]
-          family = matched[2]
-          method = matched[3]
+          iface_name = matched[1]
+          family     = matched[2]
+          method     = matched[3]
 
+          # inet6 and inet may cooexist, which is not handled thus far.
+          # As it is the only exception in Debian interfaces(5) handling,
+          # hardcoding a replacement is less extensive than having a list to
+          # update and manage.
+          if family == 'inet6' then
+            name = iface_name '#inet6'
+          else
+            name = iface_name
+          end
           # If an iface block for this interface has been seen, the file is
           # malformed.
           raise_malformed if Instance[name] && Instance[name].family
@@ -183,8 +192,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           status = :iface
           current_interface = name
 
-          # This is done automatically
-          # Instance[name].name   = name
+          Instance[name].name   = name
           Instance[name].family = family
           Instance[name].method = method
           # for the vlan naming conventions (a mess), see
@@ -249,7 +257,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     auto_interfaces = providers.select { |provider| provider.onboot == true }
     unless auto_interfaces.empty?
       stanza = []
-      stanza << 'auto ' + auto_interfaces.map(&:name).sort.join(' ')
+      stanza << 'auto ' + auto_interfaces.map(&:name).sort.join(' ').gsub('#inet6', '')
       contents << stanza.join("\n")
     end
 
@@ -257,7 +265,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     hotplug_interfaces = providers.select { |provider| provider.hotplug == true }
     unless hotplug_interfaces.empty?
       stanza = []
-      stanza << 'allow-hotplug ' + hotplug_interfaces.map(&:name).sort.join(' ')
+      stanza << 'allow-hotplug ' + hotplug_interfaces.map(&:name).sort.join(' ').gsub('#inet6', '')
       contents << stanza.join("\n")
     end
 
@@ -266,6 +274,9 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       # TODO: add validation method
       raise Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
       raise Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
+
+      # Remove duplicate-fixing name shim
+      provider.name = provider.name.gsub(/#inet6$/, '')
 
       stanza = []
       stanza << %(iface #{provider.name} #{provider.family} #{provider.method})
