@@ -64,7 +64,7 @@ describe 'network::bond', type: :define do
       let(:facts) { { osfamily: 'SparrowOS' } }
 
       it 'fails to compile' do
-        expect { is_expected.to compile }.to raise_error(%r{network::bond does not support osfamily 'SparrowOS'})
+        is_expected.to compile.and_raise_error(%r{network::bond does not support osfamily 'SparrowOS'})
       end
     end
   end
