@@ -19,7 +19,7 @@ Puppet::Type.newtype(:network_route) do
     validate do |value|
       unless value == 'default'
         a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
-        raise("Invalid value for network: #{value}") unless a
+        raise("Invalid value for parameter 'network': #{value}") unless a
       end
     end
   end
@@ -30,7 +30,7 @@ Puppet::Type.newtype(:network_route) do
 
     validate do |value|
       unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
-        raise("Invalid value for argument netmask: #{value}")
+        raise("Invalid value for parameter 'netmask': #{value}")
       end
     end
 
@@ -45,7 +45,7 @@ Puppet::Type.newtype(:network_route) do
       elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv4? }
         IPAddr.new('255.255.255.255').mask(value).to_s
       else
-        raise("Invalid value for argument netmask: #{value}")
+        raise("Invalid value for parameter 'netmask': #{value}")
       end
     end
   end
@@ -58,7 +58,7 @@ Puppet::Type.newtype(:network_route) do
       begin
         IPAddr.new(value)
       rescue ArgumentError
-        raise("Invalid value for gateway: #{value}")
+        raise("Invalid value for parameter 'gateway': #{value}")
       end
     end
   end

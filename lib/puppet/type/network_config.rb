@@ -137,7 +137,7 @@ Puppet::Type.newtype(:network_config) do
     defaultto {}
 
     validate do |value|
-      raise ArgumentError, "#{self.class} requires a hash for the options property" unless value.is_a? Hash
+      raise ArgumentError, "#{self.class} requires a hash for the 'options' parameter" unless value.is_a? Hash
       # provider.validate
     end
   end

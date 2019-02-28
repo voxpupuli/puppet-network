@@ -142,13 +142,13 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       it 'with misplaced options should fail' do
         expect do
           described_class.parse_file('', "address 192.168.1.1\niface eth0 inet static\n")
-        end.to raise_error
+        end.to raise_error(%r{Malformed debian interfaces file})
       end
 
       it 'with an option without a value should fail' do
         expect do
           described_class.parse_file('', "iface eth0 inet manual\naddress")
-        end.to raise_error
+        end.to raise_error(%r{Malformed debian interfaces file})
       end
     end
   end
@@ -313,13 +313,13 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       it 'fails if the family property is not defined' do
         lo_provider.unstub(:family)
         lo_provider.stubs(:family).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{does not have a family})
       end
 
       it 'fails if the method property is not defined' do
         lo_provider.unstub(:method)
         lo_provider.stubs(:method).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{does not have a method})
       end
     end
 

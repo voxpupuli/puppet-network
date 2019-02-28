@@ -36,7 +36,7 @@ describe Puppet::Type.type(:network_route) do
       it 'validates the network as an IP address' do
         expect do
           Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: 'not an ip address', netmask: '255.255.255.0', gateway: '23.23.23.42', interface: 'eth0')
-        end.to raise_error
+        end.to raise_error(%r{Invalid value for parameter 'network'})
       end
     end
 
@@ -44,7 +44,7 @@ describe Puppet::Type.type(:network_route) do
       it 'fails if an invalid netmask is used' do
         expect do
           Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: 'This is clearly not a netmask', gateway: '23.23.23.42', interface: 'eth0')
-        end.to raise_error
+        end.to raise_error(%r{Invalid value for parameter 'netmask'})
       end
 
       it 'converts netmasks of the CIDR form' do
@@ -67,7 +67,7 @@ describe Puppet::Type.type(:network_route) do
       it 'validates as an IP address' do
         expect do
           Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: '255.255.255.0', gateway: 'not an ip address', interface: 'eth0')
-        end.to raise_error
+        end.to raise_error(%r{Invalid value for parameter 'gateway'})
       end
     end
   end

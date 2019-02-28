@@ -77,7 +77,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       it 'with missing options should fail' do
         expect do
           described_class.parse_file('', "192.168.1.1 255.255.255.0 172.16.0.1\n")
-        end.to raise_error
+        end.to raise_error(%r{Malformed debian routes file})
       end
     end
   end
@@ -126,13 +126,13 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       it 'fails if the netmask property is not defined' do
         route2_provider.unstub(:netmask)
         route2_provider.stubs(:netmask).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{is missing the required parameter 'netmask'})
       end
 
       it 'fails if the gateway property is not defined' do
         route2_provider.unstub(:gateway)
         route2_provider.stubs(:gateway).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{is missing the required parameter 'gateway'})
       end
     end
   end
@@ -181,13 +181,13 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       it 'fails if the netmask property is not defined' do
         route2_provider.unstub(:netmask)
         route2_provider.stubs(:netmask).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{is missing the required parameter 'netmask'})
       end
 
       it 'fails if the gateway property is not defined' do
         route2_provider.unstub(:gateway)
         route2_provider.stubs(:gateway).returns nil
-        expect { content }.to raise_exception
+        expect { content }.to raise_exception(%r{is missing the required parameter 'gateway'})
       end
     end
   end
