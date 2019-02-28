@@ -80,7 +80,7 @@ describe Puppet::Type.type(:network_config) do
         end
         it 'fails when passed an IPv6 address' do
           pending('Not yet implemented')
-          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet, ipaddress: address6) }.to raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet, ipaddress: address6) }.to raise_error(%r{not a valid ipv4 address})
         end
       end
 
@@ -90,12 +90,12 @@ describe Puppet::Type.type(:network_config) do
         end
         it 'fails when passed an IPv4 address' do
           pending('Not yet implemented')
-          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet6, ipaddress: address4) }.to raise_error
+          expect { Puppet::Type.type(:network_config).new(name: 'yay', family: :inet6, ipaddress: address4) }.to raise_error(%r{not a valid ipv6 address})
         end
       end
 
       it 'fails if a malformed address is used' do
-        expect { Puppet::Type.type(:network_config).new(name: 'yay', ipaddress: 'This is clearly not an IP address') }.to raise_error
+        expect { Puppet::Type.type(:network_config).new(name: 'yay', ipaddress: 'This is clearly not an IP address') }.to raise_error(%r{requires a valid ipaddress})
       end
     end
 
@@ -103,7 +103,7 @@ describe Puppet::Type.type(:network_config) do
       it 'fails if an invalid CIDR netmask is used' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', netmask: 'This is clearly not a netmask')
-        end.to raise_error
+        end.to raise_error(%r{requires a valid netmask})
       end
     end
 
@@ -167,67 +167,67 @@ describe Puppet::Type.type(:network_config) do
       it 'fails if an random string is passed' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 'This is clearly not a mtu')
-        end.to raise_error
+        end.to raise_error(%r{must be a positive integer})
       end
 
       it 'fails on values < 42' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: '41')
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on numeric values < 42' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 41)
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on zero' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: '0')
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on numeric zero' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 0)
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on values > 65536' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: '65537')
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on numeric values > 65536' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 65_537)
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on negative values' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: '-1500')
-        end.to raise_error
+        end.to raise_error(%r{is not a valid mtu})
       end
 
       it 'fails on negative numbers' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: -1500)
-        end.to raise_error
+        end.to raise_error(%r{is not in the valid mtu range})
       end
 
       it 'fails on non-integer values' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500.1')
-        end.to raise_error
+        end.to raise_error(%r{must be a positive integer})
       end
 
       it 'fails on numeric non-integer values' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 1500.1)
-        end.to raise_error
+        end.to raise_error(%r{must be a positive integer})
       end
     end
 
@@ -240,7 +240,7 @@ describe Puppet::Type.type(:network_config) do
       it 'fails on undefined values' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mode: 'foo')
-        end.to raise_error
+        end.to raise_error(%r{Invalid value "foo". Valid values are})
       end
       it 'defaults to :raw' do
         expect(Puppet::Type.type(:network_config).new(name: 'yay')[:mode]).to eq(:raw)
@@ -262,7 +262,7 @@ describe Puppet::Type.type(:network_config) do
       it 'fails if a non-hash is passed' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'valid', options: 'geese')
-        end.to raise_error
+        end.to raise_error(%r{requires a hash for the 'options' parameter})
       end
     end
   end
