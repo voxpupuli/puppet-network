@@ -64,7 +64,7 @@ class network(
   $ensure_ipaddress        = present,
 ) {
 
-  if $::osfamily == 'Debian' and $manage_ifupdown_extra {
+  if $facts['osfamily'] == 'Debian' and $manage_ifupdown_extra {
     package { $ifupdown_extra:
       ensure   => $ensure_ifupdown_extra,
       provider => $ifupdown_extra_provider,

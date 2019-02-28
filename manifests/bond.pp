@@ -167,7 +167,7 @@ define network::bond(
     source => 'bonding',
   }
 
-  case $::osfamily {
+  case $facts['osfamily'] {
     'Debian': {
       network::bond::debian { $name:
         ensure           => $ensure,
@@ -221,7 +221,7 @@ define network::bond(
       }
     }
     default: {
-      fail("network::bond does not support osfamily '${::osfamily}'")
+      fail("network::bond does not support osfamily '${facts['osfamily']}'")
     }
   }
 }
