@@ -192,7 +192,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           status = :iface
           current_interface = name
 
-          Instance[name].name   = name
+          #Instance[name].name   = name
           Instance[name].family = family
           Instance[name].method = method
           # for the vlan naming conventions (a mess), see
