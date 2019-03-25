@@ -108,7 +108,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'method' do
-      [:static, :manual, :dhcp].each do |mth|
+      [:static, :manual, :dhcp, :auto].each do |mth|
         it "should consider '#{mth}' a valid configuration method" do
           Puppet::Type.type(:network_config).new(name: 'yay', method: mth)
         end

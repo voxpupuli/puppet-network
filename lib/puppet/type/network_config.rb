@@ -53,7 +53,7 @@ Puppet::Type.newtype(:network_config) do
 
   newproperty(:method) do
     desc 'The method for determining an IP address for the interface'
-    newvalues(:static, :manual, :dhcp, :loopback)
+    newvalues(:static, :manual, :dhcp, :loopback, :auto)
 
     # Redhat systems frequently use 'none' in place of 'static', although
     # ultimately any values but dhcp or bootp are ignored and the interface
