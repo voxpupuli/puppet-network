@@ -8,6 +8,8 @@ end
 
 Puppet::Type.newtype(:network_config) do
   @doc = 'Manage non-volatile network configuration information'
+  # Allow setting a title different from the interface name
+  @isomorphic = false
 
   feature :provider_options, <<-EOD
     The provider can accept a hash of arbitrary options. The semantics of
