@@ -172,18 +172,16 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         # zero or more options for <iface>
 
         raise_malformed unless line.match(%r{^iface\s+(\S+)\s+(\S+)\s+(\S+)}) do |matched|
-          iface_name = matched[1]
-          family     = matched[2]
-          method     = matched[3]
+          name   = matched[1]
+          family = matched[2]
+          method = matched[3]
 
           # inet6 and inet may cooexist, which is not handled thus far.
           # As it is the only exception in Debian interfaces(5) handling,
           # hardcoding a replacement is less extensive than having a list to
           # update and manage.
           if family == 'inet6' then
-            name = iface_name '#inet6'
-          else
-            name = iface_name
+            name += '#inet6'
           end
           # If an iface block for this interface has been seen, the file is
           # malformed.
