@@ -9,7 +9,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
   after do
     v_level = $VERBOSE
     $VERBOSE = nil
-    Puppet::Type::Network_config::ProviderInterfaces::Instance.reset!
+    Instance.reset!
     $VERBOSE = v_level
   end
 
