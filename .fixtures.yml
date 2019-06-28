@@ -5,6 +5,6 @@ fixtures:
     stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib'
     boolean: 'https://github.com/voxpupuli/puppet-boolean'
     filemapper: 'https://github.com/voxpupuli/puppet-filemapper'
-  symlinks:
-    network: "#{source_dir}"
-
+    augeas_core:
+      repo: https://github.com/puppetlabs/puppetlabs-augeas_core.git
+      puppet_version: ">= 6.0.0"
