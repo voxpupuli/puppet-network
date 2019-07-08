@@ -18,3 +18,7 @@ Puppetfile.lock
 .*.sw?
 .yardoc/
 Guardfile
+
+# This filename makes windows barf. Which breaks deploys
+spec/fixtures/provider/network_config/redhat_spec/network-scripts/ifcfg-eth0:10000000
+
