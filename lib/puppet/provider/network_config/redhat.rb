@@ -24,8 +24,12 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   # The valid vlan ID range is 0-4095; 4096 is out of range
   VLAN_RANGE_REGEX = %r{[1-3]?\d{1,3}|40[0-8]\d|409[0-5]}
 
+  # aliases are almost free game, redhat rejects some, and max total length is 15 characters
+  # 15 minus at least 2 for the interface name, and a colon leaves 12 characters for the alias
+  ALIAS_REGEX = %r{.{1,12}(?<!~|\.bak|\.old|\.orig|\.rpmnew|\.rpmorig|\.rpmsave)}
+
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX     = %r{\Aifcfg-[a-z]+[a-z\d]+(?::\d+|\.#{VLAN_RANGE_REGEX})?\Z}
+  SCRIPT_REGEX = %r{\Aifcfg-[a-z]+[a-z\d]+(?::#{ALIAS_REGEX}|\.#{VLAN_RANGE_REGEX})?\Z}
 
   NAME_MAPPINGS = {
     ipaddress: 'IPADDR',
