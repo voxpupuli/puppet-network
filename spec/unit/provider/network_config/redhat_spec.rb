@@ -419,7 +419,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            method: 'none',
            ipaddress: '169.254.0.1',
            netmask: '255.255.255.0',
-           mtu: '1500',
+           mtu: 1500,
            mode: :vlan,
            options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
     end
@@ -460,7 +460,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
            ipaddress: '172.20.1.9',
            netmask: '255.255.255.0',
            method: 'static',
-           mtu: '1500',
+           mtu: 1500,
            mode: nil,
            options: {
              'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
