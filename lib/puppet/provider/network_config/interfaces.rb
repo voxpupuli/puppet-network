@@ -226,7 +226,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
             case key # rubocop:disable Metrics/BlockNesting
             when 'address' then         Instance[name].ipaddress    = val
             when 'netmask' then         Instance[name].netmask      = val
-            when 'mtu' then             Instance[name].mtu          = val
+            when 'mtu' then             Instance[name].mtu          = val.to_i
             else Instance[name].options[key] << val
             end
           end
