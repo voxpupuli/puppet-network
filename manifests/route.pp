@@ -55,7 +55,8 @@ define network::route(
   Optional[Enum['global', 'nowhere', 'host', 'link', 'site']] $scope,
   Optional[String] $mtu,
 ) {
-  if $gateway == undef && $interface == undef {
+
+  if $gateway == undef and $interface == undef {
     fail('Route must have a gateway or interface!')
   }
 
