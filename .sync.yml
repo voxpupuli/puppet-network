@@ -11,3 +11,4 @@ Gemfile:
     ':test':
       - gem: 'ipaddress'
       - gem: 'rspec-its'
+      - gem: 'puppet-resource_api'

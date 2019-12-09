@@ -33,6 +33,7 @@ group :test do
   gem 'ipaddress',                                                  :require => false
   gem 'net-ip',                                                     :require => false
   gem 'rspec-its',                                                  :require => false
+  gem 'puppet-resource_api',                                        :require => false
 end
 
 group :development do
