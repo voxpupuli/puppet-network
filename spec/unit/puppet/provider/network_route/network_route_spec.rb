@@ -11,11 +11,6 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   let(:routes) { instance_double('Net::IP::Route::Collection', 'routes') }
   let(:netiproute) { instance_double('Net::IP::Route', prefix: 'route') }
 
-  before(:each) do
-    allow(Net::IP::Route).to receive(:new).with('should').and_return(netiproute)
-    allow(Net::IP::Route::Collection).to receive(:new).with('main').and_return(routes)
-  end
-
   let(:route) do
     [
       {
@@ -41,42 +36,45 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
     ]
   end
 
+  before do
+    allow(Net::IP::Route).to receive(:new).with('should').and_return(netiproute)
+    allow(Net::IP::Route::Collection).to receive(:new).with('main').and_return(routes)
+  end
+
   describe '#puppet_munge(should)' do
     let(:should) { network_route[0] }
 
-    it 'should parse network_route into iproute2 keys' do
-      expect(provider.puppet_munge(should)).to eq(
-        {
-          dev: 'enp0s3',
-          metric: '100',
-          prefix: 'default',
-          proto: 'dhcp',
-          via: '10.0.2.2',
-        }
+    it 'parses network_route into iproute2 keys' do
+      expect(provider.puppet_munge(is_expected.to)).to eq(
+        dev: 'enp0s3',
+        metric: '100',
+        prefix: 'default',
+        proto: 'dhcp',
+        via: '10.0.2.2'
       )
     end
   end
 
   describe '#get' do
-    before(:each) do
+    before do
       allow(provider).to receive(:routes_list).and_return(route) # rubocop:disable RSpec/SubjectStub
     end
 
     it 'processes resources' do
       expect(provider.get(context)).to eq(
-      [{default_route: true,
-        ensure: 'present',
-        gateway: '10.0.2.2',
-        interface: 'enp0s3',
-        metric: '100',
-        prefix: 'default',
-        protocol: 'dhcp'}]
+        [{ default_route: true,
+           ensure: 'present',
+           gateway: '10.0.2.2',
+           interface: 'enp0s3',
+           metric: '100',
+           prefix: 'default',
+           protocol: 'dhcp' }]
       )
     end
   end
 
   describe '#create(context, name, should)' do
-    before(:each) do
+    before do
       allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
     end
 
@@ -87,7 +85,7 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   end
 
   describe '#update(context, name, should)' do
-    before(:each) do
+    before do
       allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
     end
 
@@ -99,7 +97,7 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   end
 
   describe 'delete(context, name, should)' do
-    before(:each) do
+    before do
       allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
     end
 

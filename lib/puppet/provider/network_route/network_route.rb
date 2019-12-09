@@ -74,20 +74,20 @@ class Puppet::Provider::NetworkRoute::NetworkRoute
     end
   end
 
-  def create(context, name, should)
+  def create(_context, _name, should)
     puppet_munge(should)
     route = Net::IP::Route.new(should)
     Net::IP.routes.add(route)
   end
 
-  def update(context, name, should)
+  def update(_context, _name, should)
     puppet_munge(should)
     route = Net::IP::Route.new(should)
     Net::IP.routes.flush(route.prefix)
     Net::IP.routes.add(route)
   end
 
-  def delete(context, name, should)
+  def delete(_context, _name, should)
     puppet_munge(should)
     route = Net::IP::Route.new(should)
     Net::IP.routes.flush(route.prefix)

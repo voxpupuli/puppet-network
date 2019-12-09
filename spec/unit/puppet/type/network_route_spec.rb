@@ -10,7 +10,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        default_route: true,
+        default_route: true
       )
     end
 
@@ -167,20 +167,24 @@ RSpec.describe 'the network_route type' do
   end
 
   context 'with invalid scope' do
-    it 'should raise an error' do
-      expect { Puppet::Type.type('network_route').new(
-        prefix: 'default',
-        scope: 'fail'
-      )}.to raise_error(Puppet::ResourceError)
+    it 'raises an error' do
+      expect do
+        Puppet::Type.type('network_route').new(
+          prefix: 'default',
+          scope: 'fail'
+        )
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 
   context 'with invalid protocol' do
-    it 'should raise an error' do
-      expect { Puppet::Type.type('network_route').new(
-        prefix: 'default',
-        protocol: 'fail'
-      )}.to raise_error(Puppet::ResourceError)
+    it 'raises an error' do
+      expect do
+        Puppet::Type.type('network_route').new(
+          prefix: 'default',
+          protocol: 'fail'
+        )
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 end
