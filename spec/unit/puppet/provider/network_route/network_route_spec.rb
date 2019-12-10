@@ -45,7 +45,7 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
     let(:should) { network_route[0] }
 
     it 'parses network_route into iproute2 keys' do
-      expect(provider.puppet_munge(is_expected.to)).to eq(
+      expect(provider.puppet_munge(should)).to eq(
         dev: 'enp0s3',
         metric: '100',
         prefix: 'default',
