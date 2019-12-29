@@ -13,8 +13,10 @@ end
 # Gateway
 # Expected output: The ip address of the nexthop/default router
 Facter.add('network_nexthop_ip') do
-  my_gw = nil
   confine :kernel => :linux # rubocop:disable Style/HashSyntax
+  confine { Facter::Util::Resolution.which('ip') }
+
+  my_gw = nil
   setcode do
     gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
     # not all network configurations will have a nexthop.
@@ -30,6 +32,8 @@ end
 #  Expected output: The specific interface name that the node uses to communicate with the nexthop
 Facter.add('network_primary_interface') do
   confine :kernel => :linux # rubocop:disable Style/HashSyntax
+  confine { Facter::Util::Resolution.which('ip') }
+
   setcode do
     next Facter.fact(:networking).value['primary'] if facter_3
     gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
@@ -52,6 +56,8 @@ end
 #  Expected output: The ipaddress configured on the interface that communicates with the nexthop
 Facter.add('network_primary_ip') do
   confine :kernel => :linux # rubocop:disable Style/HashSyntax
+  confine { Facter::Util::Resolution.which('ip') }
+
   setcode do
     next Facter.fact(:networking).value['ip'] if facter_3
     gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
