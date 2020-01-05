@@ -78,7 +78,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     contents << header
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      [:network, :netmask, :gateway, :interface].each do |prop|
+      %i[network netmask gateway interface].each do |prop|
         raise Puppet::Error, "#{provider.name} is missing the required parameter '#{prop}'." if provider.send(prop).nil?
       end
       contents << if provider.network == 'default'
