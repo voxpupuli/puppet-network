@@ -15,9 +15,9 @@ describe 'network::bond', type: :define do
       'slave_options'    => { 'NM_CONTROLLED' => 'no' },
 
       'mode'             => 'active-backup',
-      'miimon'           => '100',
-      'downdelay'        => '200',
-      'updelay'          => '200',
+      'miimon'           => 100,
+      'downdelay'        => 200,
+      'updelay'          => 200,
       'lacp_rate'        => 'slow',
       'primary'          => 'eth0',
       'primary_reselect' => 'always',

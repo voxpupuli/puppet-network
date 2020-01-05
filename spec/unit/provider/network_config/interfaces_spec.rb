@@ -81,7 +81,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          ipaddress: '192.168.0.2',
                                                          netmask: '255.255.255.0',
                                                          onboot: true,
-                                                         mtu: '1500',
+                                                         mtu: 1500,
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
                                                            'gateway'   => '192.168.0.1'
@@ -118,7 +118,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          ipaddress: '192.168.0.2',
                                                          netmask: '255.255.255.0',
                                                          onboot: true,
-                                                         mtu: '1500',
+                                                         mtu: 1500,
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
                                                            'gateway'   => '192.168.0.1'
@@ -129,7 +129,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                            ipaddress: '172.16.0.2',
                                                            netmask: '255.255.255.0',
                                                            onboot: true,
-                                                           mtu: '1500',
+                                                           mtu: 1500,
                                                            mode: :vlan,
                                                            options: {
                                                              'broadcast'       => '172.16.0.255',
@@ -164,7 +164,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            method: 'static',
            ipaddress: '169.254.0.1',
            netmask: '255.255.0.0',
-           mtu: '1500',
+           mtu: 1500,
            mode: nil,
            options: nil)
     end
@@ -179,7 +179,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            method: 'static',
            ipaddress: '169.254.0.1',
            netmask: '255.255.0.0',
-           mtu: '1500',
+           mtu: 1500,
            mode: :vlan,
            options: {
              'vlan-raw-device' => 'eth1'
@@ -226,7 +226,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            method: 'static',
            ipaddress: '169.254.0.1',
            netmask: '255.255.0.0',
-           mtu: '576',
+           mtu: 576,
            mode: nil,
            options: {
              'pre-up'    => '/bin/touch /tmp/eth1-up',
@@ -246,7 +246,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
            method: 'loopback',
            ipaddress: nil,
            netmask: nil,
-           mtu: '65536',
+           mtu: 65_536,
            mode: nil,
            options: nil)
     end

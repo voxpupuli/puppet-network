@@ -140,24 +140,12 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'mtu' do
-      it 'validates a tiny mtu size' do
-        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '42')
-      end
-
       it 'validates a tiny mtu size as a number' do
         Puppet::Type.type(:network_config).new(name: 'yay', mtu: 42)
       end
 
-      it 'validates a normal mtu size' do
-        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500')
-      end
-
       it 'validates a normal mtu size as a number' do
         Puppet::Type.type(:network_config).new(name: 'yay', mtu: 1500)
-      end
-
-      it 'validates a large mtu size' do
-        Puppet::Type.type(:network_config).new(name: 'yay', mtu: '16384')
       end
 
       it 'validates a large mtu size as a number' do
@@ -170,21 +158,9 @@ describe Puppet::Type.type(:network_config) do
         end.to raise_error(%r{must be a positive integer})
       end
 
-      it 'fails on values < 42' do
-        expect do
-          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '41')
-        end.to raise_error(%r{is not in the valid mtu range})
-      end
-
       it 'fails on numeric values < 42' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 41)
-        end.to raise_error(%r{is not in the valid mtu range})
-      end
-
-      it 'fails on zero' do
-        expect do
-          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '0')
         end.to raise_error(%r{is not in the valid mtu range})
       end
 
@@ -194,22 +170,10 @@ describe Puppet::Type.type(:network_config) do
         end.to raise_error(%r{is not in the valid mtu range})
       end
 
-      it 'fails on values > 65536' do
-        expect do
-          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '65537')
-        end.to raise_error(%r{is not in the valid mtu range})
-      end
-
       it 'fails on numeric values > 65536' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 65_537)
         end.to raise_error(%r{is not in the valid mtu range})
-      end
-
-      it 'fails on negative values' do
-        expect do
-          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '-1500')
-        end.to raise_error(%r{is not a valid mtu})
       end
 
       it 'fails on negative numbers' do
@@ -218,15 +182,15 @@ describe Puppet::Type.type(:network_config) do
         end.to raise_error(%r{is not in the valid mtu range})
       end
 
-      it 'fails on non-integer values' do
-        expect do
-          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500.1')
-        end.to raise_error(%r{must be a positive integer})
-      end
-
       it 'fails on numeric non-integer values' do
         expect do
           Puppet::Type.type(:network_config).new(name: 'yay', mtu: 1500.1)
+        end.to raise_error(%r{must be a positive integer})
+      end
+
+      it 'fails on integers passed as strings' do
+        expect do
+          Puppet::Type.type(:network_config).new(name: 'yay', mtu: '1500.1')
         end.to raise_error(%r{must be a positive integer})
       end
     end

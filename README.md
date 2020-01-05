@@ -20,8 +20,8 @@ network_config { 'eth0':
   ensure  => 'present',
   family  => 'inet',
   method  => 'dhcp',
-  onboot  => 'true',
-  hotplug => 'true',
+  onboot  => true,
+  hotplug => true,
   options => {'pre-up' => 'sleep 2'},
 }
 
@@ -29,7 +29,7 @@ network_config { 'lo':
   ensure => 'present',
   family => 'inet',
   method => 'loopback',
-  onboot => 'true',
+  onboot => true,
 }
 
 network_config { 'eth1':
@@ -38,7 +38,7 @@ network_config { 'eth1':
   ipaddress => '169.254.0.1',
   method    => 'static',
   netmask   => '255.255.0.0',
-  onboot    => 'true',
+  onboot    => true,
 }
 ```
 
@@ -82,26 +82,28 @@ network_route { 'default':
 
 Create resources on the fly with the `puppet resource` command:
 
-    root@debian-6:~# puppet resource network_config eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0
-    notice: /Network_config[eth1]/ensure: created
-    network_config { 'eth1':
-      ensure    => 'present',
-      family    => 'inet',
-      ipaddress => '169.254.0.1',
-      method    => 'static',
-      netmask   => '255.255.0.0',
-      onboot    => 'true',
-    }
+```
+root@debian-6:~# puppet resource network_config eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0
+notice: /Network_config[eth1]/ensure: created
+network_config { 'eth1':
+  ensure    => 'present',
+  family    => 'inet',
+  ipaddress => '169.254.0.1',
+  method    => 'static',
+  netmask   => '255.255.0.0',
+  onboot    => true,
+}
 
-    # puppet resource network_route 23.23.42.0 ensure=present netmask=255.255.255.0 interface=eth0 gateway=192.168.1.1
-    notice: /Network_route[23.23.42.0]/ensure: created
-    network_route { '23.23.42.0':
-      ensure    => 'present',
-      gateway   => '192.168.1.1',
-      interface => 'eth0',
-      netmask   => '255.255.255.0',
-      options   => 'table 200',
-    }
+# puppet resource network_route 23.23.42.0 ensure=present netmask=255.255.255.0 interface=eth0 gateway=192.168.1.1
+notice: /Network_route[23.23.42.0]/ensure: created
+network_route { '23.23.42.0':
+  ensure    => 'present',
+  gateway   => '192.168.1.1',
+  interface => 'eth0',
+  netmask   => '255.255.255.0',
+  options   => 'table 200',
+}
+```
 
 ## Dependencies
 
