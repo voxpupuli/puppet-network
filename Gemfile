@@ -33,7 +33,9 @@ group :test do
   gem 'simplecov-console',                                          :require => false
   gem 'parallel_tests',                                             :require => false
   gem 'ipaddress',                                                  :require => false
+  gem 'net-ip',                                                     :require => false
   gem 'rspec-its',                                                  :require => false
+  gem 'puppet-resource_api',                                        :require => false
 end
 
 group :development do
@@ -41,6 +43,7 @@ group :development do
   gem 'travis-lint',              :require => false
   gem 'guard-rake',               :require => false
   gem 'overcommit', '>= 0.39.1',  :require => false
+  gem 'puppet-resource_api',      :require => false
 end
 
 group :system_tests do

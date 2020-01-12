@@ -1,58 +1,38 @@
-# = Class: network
+# Manage network configuration and routing on Linux systems with the
+# network_route and network_config resources. This also installs the
+# packages and gems needed to manage these settings.
 #
-# Install the packages and gems required by the network_route and network_config resources
+# @summary Manage linux network configuration and routes
 #
-# == Parameters
+# @author Vox Pupuli <voxpupuli@groups.io>
 #
-# [*ifupdown_extra*]
+# @example
+#   include network
 #
-# The name of the ifupdown-extra package
+# @param ifupdown_extra
+#   The name of the ifupdown-extra package
 #
-# Default: ifupdown-extra
+# @param ifupdown_extra_provider
+#   The provider of the ifupdown-extra package
 #
-# [*ifupdown_extra_provider*]
+# @param manage_ifupdown_extra
+#   Whether this class should manage the ifupdown-extra package
 #
-# The provider of the ifupdown-extra package
+# @param ensure_ifupdown_extra
+#   What state the ifupdown-extra package should be in
 #
-# Default: undef
+# @param ipaddress
+#   The name of the ipaddress gems
 #
-# [*manage_ifupdown_extra*]
+# @param ipaddress_provider
+#   The provider of the ipaddress gem
 #
-# Whether this class should manage the ifupdown-extra package
+# @param manage_ipaddress
+#   Whether this class should manage the ipaddress gem
 #
-# Default: true
+# @param ensure_ipaddress
+#   What state the ifupdown-extra package should be in
 #
-# [*ensure_ifupdown_extra*]
-#
-# What state the ifupdown-extra package should be in
-#
-# Default: present
-#
-# [*ipaddress*]
-#
-# The name of the ipaddress gems
-#
-# Default: ipaddress
-#
-# [*ipaddress_provider*]
-#
-# The provider of the ipaddress gem
-#
-# Default: gem
-#
-# [*manage_ipaddress*]
-#
-# Whether this class should manage the ipaddress gem
-#
-# Default: true
-#
-# [*ensure_ipaddress*]
-#
-# What state the ifupdown-extra package should be in
-#
-# Default: present
-#
-
 class network(
   $ifupdown_extra          = 'ifupdown-extra',
   $ifupdown_extra_provider = undef,
