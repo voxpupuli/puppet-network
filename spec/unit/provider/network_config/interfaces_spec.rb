@@ -155,104 +155,104 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
 
   describe 'when formatting' do
     let(:eth0_provider) do
-      stub('eth0_provider',
-           name: 'eth0',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'static',
-           ipaddress: '169.254.0.1',
-           netmask: '255.255.0.0',
-           mtu: '1500',
-           mode: nil,
-           options: nil)
+      instance_double('eth0_provider',
+                      name: 'eth0',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'static',
+                      ipaddress: '169.254.0.1',
+                      netmask: '255.255.0.0',
+                      mtu: '1500',
+                      mode: nil,
+                      options: nil)
     end
 
     let(:vlan20_provider) do
-      stub('vlan20_provider',
-           name: 'vlan20',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'static',
-           ipaddress: '169.254.0.1',
-           netmask: '255.255.0.0',
-           mtu: '1500',
-           mode: :vlan,
-           options: {
-             'vlan-raw-device' => 'eth1'
-           })
+      instance_double('vlan20_provider',
+                      name: 'vlan20',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'static',
+                      ipaddress: '169.254.0.1',
+                      netmask: '255.255.0.0',
+                      mtu: '1500',
+                      mode: :vlan,
+                      options: {
+                        'vlan-raw-device' => 'eth1'
+                      })
     end
 
     let(:vlan10_provider) do
-      stub('vlan10_provider',
-           name: 'vlan10',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'dhcp',
-           ipaddress: nil,
-           netmask: nil,
-           mtu: nil,
-           mode: :vlan,
-           options: {})
+      instance_double('vlan10_provider',
+                      name: 'vlan10',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'dhcp',
+                      ipaddress: nil,
+                      netmask: nil,
+                      mtu: nil,
+                      mode: :vlan,
+                      options: {})
     end
 
     let(:eth1_4500_provider) do
-      stub('eth1_4500_provider',
-           name: 'eth1.4500',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'dhcp',
-           ipaddress: nil,
-           netmask: nil,
-           mtu: nil,
-           mode: :vlan,
-           options: {})
+      instance_double('eth1_4500_provider',
+                      name: 'eth1.4500',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'dhcp',
+                      ipaddress: nil,
+                      netmask: nil,
+                      mtu: nil,
+                      mode: :vlan,
+                      options: {})
     end
 
     let(:eth1_provider) do
-      stub('eth1_provider',
-           name: 'eth1',
-           ensure: :present,
-           onboot: false,
-           hotplug: true,
-           family: 'inet',
-           method: 'static',
-           ipaddress: '169.254.0.1',
-           netmask: '255.255.0.0',
-           mtu: '576',
-           mode: nil,
-           options: {
-             'pre-up'    => '/bin/touch /tmp/eth1-up',
-             'post-down' => [
-               '/bin/touch /tmp/eth1-down1',
-               '/bin/touch /tmp/eth1-down2'
-             ]
-           })
+      instance_double('eth1_provider',
+                      name: 'eth1',
+                      ensure: :present,
+                      onboot: false,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'static',
+                      ipaddress: '169.254.0.1',
+                      netmask: '255.255.0.0',
+                      mtu: '576',
+                      mode: nil,
+                      options: {
+                        'pre-up'    => '/bin/touch /tmp/eth1-up',
+                        'post-down' => [
+                          '/bin/touch /tmp/eth1-down1',
+                          '/bin/touch /tmp/eth1-down2'
+                        ]
+                      })
     end
 
     let(:lo_provider) do
-      stub('lo_provider',
-           name: 'lo',
-           onboot: true,
-           hotplug: false,
-           family: 'inet',
-           method: 'loopback',
-           ipaddress: nil,
-           netmask: nil,
-           mtu: '65536',
-           mode: nil,
-           options: nil)
+      instance_double('lo_provider',
+                      name: 'lo',
+                      onboot: true,
+                      hotplug: false,
+                      family: 'inet',
+                      method: 'loopback',
+                      ipaddress: nil,
+                      netmask: nil,
+                      mtu: '65536',
+                      mode: nil,
+                      options: nil)
     end
 
     before do
-      described_class.stubs(:header).returns "# HEADER: stubbed header\n"
+      allow(described_class).to receive(:header).and_return "# HEADER: stubbed header\n"
     end
 
     let(:content) { described_class.format_file('', [lo_provider, eth0_provider, eth1_provider]) } # rubocop:disable RSpec/ScatteredLet
@@ -311,14 +311,12 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
       end
 
       it 'fails if the family property is not defined' do
-        lo_provider.unstub(:family)
-        lo_provider.stubs(:family).returns nil
+        allow(lo_provider).to receive(:family).and_return(nil)
         expect { content }.to raise_exception(%r{does not have a family})
       end
 
       it 'fails if the method property is not defined' do
-        lo_provider.unstub(:method)
-        lo_provider.stubs(:method).returns nil
+        allow(lo_provider).to receive(:method).and_return(nil)
         expect { content }.to raise_exception(%r{does not have a method})
       end
     end
