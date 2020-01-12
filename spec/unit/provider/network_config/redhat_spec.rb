@@ -110,11 +110,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       let(:virbonding_path) { File.join(PROJECT_ROOT, 'spec', 'fixtures', 'provider', 'network_config', 'redhat_spec', 'virbonding') }
 
       before do
-        described_class.stubs(:target_files).returns Dir["#{virbonding_path}/*"]
+        allow(described_class).to receive(:target_files).and_return(Dir["#{virbonding_path}/*"])
       end
-
+      
       describe 'bond0' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
 
@@ -128,7 +127,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'bond1' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
 
@@ -144,7 +142,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
 
@@ -161,8 +158,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth1' do
-        before { subject.expects(:select_file).never }
-
+        
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
 
         its(:onboot) { is_expected.to be true }
@@ -178,7 +174,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth2' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
 
@@ -195,7 +190,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth3' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
 
@@ -212,7 +206,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
 
@@ -231,7 +224,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100:0' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
 
@@ -243,7 +235,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan200' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
 
@@ -261,7 +252,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan300' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
 
@@ -279,7 +269,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan400' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
 
@@ -297,7 +286,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan500' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
 
@@ -319,11 +307,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       let(:network_scripts_path) { fixture_file('network-scripts') }
 
       before do
-        described_class.stubs(:target_files).returns Dir["#{network_scripts_path}/*"]
+        allow(described_class).to receive(:target_files).and_return(Dir["#{network_scripts_path}/*"])
       end
 
       describe 'eth0.0' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
 
@@ -342,7 +329,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.1' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
 
@@ -361,7 +347,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.4095' do
-        before { subject.expects(:select_file).never }
 
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
 
@@ -395,76 +380,76 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
   describe 'when formatting resources' do
     let(:eth0_provider) do
-      stub('eth0_provider',
-           name: 'eth0',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'none',
-           ipaddress: '169.254.0.1',
-           netmask: '255.255.255.0',
-           mtu: '1500',
-           mode: nil,
-           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
+      instance_double('eth0_provider',
+                      name: 'eth0',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'none',
+                      ipaddress: '169.254.0.1',
+                      netmask: '255.255.255.0',
+                      mtu: '1500',
+                      mode: nil,
+                      options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
     end
 
     let(:eth0_1_provider) do
-      stub('eth0_1_provider',
-           name: 'eth0.1',
-           ensure: :present,
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'none',
-           ipaddress: '169.254.0.1',
-           netmask: '255.255.255.0',
-           mtu: '1500',
-           mode: :vlan,
-           options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
+      instance_double('eth0_1_provider',
+                      name: 'eth0.1',
+                      ensure: :present,
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'none',
+                      ipaddress: '169.254.0.1',
+                      netmask: '255.255.255.0',
+                      mtu: '1500',
+                      mode: :vlan,
+                      options: { 'NM_CONTROLLED' => 'no', 'USERCTL' => 'no' })
     end
 
     let(:eth1_provider) do
-      stub('eth1_provider',
-           name: 'eth1',
-           ensure: :present,
-           onboot: :absent,
-           hotplug: true,
-           family: 'inet',
-           method: 'none',
-           ipaddress: :absent,
-           netmask: :absent,
-           mtu: :absent,
-           mode: :vlan,
-           options: :absent)
+      instance_double('eth1_provider',
+                      name: 'eth1',
+                      ensure: :present,
+                      onboot: :absent,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'none',
+                      ipaddress: :absent,
+                      netmask: :absent,
+                      mtu: :absent,
+                      mode: :vlan,
+                      options: :absent)
     end
 
     let(:lo_provider) do
-      stub('lo_provider',
-           name: 'lo',
-           onboot: true,
-           hotplug: true,
-           family: 'inet',
-           method: 'loopback',
-           ipaddress: nil,
-           netmask: nil,
-           mode: nil,
-           options: {})
+      instance_double('lo_provider',
+                      name: 'lo',
+                      onboot: true,
+                      hotplug: true,
+                      family: 'inet',
+                      method: 'loopback',
+                      ipaddress: nil,
+                      netmask: nil,
+                      mode: nil,
+                      options: {})
     end
 
     let(:bond0_provider) do
-      stub('bond0_provider',
-           name: 'bond0',
-           onboot: true,
-           hotplug: true,
-           ipaddress: '172.20.1.9',
-           netmask: '255.255.255.0',
-           method: 'static',
-           mtu: '1500',
-           mode: nil,
-           options: {
-             'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
-           })
+      instance_double('bond0_provider',
+                      name: 'bond0',
+                      onboot: true,
+                      hotplug: true,
+                      ipaddress: '172.20.1.9',
+                      netmask: '255.255.255.0',
+                      method: 'static',
+                      mtu: '1500',
+                      mode: nil,
+                      options: {
+                        'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+                      })
     end
 
     it 'fails if multiple interfaces are flushed to one file' do
@@ -515,12 +500,17 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
   end
 
   describe 'when flushing a dirty file' do
+    before do
+      allow(File).to receive(:chmod).with(0o644, '/not/a/real/file')
+      allow(File).to receive(:unlink)
+      allow(described_class).to receive(:perform_write)
+    end
     it do
-      File.expects(:chmod).with(0o644, '/not/a/real/file')
-      File.expects(:unlink).never
-      described_class.stubs(:perform_write)
       described_class.dirty_file!('/not/a/real/file')
       described_class.flush_file('/not/a/real/file')
+    end
+    it 'is expected that it shouldnot have have unlinked the file' do
+      expect(File).not_to have_received(:unlink)
     end
   end
 end

@@ -84,7 +84,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
 
   describe 'when formatting' do
     let :route1_provider do
-      stub(
+      instance_double(
         'route1_provider',
         name: '172.17.67.0',
         network: '172.17.67.0',
@@ -96,7 +96,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     end
 
     let :route2_provider do
-      stub(
+      instance_double(
         'lo_provider',
         name: '172.28.45.0',
         network: '172.28.45.0',
@@ -124,21 +124,19 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       end
 
       it 'fails if the netmask property is not defined' do
-        route2_provider.unstub(:netmask)
-        route2_provider.stubs(:netmask).returns nil
+        allow(route2_provider).to receive(:netmask).and_return(nil)
         expect { content }.to raise_exception(%r{is missing the required parameter 'netmask'})
       end
 
       it 'fails if the gateway property is not defined' do
-        route2_provider.unstub(:gateway)
-        route2_provider.stubs(:gateway).returns nil
+        allow(route2_provider).to receive(:gateway).and_return(nil)
         expect { content }.to raise_exception(%r{is missing the required parameter 'gateway'})
       end
     end
   end
   describe 'when formatting simple files' do
     let :route1_provider do
-      stub(
+      instance_double(
         'route1_provider',
         name: '172.17.67.0',
         network: '172.17.67.0',
@@ -150,7 +148,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
     end
 
     let :route2_provider do
-      stub(
+      instance_double(
         'lo_provider',
         name: '172.28.45.0',
         network: '172.28.45.0',
@@ -179,14 +177,12 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       end
 
       it 'fails if the netmask property is not defined' do
-        route2_provider.unstub(:netmask)
-        route2_provider.stubs(:netmask).returns nil
+        allow(route2_provider).to receive(:netmask).and_return(nil)
         expect { content }.to raise_exception(%r{is missing the required parameter 'netmask'})
       end
 
       it 'fails if the gateway property is not defined' do
-        route2_provider.unstub(:gateway)
-        route2_provider.stubs(:gateway).returns nil
+        allow(route2_provider).to receive(:gateway).and_return(nil)
         expect { content }.to raise_exception(%r{is missing the required parameter 'gateway'})
       end
     end
