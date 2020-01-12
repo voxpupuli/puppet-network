@@ -112,9 +112,8 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       before do
         allow(described_class).to receive(:target_files).and_return(Dir["#{virbonding_path}/*"])
       end
-      
-      describe 'bond0' do
 
+      describe 'bond0' do
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
 
         its(:onboot) { is_expected.to be true }
@@ -127,7 +126,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'bond1' do
-
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
 
         its(:onboot)    { is_expected.to be true }
@@ -142,7 +140,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0' do
-
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
 
         its(:onboot) { is_expected.to be true }
@@ -158,7 +155,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth1' do
-        
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
 
         its(:onboot) { is_expected.to be true }
@@ -174,7 +170,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth2' do
-
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
 
         its(:onboot) { is_expected.to be true }
@@ -190,7 +185,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth3' do
-
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
 
         its(:onboot) { is_expected.to be true }
@@ -206,7 +200,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan100' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.61.11') }
@@ -224,7 +217,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan100:0' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan100:0' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.61.12') }
@@ -235,7 +227,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan200' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan200' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.62.1') }
@@ -252,7 +243,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan300' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan300' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.63.1') }
@@ -269,7 +259,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan400' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan400' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.64.1') }
@@ -286,7 +275,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'vlan500' do
-
         subject { described_class.instances.find { |i| i.name == 'vlan500' } }
 
         its(:ipaddress) { is_expected.to eq('172.24.65.1') }
@@ -311,7 +299,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.0' do
-
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
 
         its(:onboot) { is_expected.to be true }
@@ -329,7 +316,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.1' do
-
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
 
         its(:onboot) { is_expected.to be true }
@@ -347,7 +333,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
 
       describe 'eth0.4095' do
-
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
 
         its(:onboot) { is_expected.to be true }
