@@ -14,6 +14,16 @@ task 'lint:auto_correct' do
   Rake::Task[:lint_fix].invoke
 end
 
+# So windows cannot handle paths with a : character. But that's used by
+# a network config fixture. The simplest way to handle it without weird
+# and confusing File.read mocks is to simply symlink it before tests are
+# run. Gross? Yeah, but it seems like the least gross option.
+task :fix_pathname do
+  FileUtils.ln_sf 'spec/fixtures/provider/network_config/redhat_spec/network-scripts/ifcfg-eth0_10000000',
+                  'spec/fixtures/provider/network_config/redhat_spec/network-scripts/ifcfg-eth0:10000000'
+end
+task :spec_prep => :fix_pathname
+
 desc 'Run acceptance tests'
 RSpec::Core::RakeTask.new(:acceptance) do |t|
   t.pattern = 'spec/acceptance'
