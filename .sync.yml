@@ -2,7 +2,7 @@
 .travis.yml:
   secure: "DjiIx0gDrAUU176TA+7WxrEJ27D504Irrhx37dqxmR/GXEMX58swwwsdr3wlaklR7/LAVafsL98A0Ff+DtynAOYcFXkmJHc3ZObp4UDHqKot2mzL8rrzf+23cO8eiKW72sNKarn4wzSlR9OXjbAf/m68u+SBkRm+cWUUZhSgFiY="
 spec/spec_helper.rb:
-  mock_with: ':mocha'
+  mock_with: ':rspec'
   spec_overrides: "require 'spec_helper_methods'"
 Gemfile:
   optional:

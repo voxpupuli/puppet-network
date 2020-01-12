@@ -29,7 +29,7 @@ describe 'network::bond', type: :define do
     describe 'RedHat' do
       let(:facts) do
         {
-          osfamily: 'RedHat',
+          os: { family: 'RedHat' },
           augeasversion: '1.4.0'
         }
       end
@@ -46,7 +46,7 @@ describe 'network::bond', type: :define do
     describe 'Debian' do
       let(:facts) do
         {
-          osfamily: 'Debian',
+          os: { family: 'Debian' },
           augeasversion: '1.4.0'
         }
       end
@@ -61,7 +61,11 @@ describe 'network::bond', type: :define do
     end
 
     describe 'on an unsupported osfamily' do
-      let(:facts) { { osfamily: 'SparrowOS' } }
+      let(:facts) do
+        {
+          os: { family: 'SparrowOS' }
+        }
+      end
 
       it 'fails to compile' do
         is_expected.to compile.and_raise_error(%r{network::bond does not support osfamily 'SparrowOS'})
@@ -72,7 +76,7 @@ describe 'network::bond', type: :define do
   describe 'configuring the kernel bonding device' do
     let(:facts) do
       {
-        osfamily: 'Debian',
+        os: { family: 'Debian' },
         augeasversion: '1.4.0'
       }
     end

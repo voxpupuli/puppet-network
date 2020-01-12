@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe Puppet::Type.type(:network_config) do
   before do
-    provider_class = stub 'provider class', name: 'fake', suitable?: true, supports_parameter?: true
-    provider_class.stubs(:new)
-
-    Puppet::Type.type(:network_config).stubs(:defaultprovider).returns provider_class
-    Puppet::Type.type(:network_config).stubs(:provider).returns provider_class
+    provider_class = instance_double 'provider class'
+    allow(provider_class).to receive(:name).and_return('fake')
+    allow(provider_class).to receive(:suitable?).and_return(true)
+    allow(provider_class).to receive(:supports_parameter?).and_return(true)
+    allow(provider_class).to receive(:new)
+    allow(Puppet::Type.type(:network_config)).to receive(:defaultprovider).and_return(provider_class)
+    allow(Puppet::Type.type(:network_config)).to receive(:provider).and_return(provider_class)
   end
-
   describe 'feature' do
     describe 'hotpluggable' do
       it { expect(Puppet::Type.type(:network_config).provider_feature(:hotpluggable)).not_to be_nil }
@@ -36,7 +37,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :mtu, :mode, :options].each do |property|
+    %i[ensure ipaddress netmask method family onboot mtu mode options].each do |property|
       describe property do
         it { expect(Puppet::Type.type(:network_config).attrtype(property)).to eq(:property) }
       end
@@ -108,7 +109,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'method' do
-      [:static, :manual, :dhcp].each do |mth|
+      %i[static manual dhcp].each do |mth|
         it "should consider '#{mth}' a valid configuration method" do
           Puppet::Type.type(:network_config).new(name: 'yay', method: mth)
         end
@@ -116,7 +117,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'family' do
-      [:inet, :inet6].each do |family|
+      %i[inet inet6].each do |family|
         it "should consider '#{family}' a valid address family" do
           Puppet::Type.type(:network_config).new(name: 'yay', family: family)
         end
@@ -232,7 +233,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'mode' do
-      [:raw, :vlan].each do |value|
+      %i[raw vlan].each do |value|
         it "should accept '#{value}' for interface mode" do
           Puppet::Type.type(:network_config).new(name: 'yay', mode: value)
         end
