@@ -6,7 +6,7 @@
 #
 # * Red Hat Deployment Guide 25.7.2 "Using Channel Bonding" https://access.redhat.com/knowledge/docs/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/sec-Using_Channel_Bonding.html
 #
-define network::bond::redhat(
+define network::bond::redhat (
   $slaves,
   $ensure           = present,
   $ipaddress        = undef,
@@ -28,9 +28,7 @@ define network::bond::redhat(
   $primary_reselect = undef,
   $xmit_hash_policy = undef,
 ) {
-
-  $opts = merge(
-    { 'BONDING_OPTS' => template('network/bond/opts-redhat.erb'), },
+  $opts = merge( { 'BONDING_OPTS' => template('network/bond/opts-redhat.erb'), },
     $options
   )
 
@@ -46,9 +44,7 @@ define network::bond::redhat(
     options   => $opts,
   }
 
-
-  $opts_slave = merge(
-    {
+  $opts_slave = merge( {
       'MASTER' => $name,
       'SLAVE'  => 'yes',
     },
@@ -63,4 +59,3 @@ define network::bond::redhat(
     options => $opts_slave,
   }
 }
-
