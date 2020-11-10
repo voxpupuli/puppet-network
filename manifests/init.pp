@@ -64,12 +64,26 @@ class network(
   $ensure_ipaddress        = present,
 ) {
 
-  if $facts['os']['family'] == 'Debian' and $manage_ifupdown_extra {
-    package { $ifupdown_extra:
-      ensure   => $ensure_ifupdown_extra,
-      provider => $ifupdown_extra_provider,
+  if $facts['os']['family'] == 'Debian' {
+    package { 'ifupdown':
+      ensure   => 'present',
     }
-    Package[$ifupdown_extra] -> Network_route <| |>
+
+    if $manage_ifupdown_extra {
+      package { $ifupdown_extra:
+        ensure   => $ensure_ifupdown_extra,
+        provider => $ifupdown_extra_provider,
+      }
+    }
+
+    $_packages = [
+      'ifupdown',
+      if $manage_ifupdown_extra {
+        $ifupdown_extra
+      },
+    ].delete_undef_values
+
+    Package[$_packages] -> Network_route <| |>
   }
 
   if $manage_ipaddress {
