@@ -1,10 +1,8 @@
 ---
 fixtures:
   repositories:
-    kmod: 'https://github.com/camptocamp/puppet-kmod'
-    stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib'
-    boolean: 'https://github.com/voxpupuli/puppet-boolean'
-    filemapper: 'https://github.com/voxpupuli/puppet-filemapper'
-    augeas_core:
-      repo: https://github.com/puppetlabs/puppetlabs-augeas_core.git
-      puppet_version: ">= 6.0.0"
+    kmod: https://github.com/camptocamp/puppet-kmod
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
+    boolean: https://github.com/voxpupuli/puppet-boolean
+    filemapper: https://github.com/voxpupuli/puppet-filemapper
+    augeas_core: https://github.com/puppetlabs/puppetlabs-augeas_core
