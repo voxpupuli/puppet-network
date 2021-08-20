@@ -5,7 +5,7 @@
 # == See also
 #
 # * Debian Network Bonding http://wiki.debian.org/Bonding
-define network::bond::debian(
+define network::bond::debian (
   $slaves,
   $ensure                                           = present,
   $ipaddress                                        = undef,
@@ -26,7 +26,6 @@ define network::bond::debian(
   $primary_reselect                                 = undef,
   $xmit_hash_policy                                 = undef,
 ) {
-
   $raw = {
     'bond-slaves'           => join($slaves, ' '),
     'bond-mode'             => $mode,

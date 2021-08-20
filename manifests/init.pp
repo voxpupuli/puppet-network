@@ -53,7 +53,7 @@
 # Default: present
 #
 
-class network(
+class network (
   $ifupdown_extra          = 'ifupdown-extra',
   $ifupdown_extra_provider = undef,
   $manage_ifupdown_extra   = true,
@@ -63,7 +63,6 @@ class network(
   $manage_ipaddress        = true,
   $ensure_ipaddress        = present,
 ) {
-
   if $facts['os']['family'] == 'Debian' and $manage_ifupdown_extra {
     package { $ifupdown_extra:
       ensure   => $ensure_ifupdown_extra,
@@ -79,5 +78,4 @@ class network(
     }
     Package[$ipaddress] -> Network_config <| |>
   }
-
 }
