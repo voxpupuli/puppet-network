@@ -55,7 +55,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     describe 'the onboot property' do
       let(:data) { described_class.parse_file('eth0', fixture_data('eth0-dhcp'))[0] }
 
-      it { expect(data[:onboot]).to be true }
+      it { expect(data[:onboot]).to eq('yes') }
     end
 
     describe 'the method property' do
@@ -76,13 +76,13 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'when true' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-hotplug'))[0] }
 
-        it { expect(data[:hotplug]).to be true }
+        it { expect(data[:hotplug]).to eq('yes') }
       end
 
       describe 'when false' do
         let(:data) { described_class.parse_file('eth0', fixture_data('eth0-nohotplug'))[0] }
 
-        it { expect(data[:hotplug]).to be false }
+        it { expect(data[:hotplug]).to eq('no') }
       end
     end
 
@@ -116,7 +116,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'bond0' do
         subject { described_class.instances.find { |i| i.name == 'bond0' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:mtu)    { is_expected.to eq('1500') }
         its(:options) do
           is_expected.to eq(
@@ -128,7 +128,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'bond1' do
         subject { described_class.instances.find { |i| i.name == 'bond1' } }
 
-        its(:onboot)    { is_expected.to be true }
+        its(:onboot)    { is_expected.to eq('yes') }
         its(:ipaddress) { is_expected.to eq('172.20.1.9') }
         its(:netmask)   { is_expected.to eq('255.255.255.0') }
         its(:mtu)       { is_expected.to eq('1500') }
@@ -142,7 +142,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth0' do
         subject { described_class.instances.find { |i| i.name == 'eth0' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:mtu)    { is_expected.to eq('1500') }
         its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
@@ -157,7 +157,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth1' do
         subject { described_class.instances.find { |i| i.name == 'eth1' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:mtu)    { is_expected.to eq('1500') }
         its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
@@ -172,7 +172,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth2' do
         subject { described_class.instances.find { |i| i.name == 'eth2' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:mtu)    { is_expected.to eq('1500') }
         its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
@@ -187,7 +187,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth3' do
         subject { described_class.instances.find { |i| i.name == 'eth3' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:mtu)    { is_expected.to eq('1500') }
         its(:mode)   { is_expected.to eq(:raw) }
         its(:options) do
@@ -301,7 +301,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth0.0' do
         subject { described_class.instances.find { |i| i.name == 'eth0.0' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:method) { is_expected.to eq('static') }
         its(:mtu)    { is_expected.to eq('9000') }
         its(:mode)   { is_expected.to eq(:vlan) }
@@ -318,7 +318,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth0.1' do
         subject { described_class.instances.find { |i| i.name == 'eth0.1' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:method) { is_expected.to eq('static') }
         its(:mtu)    { is_expected.to eq('9000') }
         its(:mode)   { is_expected.to eq(:vlan) }
@@ -335,7 +335,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       describe 'eth0.4095' do
         subject { described_class.instances.find { |i| i.name == 'eth0.4095' } }
 
-        its(:onboot) { is_expected.to be true }
+        its(:onboot) { is_expected.to eq('yes') }
         its(:method) { is_expected.to eq('static') }
         its(:mtu)    { is_expected.to eq('9000') }
         its(:mode)   { is_expected.to eq(:vlan) }
@@ -368,7 +368,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       instance_double('eth0_provider',
                       name: 'eth0',
                       ensure: :present,
-                      onboot: true,
+                      onboot: 'yes',
                       hotplug: true,
                       family: 'inet',
                       method: 'none',
@@ -383,7 +383,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       instance_double('eth0_1_provider',
                       name: 'eth0.1',
                       ensure: :present,
-                      onboot: true,
+                      onboot: 'yes',
                       hotplug: true,
                       family: 'inet',
                       method: 'none',
@@ -412,7 +412,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     let(:lo_provider) do
       instance_double('lo_provider',
                       name: 'lo',
-                      onboot: true,
+                      onboot: 'yes',
                       hotplug: true,
                       family: 'inet',
                       method: 'loopback',
