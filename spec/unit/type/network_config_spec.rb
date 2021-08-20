@@ -37,7 +37,7 @@ describe Puppet::Type.type(:network_config) do
       end
     end
 
-    %i[ensure ipaddress netmask method family onboot mtu mode options].each do |property|
+    [:ensure, :ipaddress, :netmask, :method, :family, :onboot, :mtu, :mode, :options].each do |property|
       describe property do
         it { expect(Puppet::Type.type(:network_config).attrtype(property)).to eq(:property) }
       end
@@ -109,7 +109,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'method' do
-      %i[static manual dhcp].each do |mth|
+      %w[static manual dhcp].each do |mth|
         it "should consider '#{mth}' a valid configuration method" do
           Puppet::Type.type(:network_config).new(name: 'yay', method: mth)
         end
@@ -117,7 +117,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'family' do
-      %i[inet inet6].each do |family|
+      %w[inet inet6].each do |family|
         it "should consider '#{family}' a valid address family" do
           Puppet::Type.type(:network_config).new(name: 'yay', family: family)
         end
@@ -233,7 +233,7 @@ describe Puppet::Type.type(:network_config) do
     end
 
     describe 'mode' do
-      %i[raw vlan].each do |value|
+      %w[raw vlan].each do |value|
         it "should accept '#{value}' for interface mode" do
           Puppet::Type.type(:network_config).new(name: 'yay', mode: value)
         end

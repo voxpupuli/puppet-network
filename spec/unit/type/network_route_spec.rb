@@ -15,7 +15,7 @@ describe Puppet::Type.type(:network_route) do
       it { expect(Puppet::Type.type(:network_route).attrtype(:name)).to eq(:param) }
     end
 
-    %i[ensure network netmask gateway interface options].each do |property|
+    [:ensure, :network, :netmask, :gateway, :interface, :options].each do |property|
       describe property do
         it { expect(Puppet::Type.type(:network_route).attrtype(property)).to eq(:property) }
       end
