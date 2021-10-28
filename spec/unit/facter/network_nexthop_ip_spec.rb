@@ -4,8 +4,8 @@ require 'spec_helper'
 require 'facter'
 require 'facter/network'
 
-describe ':network_nexthop_ip', type: :fact do
-  subject(:fact) { Facter.fact(':network_nexthop_ip') }
+describe 'network_nexthop_ip fact' do
+  subject(:fact) { Facter.fact(:network_nexthop_ip) }
 
   before do
     # perform any action that should be run before every test

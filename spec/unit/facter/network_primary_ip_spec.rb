@@ -4,8 +4,8 @@ require 'spec_helper'
 require 'facter'
 require 'facter/network'
 
-describe ':network_primary_ip', type: :fact do
-  subject(:fact) { Facter.fact(':network_primary_ip') }
+describe 'network_primary_ip' do
+  subject(:fact) { Facter.fact(:network_primary_ip) }
 
   before do
     Facter.clear

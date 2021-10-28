@@ -1,6 +1,6 @@
 require 'facter'
 
-Facter.add(':network_nexthop_ip') do
+Facter.add(:network_nexthop_ip) do
   confine kernel: 'Linux'
   confine { Facter::Util::Resolution.which('ip') }
   my_gw = nil
@@ -13,7 +13,7 @@ Facter.add(':network_nexthop_ip') do
   end
 end
 
-Facter.add(':network_primary_interface') do
+Facter.add(:network_primary_interface) do
   confine kernel: 'Linux'
 
   setcode do
@@ -21,7 +21,7 @@ Facter.add(':network_primary_interface') do
   end
 end
 
-Facter.add(':network_primary_ip') do
+Facter.add(:network_primary_ip) do
   confine kernel: 'Linux'
 
   setcode do
