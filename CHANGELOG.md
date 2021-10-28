@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.10.1](https://github.com/voxpupuli/puppet-network/tree/v0.10.1) (2021-10-28)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.10.0...v0.10.1)
+
+**Fixed bugs:**
+
+- dont prefix facts with : [\#278](https://github.com/voxpupuli/puppet-network/pull/278) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v0.10.0](https://github.com/voxpupuli/puppet-network/tree/v0.10.0) (2021-09-17)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.9.0...v0.10.0)
@@ -50,7 +58,6 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- release 0.9.0 [\#232](https://github.com/voxpupuli/puppet-network/pull/232) ([bastelfreak](https://github.com/bastelfreak))
 - Allow Type network\_config to take a Numeric value for the MTU parameter [\#229](https://github.com/voxpupuli/puppet-network/pull/229) ([lukebigum](https://github.com/lukebigum))
 
 ## [v0.8.0](https://github.com/voxpupuli/puppet-network/tree/v0.8.0) (2017-07-04)
