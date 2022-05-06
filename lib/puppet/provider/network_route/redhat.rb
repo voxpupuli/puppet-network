@@ -51,19 +51,16 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       new_route[:options] = route[5] if route[5]
 
       if route[0] == 'default'
-        cidr_target = 'default'
-
-        new_route[:name]    = cidr_target
+        new_route[:name]    = 'default'
         new_route[:network] = 'default'
         new_route[:netmask] = '0.0.0.0'
       else
-        # use the CIDR version of the target as :name
-        network, netmask = route[0].split('/')
-        cidr_target = "#{network}/#{IPAddr.new(netmask).to_i.to_s(2).count('1')}"
-
-        new_route[:name]    = cidr_target
-        new_route[:network] = network
-        new_route[:netmask] = netmask
+        ip = IPAddr.new(route[0])
+        netmask_addr = ip.prefix <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        netmask = IPAddr.new("#{netmask_addr}/#{ip.prefix}")
+        new_route[:name]    = "#{ip}/#{ip.prefix}"
+        new_route[:network] = ip.to_s
+        new_route[:netmask] = netmask.to_s
       end
 
       routes << new_route
@@ -84,7 +81,8 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       contents << if provider.network == 'default'
                     "#{provider.network} via #{provider.gateway} dev #{provider.interface}"
                   else
-                    "#{provider.network}/#{provider.netmask} via #{provider.gateway} dev #{provider.interface}"
+                    ip = IPAddr.new("#{provider.network}/#{provider.netmask}")
+                    "#{ip}/#{ip.prefix} via #{provider.gateway} dev #{provider.interface}"
                   end
       contents << (provider.options == :absent ? "\n" : " #{provider.options}\n")
     end
