@@ -5,21 +5,21 @@ describe 'network::bond', type: :define do
 
   let(:params) do
     {
-      'ensure'           => 'present',
-      'method'           => 'static',
-      'ipaddress'        => '172.18.1.2',
-      'netmask'          => '255.255.128.0',
-      'slaves'           => %w[eth0 eth1],
-      'mtu'              => 1550,
-      'options'          => { 'NM_CONTROLLED' => 'yes' },
-      'slave_options'    => { 'NM_CONTROLLED' => 'no' },
+      'ensure' => 'present',
+      'method' => 'static',
+      'ipaddress' => '172.18.1.2',
+      'netmask' => '255.255.128.0',
+      'slaves' => %w[eth0 eth1],
+      'mtu' => 1550,
+      'options' => { 'NM_CONTROLLED' => 'yes' },
+      'slave_options' => { 'NM_CONTROLLED' => 'no' },
 
-      'mode'             => 'active-backup',
-      'miimon'           => '100',
-      'downdelay'        => '200',
-      'updelay'          => '200',
-      'lacp_rate'        => 'slow',
-      'primary'          => 'eth0',
+      'mode' => 'active-backup',
+      'miimon' => '100',
+      'downdelay' => '200',
+      'updelay' => '200',
+      'lacp_rate' => 'slow',
+      'primary' => 'eth0',
       'primary_reselect' => 'always',
       'xmit_hash_policy' => 'layer2'
     }

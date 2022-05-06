@@ -59,6 +59,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         options: 'table 200'
       )
     end
+
     it 'parses out advanced ipv6 iface lines' do
       fixture = fixture_data('advanced_routes')
       data = described_class.parse_file('', fixture)
@@ -115,6 +116,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       it 'writes a single line for the route' do
         expect(content.scan(%r{^172.17.67.0 .*$}).length).to eq(1)
       end
+
       it 'writes all 6 fields' do
         expect(content.scan(%r{^172.17.67.0 .*$}).first.split(' ').length).to eq(6)
       end
@@ -134,6 +136,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
       end
     end
   end
+
   describe 'when formatting simple files' do
     let :route1_provider do
       instance_double(

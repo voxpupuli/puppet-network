@@ -249,7 +249,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     auto_interfaces = providers.select { |provider| provider.onboot == true }
     unless auto_interfaces.empty?
       stanza = []
-      stanza << 'auto ' + auto_interfaces.map(&:name).sort.join(' ')
+      stanza << ('auto ' + auto_interfaces.map(&:name).sort.join(' '))
       contents << stanza.join("\n")
     end
 
@@ -257,7 +257,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     hotplug_interfaces = providers.select { |provider| provider.hotplug == true }
     unless hotplug_interfaces.empty?
       stanza = []
-      stanza << 'allow-hotplug ' + hotplug_interfaces.map(&:name).sort.join(' ')
+      stanza << ('allow-hotplug ' + hotplug_interfaces.map(&:name).sort.join(' '))
       contents << stanza.join("\n")
     end
 
@@ -277,9 +277,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
           stanza << "vlan-raw-device #{provider.options['vlan-raw-device']}"
         else
           vlan_range_regex = %r{[1-3]?\d{1,3}|40[0-8]\d|409[0-5]}
-          unless provider.name =~ %r{\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z}
-            raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name "
-          end
+          raise Puppet::Error, "Interface #{provider.name}: missing vlan-raw-device or wrong VLAN ID in the iface name " unless provider.name =~ %r{\A([a-z]+\d+)(?::\d+|\.#{vlan_range_regex})\Z}
         end
       end
 
@@ -311,13 +309,12 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
   end
 
   def self.header
-    str = <<-HEADER
-# HEADER: This file is being managed by puppet. Changes to
-# HEADER: interfaces that are not being managed by puppet will persist;
-# HEADER: however changes to interfaces that are being managed by puppet will
-# HEADER: be overwritten. In addition, file order is NOT guaranteed.
-# HEADER: Last generated at: #{Time.now}
-HEADER
-    str
+    <<~HEADER
+      # HEADER: This file is being managed by puppet. Changes to
+      # HEADER: interfaces that are not being managed by puppet will persist;
+      # HEADER: however changes to interfaces that are being managed by puppet will
+      # HEADER: be overwritten. In addition, file order is NOT guaranteed.
+      # HEADER: Last generated at: #{Time.now}
+    HEADER
   end
 end

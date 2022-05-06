@@ -104,6 +104,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
         val = m[2].strip
         hash[key] = val
       end
+
       hash
     end
 
@@ -147,6 +148,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # hash with our expected label
     NAME_MAPPINGS.each_pair do |type_name, redhat_name|
       next unless (val = pairs[redhat_name])
+
       pairs.delete(redhat_name)
       props[type_name] = val
     end
@@ -164,9 +166,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     props[:options] = pairs
 
     %w[onboot hotplug].each do |bool_property|
-      if props[bool_property]
-        props[bool_property] = (props[bool_property] == 'yes')
-      end
+      props[bool_property] = (props[bool_property] == 'yes') if props[bool_property]
     end
 
     props[:method] = 'static' unless %w[bootp dhcp].include? props[:method]
@@ -176,6 +176,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
   def self.format_file(filename, providers)
     return '' if providers.empty?
+
     if providers.length > 1
       raise Puppet::DevError,
             "Unable to support multiple interfaces [#{providers.map(&:name).join(',')}] in a single file #{filename}"
@@ -200,11 +201,9 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pairs = unmunge props
 
-    content = pairs.each_with_object('') do |(key, value), str|
+    pairs.each_with_object('') do |(key, value), str|
       str << %(#{key}=#{value}\n)
     end
-
-    content
   end
 
   def self.unmunge(props)

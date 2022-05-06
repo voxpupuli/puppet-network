@@ -106,13 +106,12 @@ Puppet::Type.type(:network_route).provide(:routes) do
   end
 
   def self.header
-    str = <<-HEADER
-# HEADER: This file is being managed by puppet. Changes to
-# HEADER: routes that are not being managed by puppet will persist;
-# HEADER: however changes to routes that are being managed by puppet will
-# HEADER: be overwritten. In addition, file order is NOT guaranteed.
-# HEADER: Last generated at: #{Time.now}
-HEADER
-    str
+    <<~HEADER
+      # HEADER: This file is being managed by puppet. Changes to
+      # HEADER: routes that are not being managed by puppet will persist;
+      # HEADER: however changes to routes that are being managed by puppet will
+      # HEADER: be overwritten. In addition, file order is NOT guaranteed.
+      # HEADER: Last generated at: #{Time.now}
+    HEADER
   end
 end

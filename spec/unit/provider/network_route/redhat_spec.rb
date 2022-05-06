@@ -19,6 +19,7 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
           interface: 'vlan200'
         )
       end
+
       it 'parses out ipv6 network routes' do
         expect(data.find { |h| h[:name] == '2a01:4f8:211:9d5:53::/96' }).to eq(
           name: '2a01:4f8:211:9d5:53::/96',
@@ -133,15 +134,15 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
     describe 'writing the route line' do
       describe 'For standard (non-default) routes' do
         it 'writes a single line for the route' do
-          expect(content.scan(%r{^172.17.67.0\/30 .*$}).length).to eq(1)
+          expect(content.scan(%r{^172.17.67.0/30 .*$}).length).to eq(1)
         end
 
         it 'writes 7 fields' do
-          expect(content.scan(%r{^172.17.67.0\/30 .*$}).first.split(' ').length).to eq(7)
+          expect(content.scan(%r{^172.17.67.0/30 .*$}).first.split(' ').length).to eq(7)
         end
 
         it 'has the correct fields appended' do
-          expect(content.scan(%r{^172.17.67.0\/30 .*$}).first).to include('172.17.67.0/30 via 172.18.6.2 dev vlan200 table 200')
+          expect(content.scan(%r{^172.17.67.0/30 .*$}).first).to include('172.17.67.0/30 via 172.18.6.2 dev vlan200 table 200')
         end
 
         it 'fails if the netmask property is not defined' do

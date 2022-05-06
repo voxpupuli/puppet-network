@@ -40,9 +40,7 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       end
 
       route = line.split(' ', 6)
-      if route.length < 4
-        raise Puppet::Error, 'Malformed redhat route file, cannot instantiate network_route resources'
-      end
+      raise Puppet::Error, 'Malformed redhat route file, cannot instantiate network_route resources' if route.length < 4
 
       new_route = {}
 
@@ -92,13 +90,12 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   end
 
   def self.header
-    str = <<-HEADER
-# HEADER: This file is being managed by puppet. Changes to
-# HEADER: routes that are not being managed by puppet will persist;
-# HEADER: however changes to routes that are being managed by puppet will
-# HEADER: be overwritten. In addition, file order is NOT guaranteed.
-# HEADER: Last generated at: #{Time.now}
-HEADER
-    str
+    <<~HEADER
+      # HEADER: This file is being managed by puppet. Changes to
+      # HEADER: routes that are not being managed by puppet will persist;
+      # HEADER: however changes to routes that are being managed by puppet will
+      # HEADER: be overwritten. In addition, file order is NOT guaranteed.
+      # HEADER: Last generated at: #{Time.now}
+    HEADER
   end
 end

@@ -10,12 +10,13 @@ describe Puppet::Type.type(:network_route) do
     allow(Puppet::Type.type(:network_route)).to receive(:defaultprovider).and_return(provider_class)
     allow(Puppet::Type.type(:network_route)).to receive(:provider).and_return(provider_class)
   end
+
   describe 'when validating the attribute' do
     describe :name do # rubocop:disable RSpec/DescribeSymbol
       it { expect(Puppet::Type.type(:network_route).attrtype(:name)).to eq(:param) }
     end
 
-    [:ensure, :network, :netmask, :gateway, :interface, :options].each do |property|
+    %i[ensure network netmask gateway interface options].each do |property|
       describe property do
         it { expect(Puppet::Type.type(:network_route).attrtype(property)).to eq(:property) }
       end
