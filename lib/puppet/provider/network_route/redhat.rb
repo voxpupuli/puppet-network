@@ -55,9 +55,9 @@ Puppet::Type.type(:network_route).provide(:redhat) do
         new_route[:network] = 'default'
         new_route[:netmask] = '0.0.0.0'
       else
-        ip = IPAddr.new(route[0])
-        netmask_addr = ip.prefix <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
-        netmask = IPAddr.new("#{netmask_addr}/#{ip.prefix}")
+        ip                  = IPAddr.new(route[0])
+        netmask_addr        = ip.prefix <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        netmask             = IPAddr.new("#{netmask_addr}/#{ip.prefix}")
         new_route[:name]    = "#{ip}/#{ip.prefix}"
         new_route[:network] = ip.to_s
         new_route[:netmask] = netmask.to_s
