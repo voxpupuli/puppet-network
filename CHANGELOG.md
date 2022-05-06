@@ -4,13 +4,28 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.0.0](https://github.com/voxpupuli/puppet-network/tree/v1.0.0) (2022-05-06)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.10.1...v1.0.0)
+
+**Fixed bugs:**
+
+- Change netmask to cidr for redhat/centos [\#209](https://github.com/voxpupuli/puppet-network/issues/209)
+- Redhat route provider unable to parse new format of route file [\#169](https://github.com/voxpupuli/puppet-network/issues/169)
+- Setup routes a CIDR, not full subnetmask [\#282](https://github.com/voxpupuli/puppet-network/pull/282) ([oniGino](https://github.com/oniGino))
+
+**Closed issues:**
+
+- unable to set /32 route [\#281](https://github.com/voxpupuli/puppet-network/issues/281)
+
 ## [v0.10.1](https://github.com/voxpupuli/puppet-network/tree/v0.10.1) (2021-10-28)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.10.0...v0.10.1)
 
 **Fixed bugs:**
 
-- dont prefix facts with : [\#278](https://github.com/voxpupuli/puppet-network/pull/278) ([bastelfreak](https://github.com/bastelfreak))
+- Puppet facts not populating after 61b10ea7fc1861bd334f14aad456d3027592e68f [\#274](https://github.com/voxpupuli/puppet-network/issues/274)
+- Don't prefix facts with `:` [\#278](https://github.com/voxpupuli/puppet-network/pull/278) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v0.10.0](https://github.com/voxpupuli/puppet-network/tree/v0.10.0) (2021-09-17)
 

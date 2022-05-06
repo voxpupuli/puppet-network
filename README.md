@@ -1,11 +1,13 @@
 # Network module for Puppet
 
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-network.png?branch=master)](https://travis-ci.org/voxpupuli/puppet-network)
-[![Code Coverage](https://coveralls.io/repos/github/voxpupuli/puppet-network/badge.svg?branch=master)](https://coveralls.io/github/voxpupuli/puppet-network)
+[![Build Status](https://github.com/voxpupuli/puppet-network/workflows/CI/badge.svg)](https://github.com/voxpupuli/puppet-network/actions?query=workflow%3ACI)
+[![Release](https://github.com/voxpupuli/puppet-network/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/puppet-network/actions/workflows/release.yml)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
 [![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
 [![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/network.svg)](https://forge.puppetlabs.com/puppet/network)
+[![puppetmodule.info docs](http://www.puppetmodule.info/images/badge.png)](http://www.puppetmodule.info/m/puppet-network)
+[![Apache-2 License](https://img.shields.io/github/license/voxpupuli/puppet-network.svg)](LICENSE)
 
 ## Overview
 
