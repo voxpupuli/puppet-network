@@ -88,13 +88,9 @@ Puppet::Type.newtype(:network_config) do
       # reject floating point and negative integers
       # XXX this lets 1500.0 pass
       if value.is_a? Numeric
-        unless value.integer?
-          raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
-        end
+        raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)" unless value.integer?
       else
-        unless value =~ %r{^\d+$}
-          raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)"
-        end
+        raise ArgumentError, "#{value} is not a valid mtu (must be a positive integer)" unless value =~ %r{^\d+$}
       end
 
       # Intel 82598 & 82599 chips support MTUs up to 16110; is there any
@@ -106,9 +102,7 @@ Puppet::Type.newtype(:network_config) do
       # is 42 with a 802.1q header and 46 without.
       min_mtu = 42
       max_mtu = 65_536
-      unless (min_mtu..max_mtu).cover?(value.to_i)
-        raise ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})"
-      end
+      raise ArgumentError, "#{value} is not in the valid mtu range (#{min_mtu} .. #{max_mtu})" unless (min_mtu..max_mtu).cover?(value.to_i)
     end
   end
 

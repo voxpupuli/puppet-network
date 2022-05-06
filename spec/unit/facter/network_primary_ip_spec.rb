@@ -11,6 +11,7 @@ describe 'network_primary_ip' do
     Facter.clear
     allow(Facter.fact(:networking)).to receive(:value).and_return({ 'ip' => '192.168.178.3' })
   end
+
   it 'uses the built-in facts to resolve the primary ip address' do
     expect(fact.value).to eq('192.168.178.3')
   end

@@ -84,7 +84,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mtu: '1500',
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
-                                                           'gateway'   => '192.168.0.1'
+                                                           'gateway' => '192.168.0.1'
                                                          })
     end
 
@@ -121,7 +121,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                          mtu: '1500',
                                                          options: {
                                                            'broadcast' => '192.168.0.255',
-                                                           'gateway'   => '192.168.0.1'
+                                                           'gateway' => '192.168.0.1'
                                                          })
       expect(data.find { |h| h[:name] == 'eth0.1' }).to eq(name: 'eth0.1',
                                                            family: 'inet',
@@ -132,8 +132,8 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                                                            mtu: '1500',
                                                            mode: :vlan,
                                                            options: {
-                                                             'broadcast'       => '172.16.0.255',
-                                                             'gateway'         => '172.16.0.1',
+                                                             'broadcast' => '172.16.0.255',
+                                                             'gateway' => '172.16.0.1',
                                                              'vlan-raw-device' => 'eth0'
                                                            })
     end
@@ -229,7 +229,7 @@ describe Puppet::Type.type(:network_config).provider(:interfaces) do
                       mtu: '576',
                       mode: nil,
                       options: {
-                        'pre-up'    => '/bin/touch /tmp/eth1-up',
+                        'pre-up' => '/bin/touch /tmp/eth1-up',
                         'post-down' => [
                           '/bin/touch /tmp/eth1-down1',
                           '/bin/touch /tmp/eth1-down2'

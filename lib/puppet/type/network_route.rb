@@ -1,5 +1,5 @@
 require 'ipaddr'
-require_relative '../../puppet_x/voxpupuli/utils.rb'
+require_relative '../../puppet_x/voxpupuli/utils'
 
 Puppet::Type.newtype(:network_route) do
   @doc = 'Manage non-volatile route configuration information'
@@ -29,9 +29,7 @@ Puppet::Type.newtype(:network_route) do
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
-      unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
-        raise("Invalid value for parameter 'netmask': #{value}")
-      end
+      raise("Invalid value for parameter 'netmask': #{value}") unless value.length <= 3 || PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
     end
 
     munge do |value|
@@ -55,11 +53,9 @@ Puppet::Type.newtype(:network_route) do
     desc 'The gateway to use for the route'
 
     validate do |value|
-      begin
-        IPAddr.new(value)
-      rescue ArgumentError
-        raise("Invalid value for parameter 'gateway': #{value}")
-      end
+      IPAddr.new(value)
+    rescue ArgumentError
+      raise("Invalid value for parameter 'gateway': #{value}")
     end
   end
 

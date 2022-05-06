@@ -6,9 +6,7 @@ Facter.add(:network_nexthop_ip) do
   my_gw = nil
   setcode do
     gw_address = Facter::Util::Resolution.exec('ip route show 0/0')
-    if gw_address.include? ' via '
-      my_gw = gw_address.split(%r{\s+})[2].match(%r{^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$}).to_s
-    end
+    my_gw = gw_address.split(%r{\s+})[2].match(%r{^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$}).to_s if gw_address.include? ' via '
     my_gw
   end
 end

@@ -19,7 +19,7 @@ Puppet::Parser::Functions.newfunction(:compact_hash,
   compact_hash($example)
   # => { 'one => 'two' }
 
-  EOD
+                                      EOD
 
   hash = args[0]
 
