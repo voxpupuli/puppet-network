@@ -14,6 +14,7 @@ Lint/ConstantDefinitionInBlock:
     - 'lib/puppet/provider/network_config/interfaces.rb'
     - 'lib/puppet/provider/network_config/redhat.rb'
     - 'lib/puppet/provider/network_route/routes.rb'
+    - 'lib/puppet/provider/network_route/redhat.rb'
 
 # Offense count: 2
 # Configuration parameters: IgnoreLiteralBranches, IgnoreConstantBranches.
@@ -56,6 +57,7 @@ Style/FrozenStringLiteralComment:
 Style/HashEachMethods:
   Exclude:
     - 'lib/puppet/provider/network_config/redhat.rb'
+    - 'lib/puppet/provider/network_route/redhat.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
@@ -64,6 +66,7 @@ Style/HashEachMethods:
 Style/MutableConstant:
   Exclude:
     - 'lib/puppet/provider/network_config/redhat.rb'
+    - 'lib/puppet/provider/network_route/redhat.rb'
 
 # Offense count: 5
 # Cop supports --auto-correct.
