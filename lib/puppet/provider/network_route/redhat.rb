@@ -19,15 +19,15 @@ Puppet::Type.type(:network_route).provide(:redhat) do
   has_feature :provider_options
 
   # @return [String] The path to network-script directory on redhat systems
-  SCRIPT_DIRECTORY_ROUTE = '/etc/sysconfig/network-scripts'.freeze
+  _script_directory_route = '/etc/sysconfig/network-scripts'.freeze
 
   def select_file
-    "#{SCRIPT_DIRECTORY_ROUTE}/route-#{interface}"
+    "#{_script_directory_route}/route-#{interface}"
   end
 
-  def self.target_files(script_dir = SCRIPT_DIRECTORY_ROUTE)
+  def self.target_files(script_dir = _script_directory_route)
     entries = Dir.entries(script_dir).select { |entry| entry.match %r{route-.*} }
-    entries.map { |entry| File.join(SCRIPT_DIRECTORY_ROUTE, entry) }
+    entries.map { |entry| File.join(_script_directory_route, entry) }
   end
 
   def self.parse_file(_filename, contents)
