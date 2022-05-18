@@ -364,12 +364,6 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
       end
     end
 
-    describe 'when reading an invalid interfaces' do
-      it 'with a mangled key/value should fail' do
-        expect { described_class.parse_file('eth0', 'DEVICE: eth0') }.to raise_error Puppet::Error, %r{malformed}
-      end
-    end
-
     describe 'when DEVICE is not present' do
       let(:data) { described_class.parse_file('ifcfg-eth1', fixture_data('eth1-dhcp'))[0] }
 
