@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.0.1](https://github.com/voxpupuli/puppet-network/tree/v1.0.1) (2022-05-20)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.0.0...v1.0.1)
+
+**Fixed bugs:**
+
+- Attempt to fix nil:Class errors in RHEL [\#284](https://github.com/voxpupuli/puppet-network/pull/284) ([oniGino](https://github.com/oniGino))
+
 ## [v1.0.0](https://github.com/voxpupuli/puppet-network/tree/v1.0.0) (2022-05-06)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v0.10.1...v1.0.0)
