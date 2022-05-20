@@ -97,6 +97,11 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     pair_regex = %r{^\s*(.+?)\s*=\s*(.*)\s*$}
 
+    # INFO: It is valid ifcfg format to include certain functions and strings these should not be reported as errors, but silently removed before parsing
+    # https://bugs.centos.org/bug_view_page.php?bug_id=475
+    # Remove lines with no = sign
+    lines.select! { |line| line =~ %r{^.*=.*$} }
+
     # Convert the data into key/value pairs
     pairs = lines.each_with_object({}) do |line, hash|
       raise Puppet::Error, %(#{filename} is malformed; "#{line}" did not match "#{pair_regex}") unless line.match(pair_regex) do |m|
