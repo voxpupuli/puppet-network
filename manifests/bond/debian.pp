@@ -61,9 +61,17 @@ define network::bond::debian (
     options   => $opts,
   }
 
+  $opts_slave = merge( {
+      'bond-master' => $name,
+    },
+    $slave_options
+  )
+
   network_config { $slaves:
-    ensure      => absent,
-    reconfigure => true,
-    before      => Network_config[$name],
+    ensure  => $ensure,
+    method  => 'manual',
+    onboot  => true,
+    hotplug => false,
+    options => $opts_slave,
   }
 }
