@@ -2,6 +2,12 @@
 #
 # Instantiate bonded interfaces on Debian based systems.
 #
+# == Notes
+#
+# systemd-networkd and netplan need to be disabled or removed on
+# recent versions of Ubuntu at least, as they conflict with static
+# network configs in /etc/network/interfaces which this uses.
+#
 # == See also
 #
 # * Debian Network Bonding http://wiki.debian.org/Bonding
