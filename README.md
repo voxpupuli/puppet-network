@@ -111,7 +111,7 @@ This module requires the FileMapper mixin, available at <https://github.com/voxp
 The network_config type requires the Boolean mixin, available at <https://github.com/adrienthebo/puppet-boolean>.
 
 The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra).
-`ifupdown-extra` and `ipaddress` can be installed automatically using the `network` class.
+`ifupdown-extra` can be installed automatically using the `network` class.
 To use it, include it like so in your manifests:
 
 ```puppet
