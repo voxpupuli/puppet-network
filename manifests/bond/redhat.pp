@@ -28,7 +28,7 @@ define network::bond::redhat (
   $primary_reselect = undef,
   $xmit_hash_policy = undef,
 ) {
-  $opts = merge( { 'BONDING_OPTS' => template('network/bond/opts-redhat.erb'), },
+  $opts = merge({ 'BONDING_OPTS' => template('network/bond/opts-redhat.erb'), },
     $options
   )
 
@@ -44,7 +44,7 @@ define network::bond::redhat (
     options   => $opts,
   }
 
-  $opts_slave = merge( {
+  $opts_slave = merge({
       'MASTER' => $name,
       'SLAVE'  => 'yes',
     },
