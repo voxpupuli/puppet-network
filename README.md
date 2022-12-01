@@ -122,10 +122,6 @@ This class also provides fine-grained control over which packages to install and
 how to install them. The documentation for the parameters exposed can be found
 [here](https://github.com/voxpupuli/puppet-network/blob/master/manifests/init.pp).
 
-The `ipaddress` gem can also be installed manually with:
-
-    sudo gem install ipaddress --no-ri --no-rdoc
-
 Note: you may also need to update your master's plugins (run on your puppet master):
 
     puppet agent -t --noop

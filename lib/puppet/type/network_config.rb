@@ -33,11 +33,9 @@ Puppet::Type.newtype(:network_config) do
     desc 'The IP address of the network interfaces'
     if defined? IPAddr
       validate do |value|
-        begin
-          ipa = IPAddr.new value
-        rescue IPAddr::InvalidAddressError
-          raise ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property"
-        end
+        IPAddr.new value
+      rescue IPAddr::InvalidAddressError
+        raise ArgumentError, "#{self.class} requires a valid ipaddress for the ipaddress property"
         # provider.validate
       end
     end
@@ -47,16 +45,14 @@ Puppet::Type.newtype(:network_config) do
     desc 'The subnet mask to apply to the interface'
     if defined? IPAddr
       validate do |value|
+        ipa = IPAddr.new '127.0.0.1'
+        ipa.mask(value)
+      rescue IPAddr::InvalidAddressError
         begin
-          ipa = IPAddr.new '127.0.0.1'
-          ipa.mask(value)
+          ipz = IPAddr.new '::1'
+          ipz.mask(value)
         rescue IPAddr::InvalidAddressError
-          begin
-            ipz = IPAddr.new '::1'
-            ipz.mask(value)
-          rescue IPAddr::InvalidAddressError
-            raise ArgumentError, "#{self.class} requires a valid netmask for the netmask property"
-          end
+          raise ArgumentError, "#{self.class} requires a valid netmask for the netmask property"
         end
         # provider.validate
       end
