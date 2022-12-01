@@ -48,9 +48,9 @@
 #
 # [*ensure_ipaddress*]
 #
-# What state the ifupdown-extra package should be in
+# What state the ipaddress package should be in
 #
-# Default: present
+# Default: absent
 #
 
 class network (
@@ -61,7 +61,7 @@ class network (
   $ipaddress               = 'ipaddress',
   $ipaddress_provider      = 'puppet_gem',
   $manage_ipaddress        = true,
-  $ensure_ipaddress        = present,
+  $ensure_ipaddress        = absent,
 ) {
   if $facts['os']['family'] == 'Debian' and $manage_ifupdown_extra {
     package { $ifupdown_extra:
