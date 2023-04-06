@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.1.0](https://github.com/voxpupuli/puppet-network/tree/v1.1.0) (2023-04-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.0.2...v1.1.0)
+
+**Closed issues:**
+
+- The 'options' property of the network\_route type doesn't do anything [\#295](https://github.com/voxpupuli/puppet-network/issues/295)
+
+## [v1.0.2](https://github.com/voxpupuli/puppet-network/tree/v1.0.2) (2023-04-06)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.0.1...v1.0.2)
+
+**Implemented enhancements:**
+
+- Allow for setting 'options' in network\_route on RHEL-like OS's [\#294](https://github.com/voxpupuli/puppet-network/pull/294) ([natemccurdy](https://github.com/natemccurdy))
+- Replace the IPAddress gem with the built-in IPAddr class [\#290](https://github.com/voxpupuli/puppet-network/pull/290) ([imp-](https://github.com/imp-))
+
+**Closed issues:**
+
+- Unable to set correct netmask for IPv6 [\#267](https://github.com/voxpupuli/puppet-network/issues/267)
+
+**Merged pull requests:**
+
+- puppet-lint: autofix [\#291](https://github.com/voxpupuli/puppet-network/pull/291) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v1.0.1](https://github.com/voxpupuli/puppet-network/tree/v1.0.1) (2022-05-20)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.0.0...v1.0.1)
@@ -378,15 +403,15 @@ These should not affect the functionality of the module.
 
 ## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
-
-## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.4rc1)
 
 ## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.3)
+
+## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3rc2)
 
 ## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
 
@@ -394,19 +419,19 @@ These should not affect the functionality of the module.
 
 ## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.2)
 
 **Fixed bugs:**
 
 - interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
 
-## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
-
 ## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.1)
+
+## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1rc2)
 
 ## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
 
