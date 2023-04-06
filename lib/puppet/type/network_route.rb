@@ -4,6 +4,11 @@ require_relative '../../puppet_x/voxpupuli/utils'
 Puppet::Type.newtype(:network_route) do
   @doc = 'Manage non-volatile route configuration information'
 
+  feature :provider_options, <<-EOD
+    The provider can accept a hash of arbitrary options. The semantics of
+    these options will depend on the provider.
+  EOD
+
   include PuppetX::Voxpupuli::Utils
 
   ensurable
