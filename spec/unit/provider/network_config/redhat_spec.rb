@@ -20,6 +20,10 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
     it 'is hotpluggable' do
       expect(described_class.declared_feature?(:hotpluggable)).to be true
     end
+
+    # it 'is not startmode' do
+    #   expect(described_class.declared_feature?(:startmode)).to be false
+    # end
   end
 
   describe 'selecting files to parse' do

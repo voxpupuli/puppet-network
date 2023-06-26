@@ -1,0 +1,5 @@
+# Intel Corporation 82571EB Gigabit Ethernet Controller
+LLADDR=00:26:55:e9:33:c4
+STARTMODE=hotplug
+BOOTPROTO=none
+MTU=1500

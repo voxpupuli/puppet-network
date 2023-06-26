@@ -82,6 +82,18 @@ network_route { 'default':
 }
 ```
 
+  For SLES:
+
+```sh
+network_route { 'default':
+  ensure    => 'present',
+  gateway   => '10.0.2.2',
+  interface => 'eth0',
+  netmask   => '0.0.0.0',
+  network   => 'default'
+}
+```
+
 Create resources on the fly with the `puppet resource` command:
 
     root@debian-6:~# puppet resource network_config eth1 ensure=present family=inet method=static ipaddress=169.254.0.1 netmask=255.255.0.0

@@ -22,6 +22,8 @@ Puppet::Type.newtype(:network_config) do
     disruption as it may mean bringing down the interface for a short period.
   EOD
 
+  feature :startmode, 'The system can define startmode of an interface'
+
   ensurable
 
   newparam(:name) do
@@ -86,6 +88,11 @@ Puppet::Type.newtype(:network_config) do
   newproperty(:hotplug, required_features: :hotpluggable, parent: Puppet::Property::Boolean) do
     desc 'Allow/disallow hotplug support for this interface'
     defaultto :true
+  end
+
+  newproperty(:startmode, required_features: :startmode) do
+    desc 'Allow/disallow startmode support for this interface'
+    defaultto :auto
   end
 
   newparam(:reconfigure, required_features: :reconfigurable, parent: Puppet::Property::Boolean) do
