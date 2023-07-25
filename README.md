@@ -134,6 +134,11 @@ This class also provides fine-grained control over which packages to install and
 how to install them. The documentation for the parameters exposed can be found
 [here](https://github.com/voxpupuli/puppet-network/blob/master/manifests/init.pp).
 
+Bonding on Debian requires the package [ifenslave](https://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifenslave),
+which is installed automatically when a bond is defined. This package was
+renamed in Debian 9, and therefore bonding does not work on Debian
+versions prior to 9.
+
 Note: you may also need to update your master's plugins (run on your puppet master):
 
     puppet agent -t --noop
