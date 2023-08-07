@@ -1,0 +1,5 @@
+# Broadcom Corporation NetXtreme BCM5704 Gigabit Ethernet
+LLADDR=00:12:79:91:28:20
+STARTMODE=hotplug
+BOOTPROTO=none
+MTU=1500
