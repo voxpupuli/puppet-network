@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.0.0](https://github.com/voxpupuli/puppet-network/tree/v2.0.0) (2023-10-15)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.1.0...v2.0.0)
+
+**Breaking changes:**
+
+- Drop Puppet 6 support [\#298](https://github.com/voxpupuli/puppet-network/pull/298) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Increased kmod dependency to \< 5.0.0 [\#311](https://github.com/voxpupuli/puppet-network/pull/311) ([canihavethisone](https://github.com/canihavethisone))
+- Add Puppet 8 support [\#303](https://github.com/voxpupuli/puppet-network/pull/303) ([bastelfreak](https://github.com/bastelfreak))
+- puppetlabs/stdlib: Allow 9.x [\#302](https://github.com/voxpupuli/puppet-network/pull/302) ([bastelfreak](https://github.com/bastelfreak))
+- Add SLES support to network\_route and network\_config types [\#301](https://github.com/voxpupuli/puppet-network/pull/301) ([laugmanuel](https://github.com/laugmanuel))
+
+**Fixed bugs:**
+
+- Removed deprecated and unused puppet-boolean dependency [\#310](https://github.com/voxpupuli/puppet-network/pull/310) ([canihavethisone](https://github.com/canihavethisone))
+
+**Closed issues:**
+
+- Support for SLES [\#300](https://github.com/voxpupuli/puppet-network/issues/300)
+
 ## [v1.1.0](https://github.com/voxpupuli/puppet-network/tree/v1.1.0) (2023-04-07)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.0.2...v1.1.0)
@@ -403,15 +426,15 @@ These should not affect the functionality of the module.
 
 ## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.4rc1)
-
-## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.3)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
 
 ## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
+
+## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
 
 ## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
 
@@ -419,19 +442,19 @@ These should not affect the functionality of the module.
 
 ## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
 
 **Fixed bugs:**
 
 - interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
 
-## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.1)
-
 ## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
+
+## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
 
 ## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
 
