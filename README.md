@@ -127,7 +127,7 @@ The debian routes provider requires the package [ifupdown-extra](http://packages
 To use it, include it like so in your manifests:
 
 ```puppet
-include '::network'
+include 'network'
 ```
 
 This class also provides fine-grained control over which packages to install and
