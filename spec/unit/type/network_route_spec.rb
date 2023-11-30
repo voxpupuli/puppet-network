@@ -35,6 +35,11 @@ describe Puppet::Type.type(:network_route) do
 
   describe 'when validating the attribute value' do
     describe 'network' do
+      it 'allows local' do
+        r = Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: 'local', netmask: '255.255.255.0', gateway: '23.23.23.42', interface: 'eth0')
+        expect(r[:network]).to eq('local')
+      end
+
       it 'validates the network as an IP address' do
         expect do
           Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: 'not an ip address', netmask: '255.255.255.0', gateway: '23.23.23.42', interface: 'eth0')
@@ -63,6 +68,17 @@ describe Puppet::Type.type(:network_route) do
         r = Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: '255.255.128.0', gateway: '23.23.23.42', interface: 'eth0')
         expect(r[:netmask]).to eq('255.255.128.0')
       end
+
+      it 'requires netmask when not local' do
+        expect do
+          Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', gateway: '10.0.0.1', interface: 'eth0')
+        end.to raise_error(%r{must have netmask defined})
+      end
+
+      it 'does not require netmask when local' do
+        r = Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: 'local', gateway: '10.0.0.1', interface: 'eth0')
+        expect(r[:netmask]).to be_nil
+      end
     end
 
     describe 'gateway' do
@@ -70,6 +86,17 @@ describe Puppet::Type.type(:network_route) do
         expect do
           Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: '255.255.255.0', gateway: 'not an ip address', interface: 'eth0')
         end.to raise_error(%r{Invalid value for parameter 'gateway'})
+      end
+
+      it 'requires gateway when not local' do
+        expect do
+          Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: '192.168.1.0', netmask: '255.255.255.0', interface: 'eth0')
+        end.to raise_error(%r{must have gateway defined})
+      end
+
+      it 'does not require gateway when local' do
+        r = Puppet::Type.type(:network_route).new(name: '192.168.1.0/24', network: 'local', netmask: '255.255.255.0', interface: 'eth0')
+        expect(r[:gateway]).to be_nil
       end
     end
   end
