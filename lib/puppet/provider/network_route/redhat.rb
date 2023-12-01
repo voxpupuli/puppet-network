@@ -42,13 +42,23 @@ Puppet::Type.type(:network_route).provide(:redhat) do
       route = line.split(' ', 6)
       raise Puppet::Error, 'Malformed redhat route file, cannot instantiate network_route resources' if route.length < 4
 
+      route = line.split(' ', 5) if route[0] == 'local'
+
       new_route = {}
 
-      new_route[:gateway] = route[2]
-      new_route[:interface] = route[4]
-      new_route[:options] = route[5] if route[5]
+      if route[0] == 'local'
+        new_route[:interface] = route[3]
+        new_route[:options] = route[4] if route[4]
+      else
+        new_route[:gateway] = route[2]
+        new_route[:interface] = route[4]
+        new_route[:options] = route[5] if route[5]
+      end
 
-      if ['default', '0.0.0.0'].include? route[0]
+      if route[0] == 'local'
+        new_route[:name] = route[1]
+        new_route[:network] = 'local'
+      elsif ['default', '0.0.0.0'].include? route[0]
         new_route[:name]    = 'default' # FIXME: Must match :name in order for changes to be detected
         new_route[:network] = 'default'
         new_route[:netmask] = '0.0.0.0'
@@ -72,11 +82,16 @@ Puppet::Type.type(:network_route).provide(:redhat) do
     contents << header
     # Build routes
     providers.sort_by(&:name).each do |provider|
-      %w[network netmask gateway interface].each do |prop|
+      %w[network interface].each do |prop|
         raise Puppet::Error, "#{provider.name} is missing the required parameter '#{prop}'." if provider.send(prop).nil?
+      end
+      %w[netmask gateway].each do |prop|
+        raise Puppet::Error, "#{provider.name} is missing the required parameter '#{prop}'." if provider.send(prop).nil? && provider.send('network').to_s != 'local'
       end
       contents << if provider.network == 'default'
                     "#{provider.network} via #{provider.gateway} dev #{provider.interface}"
+                  elsif provider.network == 'local'
+                    "#{provider.network} #{provider.name} dev #{provider.interface}"
                   else
                     ip = IPAddr.new("#{provider.network}/#{provider.netmask}")
                     "#{ip}/#{ip.prefix} via #{provider.gateway} dev #{provider.interface}"

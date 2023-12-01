@@ -69,6 +69,21 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
       end
     end
 
+    describe 'an advanced file using local route' do
+      let :data do
+        described_class.parse_file('', fixture_data('local_routes'))
+      end
+
+      it 'parses out normal ipv4 network routes' do
+        expect(data.find { |h| h[:name] == '10.0.0.2' }).to eq(
+          name: '10.0.0.2',
+          network: 'local',
+          interface: 'eth0',
+          options: 'proto 66 scope host table local'
+        )
+      end
+    end
+
     describe 'an invalid file' do
       it 'fails' do
         expect do
@@ -127,8 +142,20 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
       )
     end
 
+    let :local_provider do
+      instance_double(
+        'local_provider',
+        name: '10.0.0.2',
+        network: 'local',
+        netmask: nil,
+        gateway: nil,
+        interface: 'eth0',
+        options: 'proto 66 scope host table local'
+      )
+    end
+
     let :content do
-      described_class.format_file('', [route1_provider, route2_provider, defaultroute_provider, nooptions_provider])
+      described_class.format_file('', [route1_provider, route2_provider, defaultroute_provider, nooptions_provider, local_provider])
     end
 
     describe 'writing the route line' do
@@ -164,6 +191,12 @@ describe Puppet::Type.type(:network_route).provider(:redhat) do
 
       it 'does not contain the word absent when no options are defined' do
         expect(content).not_to match(%r{absent})
+      end
+    end
+
+    describe 'for local routes' do
+      it 'has local route defined' do
+        expect(content.scan(%r{^local .*$}).first).to include('local 10.0.0.2 dev eth0 proto 66 scope host table local')
       end
     end
   end

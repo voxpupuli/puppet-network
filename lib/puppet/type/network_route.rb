@@ -22,7 +22,7 @@ Puppet::Type.newtype(:network_route) do
     isrequired
     desc 'The target network address'
     validate do |value|
-      unless value == 'default'
+      unless %w[default local].include?(value)
         a = PuppetX::Voxpupuli::Utils.try { IPAddr.new(value) }
         raise("Invalid value for parameter 'network': #{value}") unless a
       end
@@ -30,7 +30,6 @@ Puppet::Type.newtype(:network_route) do
   end
 
   newproperty(:netmask) do
-    isrequired
     desc 'The subnet mask to apply to the route'
 
     validate do |value|
@@ -54,7 +53,6 @@ Puppet::Type.newtype(:network_route) do
   end
 
   newproperty(:gateway) do
-    isrequired
     desc 'The gateway to use for the route'
 
     validate do |value|
@@ -78,5 +76,10 @@ Puppet::Type.newtype(:network_route) do
     validate do |value|
       raise ArgumentError, "#{self.class} requires a string for the options property" unless value.is_a?(String)
     end
+  end
+
+  validate do
+    raise "Network_route[#{self[:name]}] must have netmask defined" if self[:network] != 'local' && self[:netmask].nil?
+    raise "Network_route[#{self[:name]}] must have gateway defined" if self[:network] != 'local' && self[:gateway].nil?
   end
 end

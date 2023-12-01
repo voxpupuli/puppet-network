@@ -80,6 +80,12 @@ network_route { 'default':
   netmask   => '0.0.0.0',
   network   => 'default'
 }
+network_route { '10.0.0.2':
+  ensure    => 'present',
+  network   => 'local',
+  interface => 'eth0',
+  options   => 'proto 66 scope host table local',
+}
 ```
 
   For SLES:
