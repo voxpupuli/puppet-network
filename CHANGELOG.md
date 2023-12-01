@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.1.0](https://github.com/voxpupuli/puppet-network/tree/v2.1.0) (2023-12-01)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.0.0...v2.1.0)
+
+**Implemented enhancements:**
+
+- Support 'local' routes with redhat provider [\#314](https://github.com/voxpupuli/puppet-network/pull/314) ([treydock](https://github.com/treydock))
+
+**Merged pull requests:**
+
+- Remove legacy top-scope syntax [\#313](https://github.com/voxpupuli/puppet-network/pull/313) ([smortex](https://github.com/smortex))
+
 ## [v2.0.0](https://github.com/voxpupuli/puppet-network/tree/v2.0.0) (2023-10-15)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v1.1.0...v2.0.0)
@@ -442,19 +454,19 @@ These should not affect the functionality of the module.
 
 ## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.2)
 
 **Fixed bugs:**
 
 - interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
 
-## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
-
 ## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.1)
+
+## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1rc2)
 
 ## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
 
