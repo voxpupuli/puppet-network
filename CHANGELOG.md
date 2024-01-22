@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.2.0](https://github.com/voxpupuli/puppet-network/tree/v2.2.0) (2024-01-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.1.0...v2.2.0)
+
+**Implemented enhancements:**
+
+- Support puppet-filemapper 4.0.0 [\#319](https://github.com/voxpupuli/puppet-network/pull/319) ([silug](https://github.com/silug))
+
+**Closed issues:**
+
+- installation of ifenslave during configuring bond fails on Debian \>=11 [\#305](https://github.com/voxpupuli/puppet-network/issues/305)
+
+**Merged pull requests:**
+
+- add EL8 Support and add missing EL flavours [\#316](https://github.com/voxpupuli/puppet-network/pull/316) ([SimonHoenscheid](https://github.com/SimonHoenscheid))
+- Add Debian 11 and 12 support [\#308](https://github.com/voxpupuli/puppet-network/pull/308) ([hbog](https://github.com/hbog))
+
 ## [v2.1.0](https://github.com/voxpupuli/puppet-network/tree/v2.1.0) (2023-12-01)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.0.0...v2.1.0)
