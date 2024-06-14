@@ -29,7 +29,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   ALIAS_REGEX = %r{.{1,12}(?<!~|\.bak|\.old|\.orig|\.rpmnew|\.rpmorig|\.rpmsave)}
 
   # @return [Regexp] The regular expression for interface scripts on redhat systems
-  SCRIPT_REGEX = %r{\Aifcfg-[a-z]+[a-z\d]+(?::#{ALIAS_REGEX}|\.#{VLAN_RANGE_REGEX})?\Z}
+  SCRIPT_REGEX = %r{\Aifcfg-[a-z]+[a-z\d.]+(?::#{ALIAS_REGEX}|\.#{VLAN_RANGE_REGEX})?\Z}
 
   NAME_MAPPINGS = {
     ipaddress: 'IPADDR',
