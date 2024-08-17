@@ -39,6 +39,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     raise MalformedInterfacesError
   end
 
+  def order_rules
+    @resource[:order_rules]
+  end
+
   class Instance
     attr_reader :name
 
@@ -240,6 +244,10 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     Instance.all_instances.map { |_name, instance| instance.to_hash }
   end
 
+  def self.interface_order(name, rules)
+    (rules['rules'].map { |entry| entry.last if name.match(entry.first) } + [rules['default']]).compact.first
+  end
+
   # Generate an array of sections
   def self.format_file(_filename, providers)
     contents = []
@@ -249,7 +257,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     auto_interfaces = providers.select { |provider| provider.onboot == true }
     unless auto_interfaces.empty?
       stanza = []
-      stanza << ('auto ' + auto_interfaces.map(&:name).sort.join(' '))
+      stanza << ('auto ' + auto_interfaces.sort_by { |provider| interface_order(provider.name, provider.order_rules) }.map(&:name).join(' '))
       contents << stanza.join("\n")
     end
 
@@ -257,12 +265,12 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
     hotplug_interfaces = providers.select { |provider| provider.hotplug == true }
     unless hotplug_interfaces.empty?
       stanza = []
-      stanza << ('allow-hotplug ' + hotplug_interfaces.map(&:name).sort.join(' '))
+      stanza << ('allow-hotplug ' + hotplug_interfaces.sort_by { |provider| interface_order(provider.name, provider.order_rules) }.map(&:name).join(' '))
       contents << stanza.join("\n")
     end
 
     # Build iface stanzas
-    providers.sort_by(&:name).each do |provider|
+    providers.sort_by { |provider| interface_order(provider.name, provider.order_rules) }.each do |provider|
       # TODO: add validation method
       raise Puppet::Error, "#{provider.name} does not have a method." if provider.method.nil?
       raise Puppet::Error, "#{provider.name} does not have a family." if provider.family.nil?
