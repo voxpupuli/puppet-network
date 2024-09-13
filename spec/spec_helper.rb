@@ -11,7 +11,7 @@ require 'voxpupuli/test/spec_helper'
 
 RSpec.configure do |c|
   c.facterdb_string_keys = false
-  c.mock_with = :rspec
+  c.mock_with :rspec
 end
 
 add_mocked_facts!
