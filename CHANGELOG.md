@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.2.1](https://github.com/voxpupuli/puppet-network/tree/v2.2.1) (2024-10-21)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.2.0...v2.2.1)
+
+**Fixed bugs:**
+
+- Ensure boolean properties munged [\#335](https://github.com/voxpupuli/puppet-network/pull/335) ([treydock](https://github.com/treydock))
+- network\_config::redhat: allow "\_" in network interface names [\#331](https://github.com/voxpupuli/puppet-network/pull/331) ([olifre](https://github.com/olifre))
+
 ## [v2.2.0](https://github.com/voxpupuli/puppet-network/tree/v2.2.0) (2024-01-22)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.1.0...v2.2.0)
@@ -124,7 +133,7 @@ These should not affect the functionality of the module.
 **Implemented enhancements:**
 
 - update version dependencies for boolean and filemappper [\#237](https://github.com/voxpupuli/puppet-network/issues/237)
-- support non numerical aliases on redhat [\#255](https://github.com/voxpupuli/puppet-network/pull/255) ([SimonPe](https://github.com/SimonPe))
+- support non numerical aliases on redhat [\#255](https://github.com/voxpupuli/puppet-network/pull/255) ([LadyNamedLaura](https://github.com/LadyNamedLaura))
 
 **Fixed bugs:**
 
@@ -455,15 +464,15 @@ These should not affect the functionality of the module.
 
 ## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
-
-## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.4rc1)
 
 ## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.3)
+
+## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3rc2)
 
 ## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
 
