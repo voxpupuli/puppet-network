@@ -53,6 +53,16 @@ Default routes should be named 'default'.
   For Debian:
 
 ```puppet
+# default route
+network_route { 'default':
+  ensure    => 'present',
+  network   => 'default',
+  netmask   => '0.0.0.0',
+  gateway   => '172.18.6.2',
+  interface => 'enp3s0f0',
+}
+
+# specific route
 network_route { '172.17.67.0/24':
   ensure    => 'present',
   gateway   => '172.18.6.2',
@@ -90,7 +100,7 @@ network_route { '10.0.0.2':
 
   For SLES:
 
-```sh
+```puppet
 network_route { 'default':
   ensure    => 'present',
   gateway   => '10.0.2.2',
