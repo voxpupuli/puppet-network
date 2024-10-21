@@ -170,8 +170,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     # For all of the remaining values, blindly toss them into the options hash.
     props[:options] = pairs
 
-    %w[onboot hotplug].each do |bool_property|
-      props[bool_property] = (props[bool_property] == 'yes') if props[bool_property]
+    %i[onboot hotplug].each do |bool_property|
+      props[bool_property] = (props[bool_property] == 'yes') unless props[bool_property].nil?
     end
 
     props[:method] = 'static' unless %w[bootp dhcp].include? props[:method]
@@ -214,8 +214,8 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   def self.unmunge(props)
     pairs = {}
 
-    %w[onboot hotplug].each do |bool_property|
-      if props[bool_property]
+    %i[onboot hotplug].each do |bool_property|
+      unless props[bool_property].nil?
         props[bool_property] = (props[bool_property] == true ? 'yes' : 'no')
       end
     end
