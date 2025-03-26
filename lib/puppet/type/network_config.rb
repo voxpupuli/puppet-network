@@ -99,6 +99,10 @@ Puppet::Type.newtype(:network_config) do
     desc 'Reconfigure the interface after the configuration has been updated'
   end
 
+  newparam(:order_rules) do
+    desc 'Specify order rules of interfaces'
+  end
+
   newproperty(:mtu) do
     desc 'The Maximum Transmission Unit size to use for the interface'
     validate do |value|
