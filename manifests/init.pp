@@ -62,6 +62,7 @@ class network (
   $ipaddress_provider      = 'puppet_gem',
   $manage_ipaddress        = true,
   $ensure_ipaddress        = absent,
+  $order_rules             = { 'default' => 10, 'rules' => [[/^lo$/, 2], [/^lo:\d+$/, 6], [/^bond\d+$/, 11], [/^bond\d+:\d+$/, 12], [/\.\d+$/, 13], [/^(lxc)?br\d+$/, 14], [/^gre\d+$/, 15]] },
 ) {
   if $facts['os']['family'] == 'Debian' and $manage_ifupdown_extra {
     package { $ifupdown_extra:
@@ -77,5 +78,9 @@ class network (
       provider => $ipaddress_provider,
     }
     Package[$ipaddress] -> Network_config <| |>
+  }
+
+  Network_config <| |> {
+    order_rules => $order_rules,
   }
 }
