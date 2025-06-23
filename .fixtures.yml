@@ -1,8 +1,8 @@
 ---
 fixtures:
   repositories:
-    kmod: https://github.com/voxpupuli/puppet-kmod
-    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
+    augeas_core: https://github.com/puppetlabs/puppetlabs-augeas_core
     boolean: https://github.com/voxpupuli/puppet-boolean
     filemapper: https://github.com/voxpupuli/puppet-filemapper
-    augeas_core: https://github.com/puppetlabs/puppetlabs-augeas_core
+    kmod: https://github.com/voxpupuli/puppet-kmod
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
