@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [Unreleased]
+
+**Implemented enhancements:**
+
+- Add NetworkManager provider using nmstate for declarative network configuration [\#XXX](https://github.com/voxpupuli/puppet-network/pull/XXX)
+  - New `nm` provider that uses nmstate to manage network configuration through NetworkManager
+  - Supports all standard network_config properties (static IP, DHCP, IPv6, MTU, etc.)
+  - Automatic interface type detection (ethernet, wifi, bond, bridge, vlan)
+  - Hot-plugging and reconfiguration support via NetworkManager
+  - Provider-specific options for advanced NetworkManager features
+  - Comprehensive test coverage and documentation
+
 ## [v2.2.1](https://github.com/voxpupuli/puppet-network/tree/v2.2.1) (2024-10-21)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.2.0...v2.2.1)

@@ -1,0 +1,46 @@
+{
+  "interfaces": [
+    {
+      "name": "eth0",
+      "type": "ethernet",
+      "state": "up",
+      "mtu": 1500,
+      "ipv4": {
+        "enabled": true,
+        "dhcp": false,
+        "address": [
+          {
+            "ip": "192.168.1.100",
+            "prefix-length": 24
+          }
+        ]
+      },
+      "ipv6": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "eth1",
+      "type": "ethernet", 
+      "state": "up",
+      "ipv4": {
+        "enabled": true,
+        "dhcp": true
+      },
+      "ipv6": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "wlan0",
+      "type": "wifi",
+      "state": "down",
+      "ipv4": {
+        "enabled": false
+      },
+      "ipv6": {
+        "enabled": false
+      }
+    }
+  ]
+}

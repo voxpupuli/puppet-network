@@ -3,12 +3,14 @@
   "version": "2.2.2-rc0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
-  "summary": "Manage non-volatile network configuration",
+  "summary": "Manage non-volatile network configuration with support for NetworkManager via nmstate",
   "source": "https://github.com/voxpupuli/puppet-network",
   "project_page": "https://github.com/voxpupuli/puppet-network",
   "issues_url": "https://github.com/voxpupuli/puppet-network/issues",
   "tags": [
     "network",
+    "networkmanager",
+    "nmstate",
     "voxpupuli"
   ],
   "operatingsystem_support": [
@@ -57,6 +59,14 @@
         "10",
         "11",
         "12"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "38",
+        "39",
+        "40"
       ]
     },
     {
