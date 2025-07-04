@@ -12,8 +12,8 @@ Puppet::Type.type(:network_config).provide(:sles) do
 
   desc 'SLES network-scripts provider'
 
-  confine osfamily: :suse
-  defaultfor osfamily: :suse
+  confine 'os.family' => :suse
+  defaultfor 'os.family' => :suse
 
   has_feature :startmode
   has_feature :provider_options

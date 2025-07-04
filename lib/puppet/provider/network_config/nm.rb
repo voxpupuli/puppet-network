@@ -9,27 +9,23 @@ Puppet::Type.type(:network_config).provide(:nm) do
   # YAML configuration and applies them using the nmstatectl command.
   #
   # @see https://nmstate.io/
-  # @see https://docs.fedoraproject.org/en-US/fedora/latest/system-administrators-guide/networking/NetworkManager/
+  # @see https://docs.fedoraproject.org/en-US/quick-docs/network-manager-quick-reference/
 
   desc 'NetworkManager provider using nmstate'
 
-  # Confine to systems that have NetworkManager and nmstate
-  confine true: begin
-    File.executable?('/usr/bin/nmstatectl') || File.executable?('/usr/local/bin/nmstatectl')
-  end
+  # Confine to systems that have nmstate
+  commands nmstatectl: 'nmstatectl'
+
+  # Confine to systems with systemd and NetworkManager active
+  confine service_provider: :systemd
+  confine true: system('systemctl', 'is-active', '--quiet', 'NetworkManager.service')
 
   # Default for systems with NetworkManager and nmstate
-  defaultfor do
-    Facter.value(:service_provider) == 'systemd' && begin
-      File.executable?('/usr/bin/nmstatectl') || File.executable?('/usr/local/bin/nmstatectl')
-    end
-  end
+  defaultfor service_provider: :systemd
 
   has_feature :provider_options
   has_feature :hotpluggable
   has_feature :reconfigurable
-
-  commands nmstatectl: 'nmstatectl'
 
   # Retrieve current network state from nmstate
   def self.instances
@@ -58,11 +54,11 @@ Puppet::Type.type(:network_config).provide(:nm) do
       }
 
       # Map interface state to network_config properties
-      if interface['state'] == 'up'
-        instance_hash[:onboot] = :true
-      else
-        instance_hash[:onboot] = :false
-      end
+      instance_hash[:onboot] = if interface['state'] == 'up'
+                                 :true
+                               else
+                                 :false
+                               end
 
       # Handle IP configuration
       if interface['ipv4'] && interface['ipv4']['enabled']
@@ -92,9 +88,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
       end
 
       # Handle MTU
-      if interface['mtu']
-        instance_hash[:mtu] = interface['mtu']
-      end
+      instance_hash[:mtu] = interface['mtu'] if interface['mtu']
 
       instances << new(instance_hash)
     end
@@ -104,7 +98,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
 
   def self.prefetch(resources)
     instances.each do |instance|
-      if resource = resources[instance.name]
+      if (resource = resources[instance.name])
         resource.provider = instance
       end
     end
@@ -130,36 +124,36 @@ Puppet::Type.type(:network_config).provide(:nm) do
     begin
       require 'ipaddr'
       IPAddr.new(netmask).to_i.to_s(2).count('1')
-    rescue
+    rescue StandardError
       # Fallback for simple netmasks
-      case netmask
-      when '255.255.255.255' then 32
-      when '255.255.255.254' then 31
-      when '255.255.255.252' then 30
-      when '255.255.255.248' then 29
-      when '255.255.255.240' then 28
-      when '255.255.255.224' then 27
-      when '255.255.255.192' then 26
-      when '255.255.255.128' then 25
-      when '255.255.255.0' then 24
-      when '255.255.254.0' then 23
-      when '255.255.252.0' then 22
-      when '255.255.248.0' then 21
-      when '255.255.240.0' then 20
-      when '255.255.224.0' then 19
-      when '255.255.192.0' then 18
-      when '255.255.128.0' then 17
-      when '255.255.0.0' then 16
-      when '255.254.0.0' then 15
-      when '255.252.0.0' then 14
-      when '255.248.0.0' then 13
-      when '255.240.0.0' then 12
-      when '255.224.0.0' then 11
-      when '255.192.0.0' then 10
-      when '255.128.0.0' then 9
-      when '255.0.0.0' then 8
-      else nil
-      end
+      simple_netmasks = {
+        '255.255.255.255' => 32,
+        '255.255.255.254' => 31,
+        '255.255.255.252' => 30,
+        '255.255.255.248' => 29,
+        '255.255.255.240' => 28,
+        '255.255.255.224' => 27,
+        '255.255.255.192' => 26,
+        '255.255.255.128' => 25,
+        '255.255.255.0'   => 24,
+        '255.255.254.0'   => 23,
+        '255.255.252.0'   => 22,
+        '255.255.248.0'   => 21,
+        '255.255.240.0'   => 20,
+        '255.255.224.0'   => 19,
+        '255.255.192.0'   => 18,
+        '255.255.128.0'   => 17,
+        '255.255.0.0'     => 16,
+        '255.254.0.0'     => 15,
+        '255.252.0.0'     => 14,
+        '255.248.0.0'     => 13,
+        '255.240.0.0'     => 12,
+        '255.224.0.0'     => 11,
+        '255.192.0.0'     => 10,
+        '255.128.0.0'     => 9,
+        '255.0.0.0'       => 8,
+      }
+      simple_netmasks[netmask]
     end
   end
 
@@ -189,6 +183,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
 
   def flush
     return unless @property_hash[:ensure] == :present
+
     apply_config
   end
 
@@ -203,13 +198,11 @@ Puppet::Type.type(:network_config).provide(:nm) do
     interface_config = {
       'name' => @resource[:name],
       'type' => determine_interface_type,
-      'state' => (@resource[:onboot] == :false) ? 'down' : 'up'
+      'state' => @resource[:onboot] == :false ? 'down' : 'up'
     }
 
     # Configure MTU
-    if @resource[:mtu]
-      interface_config['mtu'] = @resource[:mtu].to_i
-    end
+    interface_config['mtu'] = @resource[:mtu].to_i if @resource[:mtu]
 
     # Configure IP settings based on method and family
     case @resource[:method]
@@ -272,21 +265,17 @@ Puppet::Type.type(:network_config).provide(:nm) do
   def determine_interface_type
     # Try to determine interface type based on name patterns
     case @resource[:name]
-    when /^eth\d+$/
+    when %r{^eth\d+$}, %r{^enp\d+s\d+$}, %r{^ens\d+$}
       'ethernet'
-    when /^enp\d+s\d+$/
-      'ethernet'
-    when /^ens\d+$/
-      'ethernet'
-    when /^wlan\d+$/, /^wlp\d+s\d+$/
+    when %r{^wlan\d+$}, %r{^wlp\d+s\d+$}
       'wifi'
-    when /^bond\d+$/
+    when %r{^bond\d+$}
       'bond'
-    when /^br\d+$/, /^bridge\d+$/
+    when %r{^br\d+$}, %r{^bridge\d+$}
       'linux-bridge'
-    when /\.\d+$/
+    when %r{\.\d+$}
       'vlan'
-    else
+    else # rubocop:disable Lint/DuplicateBranch
       'ethernet' # Default to ethernet
     end
   end
@@ -295,21 +284,20 @@ Puppet::Type.type(:network_config).provide(:nm) do
     # Write config to temporary file
     require 'tempfile'
     temp_file = Tempfile.new(['nmstate', '.yaml'])
-    
+
     begin
       temp_file.write(config.to_yaml)
       temp_file.close
 
       # Apply the configuration
       nmstatectl('apply', temp_file.path)
-      
+
       # If reconfigure is requested, we can check the interface state
       if @resource[:reconfigure] == :true
         # nmstate automatically applies the configuration,
         # so no additional reconfiguration is needed
         Puppet.info("Network configuration applied and interface reconfigured: #{@resource[:name]}")
       end
-      
     ensure
       temp_file.unlink
     end

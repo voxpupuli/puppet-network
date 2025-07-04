@@ -3,7 +3,7 @@
   "version": "2.2.2-rc0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
-  "summary": "Manage non-volatile network configuration with support for NetworkManager via nmstate",
+  "summary": "Manage non-volatile network configuration",
   "source": "https://github.com/voxpupuli/puppet-network",
   "project_page": "https://github.com/voxpupuli/puppet-network",
   "issues_url": "https://github.com/voxpupuli/puppet-network/issues",
@@ -17,46 +17,45 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "7",
-        "8"
+        "8",
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "7",
-        "8"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "Rocky",
       "operatingsystemrelease": [
-        "8"
+        "8",
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "AlmaLinux",
       "operatingsystemrelease": [
-        "8"
+        "8",
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "7",
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Scientific",
-      "operatingsystemrelease": [
-        "7"
+        "8",
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "10",
         "11",
         "12"
       ]
@@ -64,9 +63,8 @@
     {
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
-        "38",
-        "39",
-        "40"
+        "41",
+        "42"
       ]
     },
     {
@@ -74,6 +72,14 @@
       "operatingsystemrelease": [
         "12",
         "15"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "22.04",
+        "24.04",
+        "25.04"
       ]
     }
   ],

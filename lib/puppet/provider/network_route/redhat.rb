@@ -13,8 +13,9 @@ Puppet::Type.type(:network_route).provide(:redhat) do
 
   desc 'RHEL style routes provider'
 
-  confine osfamily: :redhat
-  defaultfor osfamily: :redhat
+  confine 'os.family' => :redhat
+  defaultfor 'os.family' => :redhat
+  defaultfor 'os.release.major' => %r{^[2-7]$} # Redhat 8+ use NetworkManager
 
   has_feature :provider_options
 

@@ -100,10 +100,10 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     let(:provider) { described_class.new(name: interface_name) }
 
     context 'with ethernet interface names' do
-      ['eth0', 'eth1', 'enp0s3', 'ens33'].each do |name|
+      %w[eth0 eth1 enp0s3 ens33].each do |name|
         context "with #{name}" do
           let(:interface_name) { name }
-          
+
           it 'returns ethernet' do
             expect(provider.send(:determine_interface_type)).to eq('ethernet')
           end
@@ -112,10 +112,10 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     end
 
     context 'with wireless interface names' do
-      ['wlan0', 'wlp2s0'].each do |name|
+      %w[wlan0 wlp2s0].each do |name|
         context "with #{name}" do
           let(:interface_name) { name }
-          
+
           it 'returns wifi' do
             expect(provider.send(:determine_interface_type)).to eq('wifi')
           end
@@ -124,10 +124,10 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     end
 
     context 'with bond interface names' do
-      ['bond0', 'bond1'].each do |name|
+      %w[bond0 bond1].each do |name|
         context "with #{name}" do
           let(:interface_name) { name }
-          
+
           it 'returns bond' do
             expect(provider.send(:determine_interface_type)).to eq('bond')
           end
@@ -136,10 +136,10 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     end
 
     context 'with bridge interface names' do
-      ['br0', 'bridge0'].each do |name|
+      %w[br0 bridge0].each do |name|
         context "with #{name}" do
           let(:interface_name) { name }
-          
+
           it 'returns linux-bridge' do
             expect(provider.send(:determine_interface_type)).to eq('linux-bridge')
           end
@@ -151,7 +151,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
       ['eth0.100', 'ens33.200'].each do |name|
         context "with #{name}" do
           let(:interface_name) { name }
-          
+
           it 'returns vlan' do
             expect(provider.send(:determine_interface_type)).to eq('vlan')
           end
@@ -161,7 +161,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
     context 'with unknown interface name' do
       let(:interface_name) { 'foo0' }
-      
+
       it 'defaults to ethernet' do
         expect(provider.send(:determine_interface_type)).to eq('ethernet')
       end
@@ -225,7 +225,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     it 'correctly parses static IP configuration' do
       instances = described_class.instances
       eth0 = instances.find { |i| i.name == 'eth0' }
-      
+
       expect(eth0.get(:method)).to eq(:static)
       expect(eth0.get(:ipaddress)).to eq('192.168.1.100')
       expect(eth0.get(:netmask)).to eq('255.255.255.0')
@@ -237,7 +237,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     it 'correctly parses DHCP configuration' do
       instances = described_class.instances
       eth1 = instances.find { |i| i.name == 'eth1' }
-      
+
       expect(eth1.get(:method)).to eq(:dhcp)
       expect(eth1.get(:family)).to eq(:inet)
       expect(eth1.get(:onboot)).to eq(:true)
@@ -270,10 +270,10 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
       it 'generates correct nmstate configuration' do
         config = provider.send(:build_nmstate_config)
-        
+
         expect(config['interfaces']).to be_an(Array)
         expect(config['interfaces'].length).to eq(1)
-        
+
         interface = config['interfaces'][0]
         expect(interface['name']).to eq('eth0')
         expect(interface['type']).to eq('ethernet')
@@ -296,7 +296,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
       it 'generates correct nmstate configuration' do
         config = provider.send(:build_nmstate_config)
-        
+
         interface = config['interfaces'][0]
         expect(interface['name']).to eq('eth0')
         expect(interface['state']).to eq('up')
@@ -317,7 +317,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
       it 'generates correct nmstate configuration' do
         config = provider.send(:build_nmstate_config)
-        
+
         interface = config['interfaces'][0]
         expect(interface['ipv6']['enabled']).to be true
         expect(interface['ipv6']['dhcp']).to be false
@@ -335,7 +335,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
       it 'generates correct nmstate configuration' do
         config = provider.send(:build_nmstate_config)
-        
+
         interface = config['interfaces'][0]
         expect(interface['state']).to eq('down')
         expect(interface['ipv4']['enabled']).to be false
@@ -354,7 +354,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
 
       it 'includes provider options in configuration' do
         config = provider.send(:build_nmstate_config)
-        
+
         interface = config['interfaces'][0]
         expect(interface['ethernet']).to eq({ 'auto-negotiation' => false })
       end
@@ -380,7 +380,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     it 'applies configuration using nmstatectl' do
       expect(Tempfile).to receive(:new).with(['nmstate', '.yaml']).and_call_original
       expect(provider).to receive(:nmstatectl).with('apply', anything)
-      
+
       provider.send(:apply_nmstate_config, config)
     end
   end
@@ -410,7 +410,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
           }
         ]
       }
-      
+
       expect(provider).to receive(:apply_nmstate_config).with(expected_config)
       provider.destroy
     end
