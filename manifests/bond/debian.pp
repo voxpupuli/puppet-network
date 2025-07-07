@@ -88,7 +88,7 @@ define network::bond::debian (
     $raw_post_up = {}
   }
 
-  $opts = compact_hash(merge($raw, $raw_post_up, $options))
+  $opts = network::compact_hash(merge($raw, $raw_post_up, $options))
 
   network_config { $name:
     ensure    => $ensure,
