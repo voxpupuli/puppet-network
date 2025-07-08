@@ -1,67 +1,31 @@
-# = Class: network
+# @summary Install the packages and gems required by the network_route and network_config resources
 #
-# Install the packages and gems required by the network_route and network_config resources
+# @param ifupdown_extra
+#   The name of the ifupdown-extra package
+# @param ifupdown_extra_provider
+#   The provider of the ifupdown-extra package
+# @param manage_ifupdown_extra
+#   Whether this class should manage the ifupdown-extra package
+# @param ensure_ifupdown_extra
+#   What state the ifupdown-extra package should be in
+# @param ipaddress
+#   The name of the ipaddress gems
+# @param ipaddress_provider
+#   The provider of the ipaddress gem
+# @param manage_ipaddress
+#   Whether this class should manage the ipaddress gem
+# @param ensure_ipaddress
+#   What state the ipaddress package should be in
 #
-# == Parameters
-#
-# [*ifupdown_extra*]
-#
-# The name of the ifupdown-extra package
-#
-# Default: ifupdown-extra
-#
-# [*ifupdown_extra_provider*]
-#
-# The provider of the ifupdown-extra package
-#
-# Default: undef
-#
-# [*manage_ifupdown_extra*]
-#
-# Whether this class should manage the ifupdown-extra package
-#
-# Default: true
-#
-# [*ensure_ifupdown_extra*]
-#
-# What state the ifupdown-extra package should be in
-#
-# Default: present
-#
-# [*ipaddress*]
-#
-# The name of the ipaddress gems
-#
-# Default: ipaddress
-#
-# [*ipaddress_provider*]
-#
-# The provider of the ipaddress gem
-#
-# Default: gem
-#
-# [*manage_ipaddress*]
-#
-# Whether this class should manage the ipaddress gem
-#
-# Default: true
-#
-# [*ensure_ipaddress*]
-#
-# What state the ipaddress package should be in
-#
-# Default: absent
-#
-
 class network (
-  $ifupdown_extra          = 'ifupdown-extra',
-  $ifupdown_extra_provider = undef,
-  $manage_ifupdown_extra   = true,
-  $ensure_ifupdown_extra   = present,
-  $ipaddress               = 'ipaddress',
-  $ipaddress_provider      = 'puppet_gem',
-  $manage_ipaddress        = true,
-  $ensure_ipaddress        = absent,
+  String[1]               $ifupdown_extra          = 'ifupdown-extra',
+  Optional[String[1]]     $ifupdown_extra_provider = undef,
+  Boolean                 $manage_ifupdown_extra   = true,
+  Stdlib::Ensure::Package $ensure_ifupdown_extra   = present,
+  String[1]               $ipaddress               = 'ipaddress',
+  String[1]               $ipaddress_provider      = 'puppet_gem',
+  Boolean                 $manage_ipaddress        = true,
+  Stdlib::Ensure::Package $ensure_ipaddress        = absent,
 ) {
   if $facts['os']['family'] == 'Debian' and $manage_ifupdown_extra {
     package { $ifupdown_extra:
