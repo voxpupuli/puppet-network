@@ -13,8 +13,8 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
   desc 'Debian interfaces style provider'
 
-  confine osfamily: :debian
-  defaultfor osfamily: :debian
+  confine 'os.family' => :debian
+  defaultfor 'os.family' => :debian
 
   has_feature :provider_options
   has_feature :hotpluggable

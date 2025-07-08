@@ -1,0 +1,9 @@
+interfaces:
+- name: eth0
+  type: ethernet
+  state: up
+  ipv4:
+    enabled: true
+    dhcp: true
+  ipv6:
+    enabled: false

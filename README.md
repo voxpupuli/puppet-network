@@ -13,6 +13,73 @@
 
 Manage non-volatile network and route configuration.
 
+This module supports multiple providers for different network management systems:
+
+- **interfaces** - Debian/Ubuntu style `/etc/network/interfaces` 
+- **redhat** - Red Hat Enterprise Linux network scripts in `/etc/sysconfig/network-scripts/`
+- **sles** - SUSE Linux Enterprise network scripts in `/etc/sysconfig/network/`
+- **nm** - NetworkManager using nmstate (requires `nmstatectl` command)
+
+The NetworkManager provider (`nm`) uses [nmstate](https://nmstate.io/) to provide declarative network configuration through NetworkManager. This provider is ideal for modern Linux distributions that use NetworkManager as their primary network management service.
+
+### NetworkManager (nm) Provider
+
+The NetworkManager provider uses nmstate to apply network configuration changes. It requires:
+
+- NetworkManager service running
+- `nmstatectl` command available (from the `nmstate` package)
+
+This provider supports all standard `network_config` properties and includes additional features:
+
+- Automatic interface type detection (ethernet, wifi, bond, bridge, vlan)
+- Hot-plugging and reconfiguration support
+- Provider-specific options for advanced NetworkManager features
+- IPv4 and IPv6 support including static, DHCP, and manual configurations
+
+Example usage with NetworkManager provider:
+
+```puppet
+# Force use of NetworkManager provider
+network_config { 'eth0':
+  ensure    => 'present',
+  provider  => 'nm',
+  family    => 'inet',
+  method    => 'static',
+  ipaddress => '192.168.1.100',
+  netmask   => '255.255.255.0',
+  onboot    => 'true',
+  mtu       => 1500,
+  options   => {
+    'ethernet' => {
+      'auto-negotiation' => false,
+      'speed' => 1000,
+      'duplex' => 'full'
+    }
+  }
+}
+
+# DHCP configuration with NetworkManager
+network_config { 'eth1':
+  ensure   => 'present',
+  provider => 'nm',
+  family   => 'inet',
+  method   => 'dhcp',
+  onboot   => 'true',
+}
+
+# IPv6 static configuration
+network_config { 'eth2':
+  ensure      => 'present',
+  provider    => 'nm',
+  family      => 'inet6',
+  method      => 'static',
+  ipaddress   => '2001:db8::1',
+  netmask     => '64',
+  onboot      => 'true',
+  reconfigure => 'true',
+}
+```
+
 ## Usage
 
 Interface configuration
@@ -137,6 +204,27 @@ Create resources on the fly with the `puppet resource` command:
 
 This module requires the FileMapper mixin, available at <https://github.com/voxpupuli/puppet-filemapper>.
 The network_config type requires the Boolean mixin, available at <https://github.com/adrienthebo/puppet-boolean>.
+
+### NetworkManager Provider Dependencies
+
+The NetworkManager (`nm`) provider requires:
+
+- NetworkManager service running
+- `nmstate` package installed (provides `nmstatectl` command)
+
+On RHEL/CentOS/Fedora:
+```bash
+dnf install nmstate
+# or
+yum install nmstate
+```
+
+On Debian/Ubuntu:
+```bash
+apt-get install nmstate
+```
+
+### Other Provider Dependencies
 
 The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra).
 `ifupdown-extra` can be installed automatically using the `network` class.

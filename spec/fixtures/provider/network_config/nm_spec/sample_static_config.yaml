@@ -1,0 +1,13 @@
+interfaces:
+- name: eth0
+  type: ethernet
+  state: up
+  mtu: 1500
+  ipv4:
+    enabled: true
+    dhcp: false
+    address:
+    - ip: 192.168.1.100
+      prefix-length: 24
+  ipv6:
+    enabled: false
