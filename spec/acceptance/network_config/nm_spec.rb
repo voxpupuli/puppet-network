@@ -2,38 +2,42 @@ require 'spec_helper_acceptance'
 
 describe 'network_config with nm provider' do
   context 'when nmstate is available' do
-    before(:all) do
-      # Check if nmstate is available
-      result = shell('which nmstatectl', acceptable_exit_codes: [0, 1])
-      skip 'nmstatectl is not available' if result.exit_code != 0
+    # before(:all) do
+    #   # Check if nmstate is available
+    #   result = shell('which nmstatectl', acceptable_exit_codes: [0, 1])
+    #   skip 'nmstatectl is not available' if result.exit_code != 0
 
-      # Check if NetworkManager is running
-      result = shell('systemctl is-active NetworkManager', acceptable_exit_codes: [0, 1])
-      skip 'NetworkManager is not running' if result.exit_code != 0
+    #   # Check if NetworkManager is running
+    #   result = shell('systemctl is-active NetworkManager', acceptable_exit_codes: [0, 1])
+    #   skip 'NetworkManager is not running' if result.exit_code != 0
 
-      # Load dummy kernel module if not already loaded
-      shell('modprobe dummy', acceptable_exit_codes: [0, 1])
-    end
+    #   # Load dummy kernel module if not already loaded
+    #   shell('modprobe dummy', acceptable_exit_codes: [0, 1])
+    # end
 
     context 'managing a dummy interface' do
       let(:manifest) do
-        <<-MANIFEST
-        network_config { 'dummy0':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'manual',
-          mtu       => 1500,
-        }
+        <<~MANIFEST
+          class { 'network':
+            manage_nmstate => true,
+          }
+
+          network_config { 'dummy0':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'manual',
+            mtu       => 1500,
+          }
         MANIFEST
       end
 
       let(:cleanup_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy0':
-          ensure   => 'absent',
-          provider => 'nm',
-        }
+        <<~MANIFEST
+          network_config { 'dummy0':
+            ensure   => 'absent',
+            provider => 'nm',
+          }
         MANIFEST
       end
 
@@ -65,26 +69,26 @@ describe 'network_config with nm provider' do
 
     context 'managing a dummy interface with static IP' do
       let(:manifest) do
-        <<-MANIFEST
-        network_config { 'dummy1':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'static',
-          family    => 'inet',
-          ipaddress => '192.0.2.100',
-          netmask   => '255.255.255.0',
-          mtu       => 1500,
-        }
+        <<~MANIFEST
+          network_config { 'dummy1':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'static',
+            family    => 'inet',
+            ipaddress => '192.0.2.100',
+            netmask   => '255.255.255.0',
+            mtu       => 1500,
+          }
         MANIFEST
       end
 
       let(:cleanup_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy1':
-          ensure   => 'absent',
-          provider => 'nm',
-        }
+        <<~MANIFEST
+          network_config { 'dummy1':
+            ensure   => 'absent',
+            provider => 'nm',
+          }
         MANIFEST
       end
 
@@ -118,26 +122,26 @@ describe 'network_config with nm provider' do
 
     context 'managing a dummy interface with IPv6' do
       let(:manifest) do
-        <<-MANIFEST
-        network_config { 'dummy2':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'static',
-          family    => 'inet6',
-          ipaddress => '2001:db8::100',
-          netmask   => '64',
-          mtu       => 1500,
-        }
+        <<~MANIFEST
+          network_config { 'dummy2':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'static',
+            family    => 'inet6',
+            ipaddress => '2001:db8::100',
+            netmask   => '64',
+            mtu       => 1500,
+          }
         MANIFEST
       end
 
       let(:cleanup_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy2':
-          ensure   => 'absent',
-          provider => 'nm',
-        }
+        <<~MANIFEST
+          network_config { 'dummy2':
+            ensure   => 'absent',
+            provider => 'nm',
+          }
         MANIFEST
       end
 
@@ -171,24 +175,24 @@ describe 'network_config with nm provider' do
 
     context 'managing interface with provider options' do
       let(:manifest) do
-        <<-MANIFEST
-        network_config { 'dummy3':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'manual',
-          mtu       => 1400,
-          options   => { 'accept-ra' => false },
-        }
+        <<~MANIFEST
+          network_config { 'dummy3':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'manual',
+            mtu       => 1400,
+            options   => { 'accept-ra' => false },
+          }
         MANIFEST
       end
 
       let(:cleanup_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy3':
-          ensure   => 'absent',
-          provider => 'nm',
-        }
+        <<~MANIFEST
+          network_config { 'dummy3':
+            ensure   => 'absent',
+            provider => 'nm',
+          }
         MANIFEST
       end
 
@@ -220,41 +224,41 @@ describe 'network_config with nm provider' do
 
     context 'updating interface configuration' do
       let(:initial_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy4':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'static',
-          family    => 'inet',
-          ipaddress => '192.0.2.200',
-          netmask   => '255.255.255.0',
-          mtu       => 1500,
-        }
+        <<~MANIFEST
+          network_config { 'dummy4':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'static',
+            family    => 'inet',
+            ipaddress => '192.0.2.200',
+            netmask   => '255.255.255.0',
+            mtu       => 1500,
+          }
         MANIFEST
       end
 
       let(:updated_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy4':
-          ensure    => 'present',
-          provider  => 'nm',
-          onboot    => true,
-          method    => 'static',
-          family    => 'inet',
-          ipaddress => '192.0.2.201',
-          netmask   => '255.255.255.0',
-          mtu       => 1400,
-        }
+        <<~MANIFEST
+          network_config { 'dummy4':
+            ensure    => 'present',
+            provider  => 'nm',
+            onboot    => true,
+            method    => 'static',
+            family    => 'inet',
+            ipaddress => '192.0.2.201',
+            netmask   => '255.255.255.0',
+            mtu       => 1400,
+          }
         MANIFEST
       end
 
       let(:cleanup_manifest) do
-        <<-MANIFEST
-        network_config { 'dummy4':
-          ensure   => 'absent',
-          provider => 'nm',
-        }
+        <<~MANIFEST
+          network_config { 'dummy4':
+            ensure   => 'absent',
+            provider => 'nm',
+          }
         MANIFEST
       end
 
@@ -303,13 +307,13 @@ describe 'network_config with nm provider' do
     end
 
     let(:manifest) do
-      <<-MANIFEST
-      network_config { 'dummy0':
-        ensure    => 'present',
-        provider  => 'nm',
-        onboot    => true,
-        method    => 'manual',
-      }
+      <<~MANIFEST
+        network_config { 'dummy0':
+          ensure    => 'present',
+          provider  => 'nm',
+          onboot    => true,
+          method    => 'manual',
+        }
       MANIFEST
     end
 
