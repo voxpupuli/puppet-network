@@ -54,11 +54,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
       }
 
       # Map interface state to network_config properties
-      instance_hash[:onboot] = if interface['state'] == 'up'
-                                 :true
-                               else
-                                 :false
-                               end
+      instance_hash[:onboot] = (interface['state'] == 'up')
 
       # Handle IP configuration
       if interface['ipv4'] && interface['ipv4']['enabled']
@@ -85,10 +81,17 @@ Puppet::Type.type(:network_config).provide(:nm) do
         end
       else
         instance_hash[:method] = :manual
+        instance_hash[:family] = :inet # Default to inet when no IP config is present
       end
 
       # Handle MTU
       instance_hash[:mtu] = interface['mtu'] if interface['mtu']
+
+      # Set hotplug default (this property doesn't have a direct nmstate equivalent)
+      instance_hash[:hotplug] = true
+
+      # Set mode default (basic interface mode)
+      instance_hash[:mode] = :raw
 
       instances << new(instance_hash)
     end
@@ -306,7 +309,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
     end
   end
 
-  # Property getters
+  # Property getters and setters
   def onboot
     @property_hash[:onboot]
   end
@@ -369,5 +372,13 @@ Puppet::Type.type(:network_config).provide(:nm) do
 
   def options=(value)
     @property_hash[:options] = value
+  end
+
+  def mode
+    @property_hash[:mode]
+  end
+
+  def mode=(value)
+    @property_hash[:mode] = value
   end
 end
