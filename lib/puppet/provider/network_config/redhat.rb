@@ -13,8 +13,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
   desc 'Redhat network-scripts provider'
 
   confine 'os.family' => :redhat
-  defaultfor 'os.family' => :redhat
-  defaultfor 'os.release.major' => %r{^[2-7]$} # Redhat 8+ use NetworkManager
+  defaultfor 'os.family' => :redhat, 'os.release.major' => %r{^[2-7]$} # Redhat 8+ use NetworkManager
 
   has_feature :hotpluggable
   has_feature :provider_options
