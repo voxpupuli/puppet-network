@@ -65,7 +65,7 @@
 define network::bond (
   Array[String[1]]                                   $slaves,
   Stdlib::Ensure::Package                            $ensure             = present,
-  Optional[Stdlib::IP::Address::V4]                  $ipaddress          = undef,
+  Optional[Stdlib::IP::Address::Nosubnet]            $ipaddress          = undef,
   Optional[String[1]]                                $netmask            = undef,
   Optional[String[1]]                                $method             = undef,
   Optional[Enum['inet', 'inet6']]                    $family             = undef,
