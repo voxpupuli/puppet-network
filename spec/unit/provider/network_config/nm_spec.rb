@@ -213,7 +213,7 @@ describe Puppet::Type.type(:network_config).provider(:nm) do
     end
 
     before do
-      allow(described_class).to receive(:nmstatectl).with('show', '--json').and_return(nmstate_output)
+      allow(described_class).to receive(:nmstatectl).with('show', '--json', '-q').and_return(nmstate_output)
     end
 
     it 'returns network interfaces excluding loopback' do

@@ -46,7 +46,7 @@ describe Puppet::Type.type(:network_route).provider(:nm) do
     end
 
     before do
-      allow(provider_class).to receive(:nmstatectl).with('show', '--json').and_return(nmstate_output)
+      allow(provider_class).to receive(:nmstatectl).with('show', '--json', '-q').and_return(nmstate_output)
     end
 
     it 'returns route instances' do

@@ -30,7 +30,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
   # Retrieve current network state from nmstate
   def self.instances
     begin
-      output = nmstatectl('show', '--json')
+      output = nmstatectl('show', '--json', '-q')
       state = JSON.parse(output)
     rescue Puppet::ExecutionFailure => e
       Puppet.debug("Failed to get nmstate configuration: #{e.message}")
@@ -264,6 +264,7 @@ Puppet::Type.type(:network_config).provide(:nm) do
 
   def determine_interface_type
     # Try to determine interface type based on name patterns
+    Puppet.debug("Determining interface type for #{@resource[:name]}")
     case @resource[:name]
     when %r{^eth\d+$}, %r{^enp\d+s\d+$}, %r{^ens\d+$}
       'ethernet'
@@ -275,6 +276,8 @@ Puppet::Type.type(:network_config).provide(:nm) do
       'linux-bridge'
     when %r{\.\d+$}
       'vlan'
+    when %r{^dummy\d+$}
+      'dummy'
     else # rubocop:disable Lint/DuplicateBranch
       'ethernet' # Default to ethernet
     end

@@ -29,7 +29,7 @@ Puppet::Type.type(:network_route).provide(:nm) do
   # Retrieve current network route state from nmstate
   def self.instances
     begin
-      output = nmstatectl('show', '--json')
+      output = nmstatectl('show', '--json', '-q')
       state = JSON.parse(output)
     rescue Puppet::ExecutionFailure => e
       Puppet.debug("Failed to get nmstate configuration: #{e.message}")
