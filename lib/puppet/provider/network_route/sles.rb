@@ -13,8 +13,8 @@ Puppet::Type.type(:network_route).provide(:sles) do
 
   desc 'SLES style routes provider'
 
-  confine osfamily: :suse
-  defaultfor osfamily: :suse
+  confine 'os.family' => :suse
+  defaultfor 'os.family' => :suse
 
   has_feature :provider_options
 

@@ -7,3 +7,5 @@ Gemfile:
     ':test':
       - gem: 'ipaddress'
       - gem: 'rspec-its'
+spec/spec_helper_acceptance.rb:
+  unmanaged: false
