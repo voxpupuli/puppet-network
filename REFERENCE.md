@@ -22,7 +22,8 @@
 
 ### Functions
 
-* [`compact_hash`](#compact_hash): compact_hash ============  Compresses a hash to remove all elements whose values are nil or undef.  Examples --------  $example = {   'one'  
+* [`compact_hash`](#compact_hash): Compresses a hash to remove all elements whose values are nil or undef.
+* [`network::compact_hash`](#network--compact_hash): Compresses a hash by removing all elements whose values are `undef`
 
 ## Classes
 
@@ -889,41 +890,59 @@ usually discover the appropriate provider for your platform.
 
 Type: Ruby 3.x API
 
-compact_hash
-============
-
 Compresses a hash to remove all elements whose values are nil or undef.
 
-Examples
---------
-
-$example = {
-  'one'  => 'two',
-  'red'  => undef,
-  'blue' => nil,
-}
-
-compact_hash($example)
-# => { 'one => 'two' }
+* **DEPRECATED** This function is deprecated. Use the network::compact_hash() function instead.
 
 #### `compact_hash()`
 
-compact_hash
-============
-
 Compresses a hash to remove all elements whose values are nil or undef.
 
-Examples
---------
+Returns: `Any`
 
+### <a name="network--compact_hash"></a>`network::compact_hash`
+
+Type: Puppet Language
+
+Compresses a hash by removing all elements whose values are `undef`
+
+#### Examples
+
+##### 
+
+```puppet
 $example = {
   'one'  => 'two',
   'red'  => undef,
-  'blue' => nil,
 }
 
-compact_hash($example)
+network::compact_hash($example)
 # => { 'one => 'two' }
+```
 
-Returns: `Any`
+#### `network::compact_hash(Hash $hash)`
+
+The network::compact_hash function.
+
+Returns: `Hash` A new hash with all `undef` values removed
+
+##### Examples
+
+###### 
+
+```puppet
+$example = {
+  'one'  => 'two',
+  'red'  => undef,
+}
+
+network::compact_hash($example)
+# => { 'one => 'two' }
+```
+
+##### `hash`
+
+Data type: `Hash`
+
+The hash to compact
 
