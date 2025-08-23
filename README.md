@@ -15,6 +15,9 @@ Manage non-volatile network and route configuration.
 
 ## Usage
 
+> [!NOTE]
+> This module defines custom types (`network_config` and `network_route`) that require proper plugin synchronization. If you encounter errors like "Could not autoload puppet/type/network_config", you may need to run `puppet generate types` on your Puppet server (for Puppet 6+) or `puppet plugin download` (for older versions). See [issue #77](https://github.com/voxpupuli/puppet-network/issues/77) for more details.
+
 Interface configuration
 
 ```puppet
