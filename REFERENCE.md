@@ -217,7 +217,7 @@ Default value: `undef`
 
 ##### <a name="-network--bond--hotplug"></a>`hotplug`
 
-Data type: `Variant[Boolean, Enum['true', 'false'], Undef]`
+Data type: `Optional[Variant[Boolean, Enum['true', 'false']]]`
 
 Whether to allow hotplug for the interface
 

@@ -70,7 +70,7 @@ define network::bond (
   Optional[String[1]]                                $method             = undef,
   Optional[Enum['inet', 'inet6']]                    $family             = undef,
   Optional[Boolean]                                  $onboot             = undef,
-  Variant[Boolean, Enum['true', 'false'], Undef]     $hotplug            = undef,
+  Optional[Variant[Boolean, Enum['true', 'false']]]  $hotplug            = undef,
   Optional[Enum['slow', 'fast', '0', '1']]           $lacp_rate          = undef,
   Optional[
     Variant[Integer[42, 65536], Pattern[/^\d+$/]]
