@@ -139,7 +139,6 @@ Create resources on the fly with the `puppet resource` command:
 ## Dependencies
 
 This module requires the FileMapper mixin, available at <https://github.com/voxpupuli/puppet-filemapper>.
-The network_config type requires the Boolean mixin, available at <https://github.com/adrienthebo/puppet-boolean>.
 
 The debian routes provider requires the package [ifupdown-extra](http://packages.debian.org/search?suite=all&section=all&arch=any&searchon=names&keywords=ifupdown-extra).
 `ifupdown-extra` can be installed automatically using the `network` class.
