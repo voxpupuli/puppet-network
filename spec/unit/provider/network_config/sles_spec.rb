@@ -36,7 +36,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
                      ifcfg-eth0.4095 ifcfg-bond1.1001]
 
     invalid_files = %w[.ifcfg-bond0.swp ifcfg-bond1~ ifcfg-vlan500.bak
-                       ifcfg-eth0:my.alias.bak ifcfg-eth0.4096]
+                       ifcfg-eth0_my.alias.bak ifcfg-eth0.4096]
 
     valid_files.each do |file|
       it { is_expected.to include file }
