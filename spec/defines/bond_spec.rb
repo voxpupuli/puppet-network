@@ -21,7 +21,7 @@ describe 'network::bond', type: :define do
       'lacp_rate' => 'slow',
       'primary' => 'eth0',
       'primary_reselect' => 'always',
-      'xmit_hash_policy' => 'layer2'
+      'xmit_hash_policy' => 'layer2',
     }
   end
 
@@ -30,7 +30,7 @@ describe 'network::bond', type: :define do
       let(:facts) do
         {
           os: { family: 'RedHat' },
-          augeasversion: '1.4.0'
+          augeasversion: '1.4.0',
         }
       end
 
@@ -47,7 +47,7 @@ describe 'network::bond', type: :define do
       let(:facts) do
         {
           os: { family: 'Debian' },
-          augeasversion: '1.4.0'
+          augeasversion: '1.4.0',
         }
       end
 
@@ -63,7 +63,7 @@ describe 'network::bond', type: :define do
     describe 'on an unsupported osfamily' do
       let(:facts) do
         {
-          os: { family: 'SparrowOS' }
+          os: { family: 'SparrowOS' },
         }
       end
 
@@ -77,7 +77,7 @@ describe 'network::bond', type: :define do
     let(:facts) do
       {
         os: { family: 'Debian' },
-        augeasversion: '1.4.0'
+        augeasversion: '1.4.0',
       }
     end
 

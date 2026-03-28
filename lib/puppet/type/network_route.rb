@@ -40,7 +40,7 @@ Puppet::Type.newtype(:network_route) do
       # '255.255.255.255'.to_i  will return 255, so we try to convert it back:
       if value.to_i.to_s == value
         # what are the chances someone is using /16 for their IPv6 network?
-        addr = value.to_i <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        addr = (value.to_i <= 32) ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
         IPAddr.new(addr).mask(value.strip.to_i).to_s
       elsif PuppetX::Voxpupuli::Utils.try { IPAddr.new(value).ipv6? }
         IPAddr.new('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').mask(value).to_s

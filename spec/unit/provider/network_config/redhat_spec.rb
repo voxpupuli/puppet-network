@@ -125,7 +125,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
         its(:options) do
           is_expected.to eq(
-            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
           )
         end
       end
@@ -140,7 +140,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
 
         its(:options) do
           is_expected.to eq(
-            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+            'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
           )
         end
       end
@@ -156,7 +156,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
           is_expected.to eq(
             'HWADDR' => '00:12:79:91:28:1f',
             'SLAVE' => 'yes',
-            'MASTER' => 'bond0'
+            'MASTER' => 'bond0',
           )
         end
       end
@@ -172,7 +172,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
           is_expected.to eq(
             'HWADDR' => '00:12:79:91:28:20',
             'SLAVE' => 'yes',
-            'MASTER' => 'bond0'
+            'MASTER' => 'bond0',
           )
         end
       end
@@ -188,7 +188,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
           is_expected.to eq(
             'HWADDR' => '00:26:55:e9:33:c4',
             'SLAVE' => 'yes',
-            'MASTER' => 'bond1'
+            'MASTER' => 'bond1',
           )
         end
       end
@@ -204,7 +204,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
           is_expected.to eq(
             'HWADDR' => '00:26:55:e9:33:c5',
             'SLAVE' => 'yes',
-            'MASTER' => 'bond1'
+            'MASTER' => 'bond1',
           )
         end
       end
@@ -222,7 +222,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
           is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
             'PHYSDEV' => 'bond0',
-            'GATEWAY' => '172.24.61.1'
+            'GATEWAY' => '172.24.61.1',
           )
         end
       end
@@ -249,7 +249,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:options) do
           is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV' => 'bond0'
+            'PHYSDEV' => 'bond0',
           )
         end
       end
@@ -266,7 +266,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:options) do
           is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV' => 'bond0'
+            'PHYSDEV' => 'bond0',
           )
         end
       end
@@ -283,7 +283,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:options) do
           is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV' => 'bond0'
+            'PHYSDEV' => 'bond0',
           )
         end
       end
@@ -300,7 +300,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
         its(:options) do
           is_expected.to eq(
             'VLAN_NAME_TYPE' => 'VLAN_PLUS_VID_NO_PAD',
-            'PHYSDEV' => 'bond0'
+            'PHYSDEV' => 'bond0',
           )
         end
       end
@@ -326,7 +326,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
             'IPV6INIT' => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE' => 'Ethernet',
-            'BRIDGE' => 'br1'
+            'BRIDGE' => 'br1',
           )
         end
       end
@@ -344,7 +344,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
             'IPV6INIT' => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE' => 'Ethernet',
-            'BRIDGE' => 'br1'
+            'BRIDGE' => 'br1',
           )
         end
       end
@@ -362,7 +362,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
             'IPV6INIT' => 'no',
             'NM_CONTROLLED' => 'no',
             'TYPE' => 'Ethernet',
-            'BRIDGE' => 'br4095'
+            'BRIDGE' => 'br4095',
           )
         end
       end
@@ -445,7 +445,7 @@ describe Puppet::Type.type(:network_config).provider(:redhat) do
                       mtu: '1500',
                       mode: nil,
                       options: {
-                        'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+                        'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
                       })
     end
 

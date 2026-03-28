@@ -69,7 +69,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
         method: @method,
         mtu: @mtu,
         mode: @mode,
-        options: squeeze_options
+        options: squeeze_options,
       }
 
       h.each_with_object({}) do |(key, val), hash|
@@ -223,7 +223,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
 
             name = current_interface
 
-            case key # rubocop:disable Metrics/BlockNesting
+            case key
             when 'address' then         Instance[name].ipaddress    = val
             when 'netmask' then         Instance[name].netmask      = val
             when 'mtu' then             Instance[name].mtu          = val
@@ -284,7 +284,7 @@ Puppet::Type.type(:network_config).provide(:interfaces) do
       [
         [:ipaddress, 'address'],
         [:netmask,   'netmask'],
-        [:mtu,       'mtu']
+        [:mtu,       'mtu'],
       ].each do |(property, section)|
         stanza << "#{section} #{provider.send property}" if provider.send(property) && provider.send(property) != :absent
       end

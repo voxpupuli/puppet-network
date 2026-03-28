@@ -38,7 +38,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
     onboot: 'ONBOOT',
     name: 'DEVICE',
     hotplug: 'HOTPLUG',
-    mtu: 'MTU'
+    mtu: 'MTU',
   }.freeze
 
   # Map provider instances to files based on their name
@@ -216,7 +216,7 @@ Puppet::Type.type(:network_config).provide(:redhat) do
 
     %i[onboot hotplug].each do |bool_property|
       unless props[bool_property].nil?
-        props[bool_property] = (props[bool_property] == true ? 'yes' : 'no')
+        props[bool_property] = ((props[bool_property] == true) ? 'yes' : 'no')
       end
     end
 

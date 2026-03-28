@@ -28,7 +28,7 @@ describe Puppet::Type.type(:network_route) do
 
     describe 'ensure' do
       it 'is an ensurable value' do
-        expect(Puppet::Type.type(:network_route).propertybyname(:ensure).ancestors).to be_include(Puppet::Property::Ensure)
+        expect(Puppet::Type.type(:network_route).propertybyname(:ensure).ancestors).to include(Puppet::Property::Ensure)
       end
     end
   end

@@ -16,7 +16,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         network: '172.17.67.0',
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
-        interface: 'vlan200'
+        interface: 'vlan200',
       )
     end
 
@@ -29,7 +29,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         network: 'default',
         netmask: '0.0.0.0',
         gateway: '172.18.6.2',
-        interface: 'vlan200'
+        interface: 'vlan200',
       )
     end
 
@@ -42,7 +42,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         network: '2a01:4f8:211:9d5:53::',
         netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
         gateway: '2a01:4f8:211:9d5::2',
-        interface: 'vlan200'
+        interface: 'vlan200',
       )
     end
 
@@ -56,7 +56,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
         interface: 'vlan200',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -70,7 +70,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
         gateway: '2a01:4f8:211:9d5::2',
         interface: 'vlan200',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -92,7 +92,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
         interface: 'vlan200',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -104,7 +104,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
         interface: 'eth0',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -146,7 +146,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
         interface: 'vlan200',
-        options: :absent
+        options: :absent,
       )
     end
 
@@ -158,7 +158,7 @@ describe Puppet::Type.type(:network_route).provider(:routes) do
         netmask: '255.255.255.0',
         gateway: '172.18.6.2',
         interface: 'eth0',
-        options: :absent
+        options: :absent,
       )
     end
 
