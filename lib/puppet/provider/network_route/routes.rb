@@ -96,10 +96,10 @@ Puppet::Type.type(:network_route).provide(:routes) do
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'gateway'." if provider.gateway.nil?
       raise Puppet::Error, "#{provider.name} is missing the required parameter 'interface'." if provider.interface.nil?
 
-      netmask = (provider.name == 'default' ? '0.0.0.0' : provider.netmask)
+      netmask = ((provider.name == 'default') ? '0.0.0.0' : provider.netmask)
 
       contents << "#{provider.network} #{netmask} #{provider.gateway} #{provider.interface}"
-      contents << (provider.options == :absent ? "\n" : " #{provider.options}\n")
+      contents << ((provider.options == :absent) ? "\n" : " #{provider.options}\n")
     end
 
     contents.join

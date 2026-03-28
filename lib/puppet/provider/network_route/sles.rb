@@ -54,7 +54,7 @@ Puppet::Type.type(:network_route).provide(:sles) do
         new_route[:netmask] = '0.0.0.0'
       else
         ip                  = IPAddr.new(route[0])
-        netmask_addr        = ip.prefix <= 32 ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+        netmask_addr        = (ip.prefix <= 32) ? '255.255.255.255' : 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
         netmask             = IPAddr.new("#{netmask_addr}/#{ip.prefix}")
         new_route[:name]    = "#{ip}/#{ip.prefix}" # FIXME: Must match :name in order for changes to be detected
         new_route[:network] = ip.to_s
@@ -81,7 +81,7 @@ Puppet::Type.type(:network_route).provide(:sles) do
                     ip = IPAddr.new("#{provider.network}/#{provider.netmask}")
                     "#{ip}/#{ip.prefix} #{provider.gateway} - #{provider.interface}"
                   end
-      contents << (provider.options == :absent ? "\n" : " #{provider.options}\n")
+      contents << ((provider.options == :absent) ? "\n" : " #{provider.options}\n")
     end
     contents.join
   end

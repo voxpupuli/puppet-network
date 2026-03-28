@@ -16,7 +16,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
           network: '172.17.67.0',
           netmask: '255.255.255.252',
           gateway: '172.18.6.2',
-          interface: 'vlan200'
+          interface: 'vlan200',
         )
       end
 
@@ -26,7 +26,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
           network: '2a01:4f8:211:9d5:53::',
           netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
           gateway: '2a01:4f8:211:9d5::2',
-          interface: 'vlan200'
+          interface: 'vlan200',
         )
       end
 
@@ -36,7 +36,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
           network: 'default',
           netmask: '0.0.0.0',
           gateway: '10.0.0.1',
-          interface: 'eth1'
+          interface: 'eth1',
         )
       end
     end
@@ -53,7 +53,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
           netmask: 'ffff:ffff:ffff:ffff:ffff:ffff::',
           gateway: '2a01:4f8:211:9d5::2',
           interface: 'vlan200',
-          options: 'table 200'
+          options: 'table 200',
         )
       end
 
@@ -64,7 +64,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
           netmask: '255.255.255.252',
           gateway: '172.18.6.2',
           interface: 'vlan200',
-          options: 'table 200'
+          options: 'table 200',
         )
       end
     end
@@ -87,7 +87,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
         netmask: '30',
         gateway: '172.18.6.2',
         interface: 'vlan200',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -99,7 +99,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
         netmask: '30',
         gateway: '172.18.6.2',
         interface: 'eth0',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -111,7 +111,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
         netmask: '',
         gateway: '10.0.0.1',
         interface: 'eth1',
-        options: 'table 200'
+        options: 'table 200',
       )
     end
 
@@ -123,7 +123,7 @@ describe Puppet::Type.type(:network_route).provider(:sles) do
         netmask: '',
         gateway: '10.0.0.1',
         interface: 'eth2',
-        options: :absent
+        options: :absent,
       )
     end
 

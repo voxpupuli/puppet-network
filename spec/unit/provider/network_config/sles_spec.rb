@@ -111,7 +111,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
             'BONDING_MASTER'      => 'yes',
             'BONDING_MODULE_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
             'BONDING_SLAVE_0'     => 'eth0',
-            'BONDING_SLAVE_1'     => 'eth1'
+            'BONDING_SLAVE_1'     => 'eth1',
           )
         end
       end
@@ -129,7 +129,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
             'BONDING_MASTER'      => 'yes',
             'BONDING_MODULE_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
             'BONDING_SLAVE_0'     => 'eth2',
-            'BONDING_SLAVE_1'     => 'eth3'
+            'BONDING_SLAVE_1'     => 'eth3',
           )
         end
       end
@@ -143,7 +143,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'LLADDR' => '00:12:79:91:28:1f'
+            'LLADDR' => '00:12:79:91:28:1f',
           )
         end
       end
@@ -157,7 +157,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'LLADDR' => '00:12:79:91:28:20'
+            'LLADDR' => '00:12:79:91:28:20',
           )
         end
       end
@@ -171,7 +171,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'LLADDR' => '00:26:55:e9:33:c4'
+            'LLADDR' => '00:26:55:e9:33:c4',
           )
         end
       end
@@ -185,7 +185,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'LLADDR' => '00:26:55:e9:33:c5'
+            'LLADDR' => '00:26:55:e9:33:c5',
           )
         end
       end
@@ -201,7 +201,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'ETHERDEVICE' => 'bond0'
+            'ETHERDEVICE' => 'bond0',
           )
         end
       end
@@ -217,7 +217,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
 
         its(:options) do
           is_expected.to eq(
-            'ETHERDEVICE' => 'bond0'
+            'ETHERDEVICE' => 'bond0',
           )
         end
       end
@@ -241,7 +241,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
         its(:options) do
           is_expected.to eq(
             'INTERFACETYPE' => 'Ethernet',
-            'ETHERDEVICE' => 'br4095'
+            'ETHERDEVICE' => 'br4095',
           )
         end
       end
@@ -297,7 +297,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
                       mtu: :absent,
                       mode: :vlan,
                       options: {
-                        'ETHERDEVICE' => 'eth1'
+                        'ETHERDEVICE' => 'eth1',
                       })
     end
 
@@ -324,7 +324,7 @@ describe Puppet::Type.type(:network_config).provider(:sles) do
                       mtu: '1500',
                       mode: nil,
                       options: {
-                        'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4)
+                        'BONDING_OPTS' => %(mode=4 miimon=100 xmit_hash_policy=layer3+4),
                       })
     end
 

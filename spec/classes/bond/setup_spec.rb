@@ -4,7 +4,7 @@ describe 'network::bond::setup', type: :class do
   describe 'on Debian' do
     let(:facts) do
       {
-        os: { family: 'Debian' }
+        os: { family: 'Debian' },
       }
     end
 
