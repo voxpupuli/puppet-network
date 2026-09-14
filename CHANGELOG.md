@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.0.0](https://github.com/voxpupuli/puppet-network/tree/v3.0.0) (2026-09-14)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.2.1...v3.0.0)
+
+**Breaking changes:**
+
+- Drop puppet, update openvox minimum version to 8.19 [\#350](https://github.com/voxpupuli/puppet-network/pull/350) ([TheMeier](https://github.com/TheMeier))
+- drop support for SLES 12 [\#342](https://github.com/voxpupuli/puppet-network/pull/342) ([thomas-merz](https://github.com/thomas-merz))
+
+**Implemented enhancements:**
+
+- replace deprecated calls with Facter::Core::Execution [\#366](https://github.com/voxpupuli/puppet-network/pull/366) ([corporate-gadfly](https://github.com/corporate-gadfly))
+- remove merge\(\) in favor of + [\#359](https://github.com/voxpupuli/puppet-network/pull/359) ([marcusdots](https://github.com/marcusdots))
+- metadata.json: Add OpenVox [\#340](https://github.com/voxpupuli/puppet-network/pull/340) ([jstraw](https://github.com/jstraw))
+
+**Merged pull requests:**
+
+- fix\(documentation\): remove dependency on boolean mixin [\#356](https://github.com/voxpupuli/puppet-network/pull/356) ([tuxmea](https://github.com/tuxmea))
+- Add a note to the README re needing `puppet generate types` [\#352](https://github.com/voxpupuli/puppet-network/pull/352) ([bwitt](https://github.com/bwitt))
+- fix: replace legacy facts in route provider [\#349](https://github.com/voxpupuli/puppet-network/pull/349) ([TheMeier](https://github.com/TheMeier))
+- Move Ruby compact\_hash function to Puppet code [\#346](https://github.com/voxpupuli/puppet-network/pull/346) ([silug](https://github.com/silug))
+- Add documentation for openvox-strings [\#345](https://github.com/voxpupuli/puppet-network/pull/345) ([silug](https://github.com/silug))
+
 ## [v2.2.1](https://github.com/voxpupuli/puppet-network/tree/v2.2.1) (2024-10-21)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-network/compare/v2.2.0...v2.2.1)
@@ -464,15 +487,15 @@ These should not affect the functionality of the module.
 
 ## [0.0.4rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.4rc1) (2012-10-28)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.4rc1)
-
-## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.3)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc2...0.0.4rc1)
 
 ## [0.0.3rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc2) (2012-10-22)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3...0.0.3rc2)
+
+## [0.0.3](https://github.com/voxpupuli/puppet-network/tree/0.0.3) (2012-10-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.3rc1...0.0.3)
 
 ## [0.0.3rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.3rc1) (2012-10-22)
 
@@ -480,19 +503,19 @@ These should not affect the functionality of the module.
 
 ## [0.0.2](https://github.com/voxpupuli/puppet-network/tree/0.0.2) (2012-10-16)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.2)
 
 **Fixed bugs:**
 
 - interfaces provider fails when given a second interface to manage [\#4](https://github.com/voxpupuli/puppet-network/issues/4)
 
-## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
-
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc2...0.0.1)
-
 ## [0.0.1rc2](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc2) (2012-09-18)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1rc2)
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1...0.0.1rc2)
+
+## [0.0.1](https://github.com/voxpupuli/puppet-network/tree/0.0.1) (2012-09-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-network/compare/0.0.1rc1...0.0.1)
 
 ## [0.0.1rc1](https://github.com/voxpupuli/puppet-network/tree/0.0.1rc1) (2012-08-29)
 
