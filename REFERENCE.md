@@ -747,7 +747,7 @@ Default value: `present`
 
 Valid values: `inet`, `inet6`, `inet4`
 
-Aliases: `"inet4"=>"inet"`
+Aliases: `"inet4" => "inet"`
 
 The address family to use for the interface
 
@@ -767,7 +767,7 @@ The IP address of the network interfaces
 
 Valid values: `static`, `manual`, `dhcp`, `loopback`, `none`
 
-Aliases: `"none"=>"static"`
+Aliases: `"none" => "static"`
 
 The method for determining an IP address for the interface
 
