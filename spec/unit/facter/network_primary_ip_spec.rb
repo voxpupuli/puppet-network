@@ -9,6 +9,7 @@ describe 'network_primary_ip' do
 
   before do
     Facter.clear
+    allow(Facter.fact(:kernel)).to receive(:value).and_return('Linux')
     allow(Facter.fact(:networking)).to receive(:value).and_return({ 'ip' => '192.168.178.3' })
   end
 

@@ -11,11 +11,12 @@ describe 'network_nexthop_ip fact' do
     # perform any action that should be run before every test
     Facter.clear
     allow(Facter.fact(:kernel)).to receive(:value).and_return('Linux')
-    allow(Facter::Util::Resolution).to receive(:which).with('ip').and_return('/usr/bin/ip')
+    allow(Facter::Core::Execution).to receive(:which).with('ip').and_return('/usr/bin/ip')
+    allow(Facter::Core::Execution).to receive(:execute)
   end
 
-  it 'returns a the gateway' do
-    expect(Facter::Util::Resolution).to receive(:exec).with('ip route show 0/0').and_return('default via 192.168.178.1 dev eth0') # rubocop:disable RSpec/MessageSpies
+  it 'returns the gateway' do
+    expect(Facter::Core::Execution).to receive(:execute).with('ip route show 0/0').and_return('default via 192.168.178.1 dev eth0') # rubocop:disable RSpec/MessageSpies
     expect(fact.value).to eq('192.168.178.1')
   end
 end
