@@ -126,7 +126,7 @@ Instantiate cross-platform bonded interfaces
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 network::bond { 'bond0':
@@ -747,7 +747,7 @@ Default value: `present`
 
 Valid values: `inet`, `inet6`, `inet4`
 
-Aliases: `"inet4"=>"inet"`
+Aliases: `"inet4" => "inet"`
 
 The address family to use for the interface
 
@@ -767,7 +767,7 @@ The IP address of the network interfaces
 
 Valid values: `static`, `manual`, `dhcp`, `loopback`, `none`
 
-Aliases: `"none"=>"static"`
+Aliases: `"none" => "static"`
 
 The method for determining an IP address for the interface
 
@@ -908,7 +908,7 @@ Compresses a hash by removing all elements whose values are `undef`
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 $example = {
@@ -928,7 +928,7 @@ Returns: `Hash` A new hash with all `undef` values removed
 
 ##### Examples
 
-###### 
+######
 
 ```puppet
 $example = {
@@ -945,4 +945,3 @@ network::compact_hash($example)
 Data type: `Hash`
 
 The hash to compact
-
