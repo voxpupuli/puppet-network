@@ -126,7 +126,7 @@ Instantiate cross-platform bonded interfaces
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 network::bond { 'bond0':
@@ -908,7 +908,7 @@ Compresses a hash by removing all elements whose values are `undef`
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 $example = {
@@ -928,7 +928,7 @@ Returns: `Hash` A new hash with all `undef` values removed
 
 ##### Examples
 
-###### 
+######
 
 ```puppet
 $example = {
@@ -945,4 +945,3 @@ network::compact_hash($example)
 Data type: `Hash`
 
 The hash to compact
-
